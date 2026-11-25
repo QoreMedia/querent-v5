@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-accent="violet" data-wireframe="on">
+<html lang="en" data-theme="dark" data-accent="blue" data-wireframe="on">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,9 +25,9 @@
   --ink-mute: #5A5F69;
   --line: rgba(255,255,255,0.08);
   --line-strong: rgba(255,255,255,0.16);
-  --accent: oklch(0.65 0.22 295);
+  --accent: #2563EB;
   --accent-2: oklch(0.72 0.18 250);
-  --accent-soft: oklch(0.65 0.22 295 / 0.14);
+  --accent-soft: rgba(37,99,235,0.14);
   --warn: oklch(0.78 0.16 70);
   --ok: oklch(0.78 0.16 150);
   --maxw: 1280px;
@@ -45,16 +45,16 @@
   --ink-mute: #8A8F99;
   --line: rgba(0,0,0,0.10);
   --line-strong: rgba(0,0,0,0.18);
-  --accent-soft: oklch(0.65 0.22 295 / 0.10);
+  --accent-soft: rgba(37,99,235,0.10);
 }
 [data-accent="blue"] {
   --accent: oklch(0.72 0.18 250);
-  --accent-2: oklch(0.65 0.22 295);
+  --accent-2: #1D4ED8;
   --accent-soft: oklch(0.72 0.18 250 / 0.12);
 }
 [data-accent="amber"] {
   --accent: oklch(0.78 0.16 70);
-  --accent-2: oklch(0.65 0.22 295);
+  --accent-2: #1D4ED8;
   --accent-soft: oklch(0.78 0.16 70 / 0.14);
 }
 
@@ -166,6 +166,31 @@ body::before {
   border-color: var(--line-strong);
 }
 .btn-ghost:hover { border-color: var(--ink); }
+
+/* ---------- CTA icons (LM-0002; spec: design-system/spec.json ctaIcon) ----------
+   One inline Lucide-style set: stroke currentColor, 16-18px, aria-hidden. Place icon as first
+   (calendar, mail, arrow-left) or last (arrow-right, arrow-down) child of .btn / .footer-cta / .cta-link.
+   Hover/focus nudge uses the shared --ease-soft / --dur-fast tokens; transform only. */
+.btn, .footer-cta, .cta-link { gap: 8px; }
+.btn-sm { gap: 6px; }
+.cta-link { display: inline-flex; align-items: center; }
+.cta-ico {
+  display: block; flex: none;
+  width: clamp(16px, 1.2em, 18px); height: clamp(16px, 1.2em, 18px);
+  fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.footer-cta .cta-ico, .cta-link .cta-ico { stroke-width: 2; }
+.cta-ico--cal { translate: 0 -0.5px; }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--right { transform: translate3d(3px, 0, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--left { transform: translate3d(-3px, 0, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--down { transform: translate3d(0, 2px, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--cal { transform: translate3d(0, -1.5px, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--mail { transform: translate3d(0, -1px, 0) scale(1.06); }
+@media (prefers-reduced-motion: reduce) {
+  .cta-ico { transition: none; }
+  :is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico { transform: none; }
+}
 
 /* ---------- Typography ---------- */
 .eyebrow {
@@ -344,7 +369,7 @@ body::before {
   <header class="hdr">
     <div class="hdr-inner">
       <a class="logo" href="index.html">
-        <img src="/querent-logo.png" alt="Querent" style="width:26px;height:26px;display:block;">
+        <img src="/assets/querent-logo-flat.svg" alt="Querent" style="width:26px;height:26px;display:block;">
         <span class="logo-word">Querent</span>
       </a>
       <nav class="nav">
@@ -359,7 +384,7 @@ body::before {
           <svg class="theme-toggle-sun"  viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
           <svg class="theme-toggle-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
-        <a href="booking.html" class="btn btn-primary btn-sm">Book a Call →</a>
+        <a href="booking.html" class="btn btn-primary btn-sm"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Call</a>
       </div>
     </div>
   </header>
@@ -375,8 +400,8 @@ body::before {
         build first.
       </p>
       <div class="svc-page-cta">
-        <a href="booking.html" class="btn btn-primary">Book a free audit</a>
-        <a href="index.html" class="btn btn-ghost">← Back to home</a>
+        <a href="booking.html" class="btn btn-primary"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+        <a href="index.html" class="btn btn-ghost"><svg class="cta-ico cta-ico--left" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Back to home</a>
       </div>
     </section>
 
@@ -420,7 +445,7 @@ body::before {
               <li>Handoff playbook for your team</li>
             </ul>
           </div>
-          <a href="index.html#cta" class="btn btn-primary btn-block">Book a scoping call →</a>
+          <a href="index.html#cta" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
         </div>
       </div>
     </section>
@@ -456,7 +481,7 @@ body::before {
               <li>Runbook + handoff training</li>
             </ul>
           </div>
-          <a href="index.html#cta" class="btn btn-primary btn-block">Book a scoping call →</a>
+          <a href="index.html#cta" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
         </div>
       </div>
     </section>
@@ -492,7 +517,7 @@ body::before {
               <li>Weekly performance review</li>
             </ul>
           </div>
-          <a href="index.html#cta" class="btn btn-primary btn-block">Book a scoping call →</a>
+          <a href="index.html#cta" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
         </div>
       </div>
     </section>
@@ -528,7 +553,7 @@ body::before {
               <li>Quarterly accuracy review</li>
             </ul>
           </div>
-          <a href="index.html#cta" class="btn btn-primary btn-block">Book a scoping call →</a>
+          <a href="index.html#cta" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
         </div>
       </div>
     </section>
@@ -565,7 +590,7 @@ body::before {
               <li>90‑day operations roadmap</li>
             </ul>
           </div>
-          <a href="index.html#cta" class="btn btn-primary btn-block">Book a scoping call →</a>
+          <a href="index.html#cta" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
         </div>
       </div>
     </section>
@@ -582,8 +607,8 @@ body::before {
           </p>
         </div>
         <div class="svc-page-final">
-          <a href="index.html#cta" class="btn btn-primary btn-block">Book my free audit →</a>
-          <a href="mailto:hello@querent.ai" class="btn btn-ghost btn-block">Email hello@querent.ai</a>
+          <a href="index.html#cta" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book my free audit</a>
+          <a href="mailto:hello@querent.ai" class="btn btn-ghost btn-block"><svg class="cta-ico cta-ico--mail" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Email hello@querent.ai</a>
           <div class="mono dim cta-fine">Replies within 1 business day. No drip sequences.</div>
         </div>
       </div>
@@ -594,13 +619,13 @@ body::before {
   <footer class="footer">
     <div class="footer-grid">
       <div>
-        <a class="logo" href="index.html"><img src="/querent-logo.png" alt="Querent" style="width:26px;height:26px;display:block;"><span class="logo-word">Querent</span></a>
+        <a class="logo" href="index.html"><img src="/assets/querent-logo-flat.svg" alt="Querent" style="width:26px;height:26px;display:block;"><span class="logo-word">Querent</span></a>
         <p class="footer-tag">AI automation, productized.</p>
       </div>
       <div>
         <div class="mono dim footer-h">SERVICES</div>
         <ul>
-          <li><a href="menu.html">Menu of services →</a></li>
+          <li><a href="menu.html" class="cta-link">Menu of services<svg class="cta-ico cta-ico--right" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></li>
           <li><a href="#concierge">AI Concierge</a></li>
           <li><a href="#workflow">n8n Workflow Automation</a></li>
           <li><a href="#leadgen">Outbound &amp; Research</a></li>
