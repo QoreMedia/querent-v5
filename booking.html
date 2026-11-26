@@ -2,26 +2,38 @@
 <html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Book a Free Audit — Querent</title>
+<link rel="icon" type="image/svg+xml" href="/assets/querent-logo-flat.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&amp;family=Source+Sans+3:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
 <style>
+/* LOCAL-MOD LM-0002: brand colour variables. Values are identical to the literals they replace, so the page looks the same by default.
+   The staging design-system preview can override them to try other palettes (see staging-ds-panel.js). */
+:root {
+  --c-night: #0A0B0E; --c-on-night: #ECEEF2; --c-slate-400: #94A3B8; --c-slate-500: #64748B;
+  --c-blue-300: #93C5FD; --c-blue-400: #60A5FA; --c-blue-600: #2563EB; --c-blue-700: #1D4ED8;
+  --c-navy-900: #0D1B38; --c-navy-800: #152C5B; --c-cyan-500: #06B6D4; --c-cyan-300: #22D3EE;
+  --c-panel-light: #E8EEFA; --c-panel-dark-end: #0B1226; --c-panel-dark-start: #111C38; --c-canvas: #F4F4F2;
+  --rgb-blue-600: 37 99 235; --rgb-blue-300: 147 197 253; --rgb-blue-700: 29 78 216; --rgb-cyan-500: 6 182 212;
+  --rgb-navy-800: 21 44 91; --rgb-navy-900: 13 27 56; --rgb-night: 10 11 14; --rgb-blue-400: 96 165 250; --rgb-cyan-300: 34 211 238;
+}
+
 /* booking page refinement. Light-dominant, deep navy accent, shared motion tokens with index.html. */
 :root {
-  --bg: #F4F4F2;
+  --bg: var(--c-canvas);
   --bg-elev: #FFFFFF;
-  --ink: #0A0B0E;
+  --ink: var(--c-night);
   --ink-dim: #5A5F69;
   --ink-mute: #8A8F99;
-  --line: rgba(10,11,14,0.10);
-  --line-strong: rgba(10,11,14,0.18);
+  --line: rgb(var(--rgb-night) / 0.10);
+  --line-strong: rgb(var(--rgb-night) / 0.18);
   /* Blue family: navy (primary accent) -> brand blue -> tints. No purple, no teal. */
-  --navy-900: #0D1B38;
-  --navy-700: #152C5B;
-  --blue-600: #1D4ED8;
-  --blue-300: #93C5FD;
+  --navy-900: var(--c-navy-900);
+  --navy-700: var(--c-navy-800);
+  --blue-600: var(--c-blue-700);
+  --blue-300: var(--c-blue-300);
   --tint-100: #E6EDF9;
   --tint-50: #F1F5FC;
   --maxw: 1280px;
@@ -38,14 +50,17 @@
 html, body { margin: 0; padding: 0; }
 body {
   background:
-    radial-gradient(ellipse 55% 40% at 8% 0%, rgba(29,78,216,0.07), transparent 70%),
-    radial-gradient(ellipse 45% 35% at 96% 30%, rgba(21,44,91,0.06), transparent 70%),
+    radial-gradient(ellipse 55% 40% at 8% 0%, rgb(var(--rgb-blue-700) / 0.07), transparent 70%),
+    radial-gradient(ellipse 45% 35% at 96% 30%, rgb(var(--rgb-navy-800) / 0.06), transparent 70%),
     var(--bg);
   color: var(--ink);
-  font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-feature-settings: "ss01","cv11";
   -webkit-font-smoothing: antialiased;
   font-size: 16px; line-height: 1.5; letter-spacing: -0.005em;
+}
+h1, h2, h3, .h1, .h2, .h3, .title, .why-now-headline, .faq-title, .cta-h2, .proc2-card-title, .stat-num, .value-num, .case-stat-num, .logo-word {
+  font-family: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
 }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; }
@@ -54,19 +69,65 @@ button { font: inherit; cursor: pointer; }
 
 /* ---------- Header (dark ribbon, as index.html) ---------- */
 .hdr {
-  position: sticky; top: 0; z-index: 50;
-  background: rgba(10,11,14,0.92); color: #ECEEF2;
+  position: sticky; top: 0; z-index: 50; overflow: visible;
+  background: rgb(var(--rgb-night) / 0.92); color: var(--c-on-night);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255,255,255,0.10);
 }
 .hdr-inner { max-width: var(--maxw); margin: 0 auto; padding: 10px var(--pad); display: flex; align-items: center; justify-content: space-between; gap: 32px; }
-.logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.02em; color: #ECEEF2; }
+.logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.02em; color: var(--c-on-night); }
 .logo-word { font-size: 18px; }
-.nav { display: flex; gap: 32px; }
-.nav a { color: #8A8F99; font-size: 14px; font-weight: 600; transition: color .15s ease; }
-.nav a:hover { color: #ECEEF2; }
-.hdr :focus-visible, .footer :focus-visible { outline-color: #60A5FA; }
-.btn { display: inline-flex; align-items: center; justify-content: center; padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; border: 1px solid rgba(255,255,255,0.22); color: #ECEEF2; background: transparent; transition: background .15s ease, border-color .15s ease; white-space: nowrap; }
+.nav { display: flex; align-items: center; gap: 28px; }
+.nav > a, .nav-trigger {
+  color: #8A8F99; font-size: 14px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 5px;
+  min-height: 44px; padding: 6px 4px;
+  background: none; border: 0; transition: color .15s ease;
+}
+.nav > a:hover, .nav-trigger:hover,
+.nav-item:hover > .nav-trigger,
+.nav-item:focus-within > .nav-trigger,
+.nav-item.is-open > .nav-trigger { color: var(--c-on-night); }
+.nav-item { position: relative; display: flex; align-items: center; }
+.nav-caret { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 180ms var(--ease-soft); opacity: 0.8; }
+.nav-item:hover .nav-caret,
+.nav-item:focus-within .nav-caret,
+.nav-item.is-open .nav-caret { transform: rotate(180deg); opacity: 1; }
+/* padding-top provides a hover bridge so the pointer never loses hover */
+.nav-dd {
+  position: absolute; top: 100%; left: -10px; padding-top: 8px;
+  min-width: 236px; z-index: 60;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translate3d(0, 6px, 0);
+  transition: opacity 180ms var(--ease-soft), transform 180ms var(--ease-soft), visibility 0s linear 180ms;
+}
+.nav-item:hover > .nav-dd,
+.nav-item:focus-within > .nav-dd,
+.nav-item.is-open > .nav-dd {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+  transition: opacity 180ms var(--ease-soft), transform 180ms var(--ease-soft), visibility 0s;
+}
+.nav-dd-panel {
+  background: rgb(var(--rgb-night) / 0.96);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 22px 44px -14px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.nav-dd-panel a {
+  display: flex; align-items: center; min-height: 44px; padding: 8px 12px;
+  border-radius: 9px; font-size: 13.5px; font-weight: 500;
+  color: var(--c-slate-400); white-space: nowrap;
+  transition: background 140ms ease, color 140ms ease;
+}
+.nav-dd-panel a:hover, .nav-dd-panel a:focus-visible {
+  background: rgba(255,255,255,0.08); color: var(--c-on-night);
+}
+.hdr :focus-visible, .footer :focus-visible { outline-color: var(--c-blue-400); }
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: var(--pad-button, 8px 14px); border-radius: var(--r-btn, 10px); font-size: 13px; font-weight: 600; border: var(--bw-button, 1px) solid var(--bc-button, rgba(255,255,255,0.22)); color: var(--c-on-night); background: transparent; transition: background .15s ease, border-color .15s ease; white-space: nowrap; }
 .btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.4); }
 
 /* ---------- CTA icons (LM-0002; spec: design-system/spec.json ctaIcon) ----------
@@ -101,11 +162,10 @@ button { font: inherit; cursor: pointer; }
 /* ---------- Layout: one 12-col grid, shared left edge ---------- */
 .page { max-width: var(--maxw); margin: 0 auto; padding: 72px var(--pad) 96px; }
 .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px; row-gap: 40px; align-items: start; }
-.intro { grid-column: 1 / span 5; position: sticky; top: 92px; }
-.panel { grid-column: 6 / span 7; }
-
-.eyebrow { display: inline-flex; align-items: center; gap: 10px; font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--navy-700); margin: 0 0 20px; }
-.eyebrow::before { content: ""; width: 24px; height: 2px; background: var(--navy-700); border-radius: 2px; }
+.intro { grid-column: 1 / span 6; position: sticky; top: 92px; min-width: 0; }
+.panel { grid-column: 8 / span 5; min-width: 0; }
+/* Card is deliberately narrow (<768px): Cal.com then renders its compact layout, month calendar first, slots after a date is tapped. */
+.book-card { max-width: 480px; }
 .h1 { font-size: clamp(36px, 4.2vw, 60px); line-height: 1.02; letter-spacing: -0.035em; font-weight: 700; margin: 0 0 20px; color: var(--ink); }
 .h1 em { font-style: normal; color: var(--navy-700); display: block; }
 .lede { font-size: 17px; line-height: 1.6; color: var(--ink-dim); margin: 0 0 36px; max-width: 46ch; }
@@ -118,75 +178,183 @@ button { font: inherit; cursor: pointer; }
 .detail-text h4 { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 2px; color: var(--ink); }
 .detail-text p { font-size: 14px; line-height: 1.45; color: var(--ink-dim); margin: 0; }
 
-/* ---------- Booking panel: hosts + calendar share one frame ---------- */
-.panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 14px; }
-.panel-title { font-size: 13px; font-weight: 600; color: var(--ink); margin: 0; }
-.panel-note { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); }
-.book-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+/* ---------- Booking card: service + hosts + date picker in ONE fixed card (LM-0002) ---------- */
+.book-card {
+  background: #FFFFFF; border: var(--bw-card, 1px) solid var(--bc-card, var(--line)); border-radius: var(--r-card, var(--radius));
+  overflow: hidden; width: 100%; position: relative;
+  box-shadow: 0 calc(28px * var(--shk-card, 1)) calc(56px * var(--shk-card, 1)) calc(-36px * var(--shk-card, 1)) rgb(var(--rgb-navy-900) / 0.35);
+}
+.book-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--navy-900), var(--navy-700) 55%, var(--blue-600)); z-index: 2; }
+.book-top { padding: var(--pad-card, 22px 24px 18px); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: var(--gap-card, 14px); }
+.book-service { margin: 0; font-size: 14px; color: var(--ink-dim); }
+.book-service strong { color: var(--ink); font-weight: 600; letter-spacing: -0.01em; }
+.book-selector { display: flex; flex-wrap: wrap; gap: var(--gap-chip, 10px); }
 .book-tab {
-  position: relative; display: flex; align-items: center; gap: 14px; text-align: left;
-  padding: 16px 18px; border-radius: 16px;
-  background: var(--bg-elev); border: 1px solid var(--line); color: var(--ink);
-  transition: background var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft), transform var(--dur-fast) var(--ease-soft), box-shadow var(--dur-fast) var(--ease-soft);
+  position: relative; display: flex; align-items: center; gap: 10px; text-align: left;
+  min-height: 44px; padding: var(--pad-chip, 6px 16px 6px 8px); border-radius: var(--r-chip, 14px);
+  background: var(--bg-elev); border: var(--bw-chip, 1px) solid var(--bc-chip, var(--line-strong)); color: var(--ink);
+  transition: background var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft), transform var(--dur-fast) var(--ease-soft);
 }
 .book-tab:hover { border-color: var(--navy-700); transform: translateY(-1px); }
-.book-tab:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 3px; border-radius: 16px; }
-.book-avatar { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; background: var(--tint-100); color: var(--navy-700); transition: background var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft); }
-.book-tab-info { min-width: 0; }
-.book-tab-name { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; display: block; }
-.book-tab-role { font-size: 13px; color: var(--ink-dim); display: block; transition: color var(--dur-fast) var(--ease-soft); }
-.book-check { margin-left: auto; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line-strong); display: flex; align-items: center; justify-content: center; color: transparent; flex-shrink: 0; transition: background var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft); }
-.book-check svg { width: 12px; height: 12px; }
-.book-tab.active { background: var(--navy-700); border-color: var(--navy-700); color: #FFFFFF; box-shadow: 0 14px 28px -16px rgba(13,27,56,0.7); }
+.book-tab:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 3px; }
+.book-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: var(--tint-100); color: var(--navy-700); transition: background var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft); }
+.book-tab-name { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+.book-tab-role { font-size: 12.5px; color: var(--ink-dim); transition: color var(--dur-fast) var(--ease-soft); }
+.book-tab.active { background: var(--navy-700); border-color: var(--navy-700); color: #FFFFFF; }
 .book-tab.active .book-tab-role { color: #BFD0F2; }
 .book-tab.active .book-avatar { background: #E6EDF9; color: var(--navy-700); }
-.book-tab.active .book-check { background: #E6EDF9; border-color: #E6EDF9; color: var(--navy-700); }
-
-.cal-wrap {
-  background: #FFFFFF; border: 1px solid var(--line); border-radius: var(--radius);
-  overflow: hidden; min-height: 600px; width: 100%; position: relative;
-  box-shadow: 0 28px 56px -36px rgba(13,27,56,0.35);
+.book-body { position: relative; min-width: 0; }
+.cal-picker-stage { padding: 18px 24px 20px; }
+.cal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.cal-month-title { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.015em; color: var(--ink); }
+.cal-month-nav { display: flex; align-items: center; gap: 6px; }
+.cal-nav-btn {
+  width: 44px; height: 44px; min-width: 44px; min-height: 44px;
+  border-radius: 11px; border: 1px solid var(--line-strong);
+  background: var(--bg-elev); color: var(--ink);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft);
 }
-.cal-wrap::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--navy-900), var(--navy-700) 55%, var(--blue-600)); z-index: 2; }
+.cal-nav-btn:hover:not(:disabled) { background: var(--tint-50); border-color: var(--navy-700); color: var(--navy-700); }
+.cal-nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.cal-nav-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cal-weekdays { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-bottom: 6px; text-align: center; }
+.cal-weekdays span { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--ink-mute); padding: 4px 0; }
+.cal-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.cal-pad { min-height: 44px; }
+.cal-day {
+  position: relative; width: 100%; min-height: 44px; padding: 0;
+  border-radius: 11px; border: 1px solid transparent;
+  background: var(--tint-50); color: var(--navy-900);
+  font-size: 14px; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 160ms var(--ease-soft), border-color 160ms var(--ease-soft), color 160ms var(--ease-soft), transform 160ms var(--ease-soft);
+}
+.cal-day:hover:not(:disabled) { border-color: var(--navy-700); background: var(--tint-100); transform: translateY(-1px); }
+.cal-day:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 2px; }
+.cal-day.is-today::after {
+  content: ""; position: absolute; bottom: 6px; left: 50%; width: 4px; height: 4px;
+  border-radius: 50%; transform: translateX(-50%); background: var(--blue-600);
+}
+.cal-day.is-selected {
+  background: var(--navy-700); border-color: var(--navy-700);
+  color: #FFFFFF; font-weight: 700; transform: none;
+}
+.cal-day.is-selected::after { background: #FFFFFF; }
+.cal-day:disabled {
+  background: transparent; border-color: transparent;
+  color: var(--ink-mute); opacity: 0.42; font-weight: 500; cursor: not-allowed;
+}
+.cal-prompt {
+  margin: 14px 0 0; padding-top: 14px; border-top: 1px solid var(--line);
+  font-size: 13.5px; color: var(--ink-dim); text-align: center;
+  transition: opacity 200ms var(--ease-soft);
+}
+.cal-prompt[hidden] { display: none; }
+
+/* State 2: smooth slot drawer reveal inside fixed card */
+.slot-drawer {
+  display: grid; grid-template-rows: 0fr; opacity: 0;
+  transition: grid-template-rows 300ms var(--ease-out), opacity 220ms var(--ease-soft);
+}
+.slot-drawer.is-open { grid-template-rows: 1fr; opacity: 1; }
+.slot-drawer-inner { overflow: hidden; min-height: 0; }
+.slot-divider { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+.slot-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.slot-date-label { margin: 0; font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+.slot-tz { font-size: 12.5px; font-weight: 500; color: var(--ink-dim); margin-left: 4px; }
+.fmt-toggle {
+  display: inline-flex; border: 1px solid var(--line-strong); border-radius: 10px;
+  background: var(--tint-50); padding: 2px; gap: 2px;
+}
+.fmt-btn {
+  min-width: 44px; min-height: 44px; padding: 0 10px;
+  border: 0; border-radius: 8px; background: transparent;
+  font-size: 12.5px; font-weight: 700; color: var(--ink-dim);
+  transition: background 150ms ease, color 150ms ease;
+}
+.fmt-btn:hover { color: var(--ink); }
+.fmt-btn.active { background: var(--navy-700); color: #FFFFFF; }
+.slot-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;
+  max-height: 248px; overflow-y: auto; padding: 2px;
+}
+.slot-btn {
+  min-height: 44px; padding: 8px 12px; border-radius: 10px;
+  border: 1px solid var(--line-strong); background: var(--bg-elev);
+  color: var(--ink); font-size: 14px; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 150ms var(--ease-soft), border-color 150ms var(--ease-soft), color 150ms var(--ease-soft);
+}
+.slot-btn:hover { border-color: var(--navy-700); background: var(--tint-50); color: var(--navy-700); }
+.slot-btn.is-selected { background: var(--navy-700); border-color: var(--navy-700); color: #FFFFFF; }
+.slot-status { margin: 6px 0; font-size: 13.5px; color: var(--ink-dim); text-align: center; grid-column: 1 / -1; padding: 12px 0; }
+
+/* State 3: Cal.com booking form inside the card */
+.cal-embed-stage { animation: bkStageIn 220ms var(--ease-out); }
+.cal-embed-stage[hidden] { display: none; }
+@keyframes bkStageIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.cal-embed-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 12px 24px; border-bottom: 1px solid var(--line); background: var(--tint-50);
+}
+.cal-back-btn {
+  min-height: 44px; padding: 8px 12px 8px 8px; border-radius: 10px;
+  border: 1px solid var(--line-strong); background: var(--bg-elev); color: var(--ink);
+  font-size: 13.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+.cal-back-btn:hover { border-color: var(--navy-700); color: var(--navy-700); }
+.cal-back-btn:hover > .cta-ico--left { transform: translate3d(-3px, 0, 0); }
+.cal-embed-summary { font-size: 13px; font-weight: 600; color: var(--navy-700); }
+.cal-wrap { position: relative; min-height: 520px; min-width: 0; max-width: 100%; overflow-x: auto; }
 .cal-wrap::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 36px; background: #FFFFFF; pointer-events: none; z-index: 2; }
-#cal-booking { width: 100%; min-height: 600px; padding-top: 3px; }
-#cal-booking iframe { border: none !important; }
+#cal-booking { width: 100%; min-width: 0 !important; max-width: 100% !important; min-height: 520px; }
+#cal-booking cal-inline, #cal-booking iframe { border: none !important; min-width: 0 !important; max-width: 100% !important; }
 
 /* ---------- Footer (dark, as index.html footer) ---------- */
 .footer {
   background:
-    radial-gradient(ellipse 50% 90% at 88% 0%, rgba(29,78,216,0.22), transparent 70%),
-    #0A0B0E;
-  color: #ECEEF2; border-top: 1px solid rgba(147,197,253,0.14);
+    radial-gradient(ellipse 50% 90% at 88% 0%, rgb(var(--rgb-blue-700) / 0.22), transparent 70%),
+    var(--c-night);
+  color: var(--c-on-night); border-top: 1px solid rgb(var(--rgb-blue-300) / 0.14);
 }
-.footer-inner { max-width: var(--maxw); margin: 0 auto; padding: 48px var(--pad) 0; display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap; }
-.footer-tag { color: #94A3B8; margin: 14px 0 0; font-size: 14px; line-height: 1.6; max-width: 300px; }
+.footer-inner { max-width: var(--maxw); margin: 0 auto; padding: 28px var(--pad); display: flex; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap; }
 .footer-links { display: flex; gap: 28px; font-size: 14px; flex-wrap: wrap; }
-.footer-links a { color: #94A3B8; transition: color .15s ease; }
-.footer-links a:hover { color: #ECEEF2; }
-.footer-rule { max-width: calc(var(--maxw) - 2 * var(--pad)); height: 1px; background: rgba(147,197,253,0.14); margin: 40px auto 0; }
-.footer-bottom { max-width: var(--maxw); margin: 0 auto; padding: 22px var(--pad) 28px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; color: #64748B; }
-.footer-bottom a:hover { color: #ECEEF2; }
+.footer-links a { color: var(--c-slate-400); transition: color .15s ease; }
+.footer-links a:hover { color: var(--c-on-night); }
+.footer-copy { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--pad) 24px; font-size: 13px; color: var(--c-slate-500); }
 
 @media (max-width: 980px) {
+  .grid { grid-template-columns: minmax(0, 1fr); column-gap: 0; }
   .intro, .panel { grid-column: 1 / -1; position: static; }
+  .book-card { margin: 0 auto; }
   .page { padding-top: 48px; }
 }
 @media (max-width: 768px) {
   :root { --pad: 24px; }
   .nav { display: none; }
   .page { padding-bottom: 64px; }
-  .lede { font-size: 16px; margin-bottom: 28px; }
+  .lede { font-size: 16px; }
   .grid { row-gap: 32px; }
+  /* LM-0002 mobile: tap targets >= 44px */
+  .hdr .btn-ico-m { font-size: 0; gap: 0; width: 44px; height: 44px; min-height: 44px; padding: 0; flex: none; }
+  .hdr .btn-ico-m .cta-ico { width: 20px; height: 20px; }
+  .logo, .hdr .btn, .footer-cta { min-height: 44px; }
+  .footer-links a { display: inline-flex; align-items: center; min-height: 44px; }
 }
 @media (max-width: 520px) {
-  .book-selector { grid-template-columns: 1fr; }
-  .panel-note { display: none; }
-  .cal-wrap, #cal-booking { min-height: 560px; }
+  .book-top { padding: 18px 16px 14px; }
+  .cal-picker-stage { padding: 16px 14px 18px; }
+  .cal-embed-bar { padding: 12px 14px; }
+  .cal-weekdays, .cal-days { gap: 2px; }
+  .book-selector { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .book-tab { min-width: 0; }
+  .book-tab-role { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rise { animation: none; }
-  .book-tab, .book-tab * { transition: none !important; transform: none !important; }
+  .rise, .cal-embed-stage { animation: none; }
+  .book-tab, .book-tab *, .nav-dd, .nav-caret, .slot-drawer, .cal-day, .slot-btn, .cal-back-btn > .cta-ico { transition: none !important; transform: none !important; }
 }
 </style>
 </head>
@@ -201,13 +369,35 @@ button { font: inherit; cursor: pointer; }
       </a>
       <nav class="nav" aria-label="Primary">
         <a href="index.html">Home</a>
-        <a href="menu.html">Solutions</a>
-        <a href="index.html#case">Case Studies</a>
-        <a href="index.html#process">Process</a>
-        <a href="index.html#faq">FAQ</a>
+        <div class="nav-item">
+          <button type="button" class="nav-trigger" aria-expanded="false" aria-haspopup="true">Services<svg class="nav-caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="nav-dd">
+            <div class="nav-dd-panel">
+              <a href="menu.html">All Services</a>
+              <a href="menu.html#concierge">AI Concierge</a>
+              <a href="menu.html#workflow">Workflow Automation</a>
+              <a href="menu.html#leadgen">Outbound &amp; Lead Gen</a>
+              <a href="menu.html#internal">Internal Ops Agents</a>
+              <a href="menu.html#consult">Strategy &amp; Advisory</a>
+              <a href="va.html">AI Virtual Assistants</a>
+            </div>
+          </div>
+        </div>
+        <div class="nav-item">
+          <button type="button" class="nav-trigger" aria-expanded="false" aria-haspopup="true">Company<svg class="nav-caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="nav-dd">
+            <div class="nav-dd-panel">
+              <a href="index.html#why-now">Why Now</a>
+              <a href="index.html#case">Case Studies</a>
+              <a href="index.html#process">Process</a>
+              <a href="index.html#faq">FAQ</a>
+              <a href="booking.html">Book a Call</a>
+            </div>
+          </div>
+        </div>
       </nav>
       <div class="hdr-actions">
-        <a href="index.html" class="btn"><svg class="cta-ico cta-ico--left" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Back</a>
+        <a href="index.html" class="btn btn-ico-m" aria-label="Back"><svg class="cta-ico cta-ico--left" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Back</a>
       </div>
     </div>
   </header>
@@ -217,9 +407,8 @@ button { font: inherit; cursor: pointer; }
       <div class="grid">
 
         <section class="intro">
-          <p class="eyebrow rise" style="--i:0">Free 30-minute audit</p>
-          <h1 class="h1 rise" style="--i:1">Book a free<em>automation audit.</em></h1>
-          <p class="lede rise" style="--i:2">We'll map your top 3 AI‑automatable workflows, model the ROI, and send you a written brief whether you hire us or not... No obligations at all!</p>
+          <div class="intro-copy"><h1 class="h1 rise" style="--i:1"><span id="ttl-a">Book a free</span><em id="ttl-b">automation audit.</em></h1>
+          <p class="lede rise" id="lede" style="--i:2">We'll map your top 3 AI‑automatable workflows, model the ROI, and send you a written brief whether you hire us or not... No obligations at all!</p></div>
           <ul class="detail-list">
             <li class="detail-item rise" style="--i:3">
               <div class="detail-icon" aria-hidden="true">
@@ -245,38 +434,71 @@ button { font: inherit; cursor: pointer; }
               </div>
               <div class="detail-text">
                 <h4>Written brief included</h4>
-                <p>You leave with a workflow audit doc — yours to keep regardless.</p>
+                <p>You leave with a short written brief — yours to keep regardless.</p>
               </div>
             </li>
           </ul>
         </section>
 
-        <section class="panel" aria-label="Choose a host and a time">
-          <div class="panel-head rise" style="--i:3">
-            <h2 class="panel-title">Choose your host</h2>
-            <span class="panel-note">Then pick a time</span>
-          </div>
-          <div class="book-selector rise" style="--i:4" role="group" aria-label="Host">
-            <button type="button" class="book-tab active" data-cal="benquerent/30min" aria-pressed="true" onclick="switchCal(this)">
-              <span class="book-avatar" aria-hidden="true">B</span>
-              <span class="book-tab-info">
-                <span class="book-tab-name">Ben Tsan</span>
-                <span class="book-tab-role">Co-Founder &amp; Ops</span>
-              </span>
-              <span class="book-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            </button>
-            <button type="button" class="book-tab" data-cal="joshuali/30min" aria-pressed="false" onclick="switchCal(this)">
-              <span class="book-avatar" aria-hidden="true">J</span>
-              <span class="book-tab-info">
-                <span class="book-tab-name">Josh Li</span>
-                <span class="book-tab-role">Co-Founder &amp; Strategy</span>
-              </span>
-              <span class="book-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            </button>
-          </div>
-
-          <div class="cal-wrap rise" style="--i:5">
-            <div id="cal-booking"></div>
+        <section class="panel" aria-label="Book a time">
+          <div class="book-card rise" style="--i:3">
+            <div class="book-top">
+              <p class="book-service">Booking: <strong id="svc-name">Free automation audit</strong></p>
+              <div class="book-selector" role="group" aria-label="Host">
+                <button type="button" class="book-tab active" data-host="ben" aria-pressed="true" onclick="switchCal(this)">
+                  <span class="book-avatar" aria-hidden="true">B</span>
+                  <span class="book-tab-name">Ben Tsan</span><span class="book-tab-role">Ops</span>
+                </button>
+                <button type="button" class="book-tab" data-host="josh" aria-pressed="false" onclick="switchCal(this)">
+                  <span class="book-avatar" aria-hidden="true">J</span>
+                  <span class="book-tab-name">Josh Li</span><span class="book-tab-role">Strategy</span>
+                </button>
+              </div>
+            </div>
+            <div class="book-body">
+              <div class="cal-picker-stage" id="cal-picker-stage">
+                <div class="cal-head">
+                  <h2 class="cal-month-title" id="cal-month-label"></h2>
+                  <div class="cal-month-nav">
+                    <button type="button" class="cal-nav-btn" id="cal-prev" aria-label="Previous month">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 18-6-6 6-6"/></svg>
+                    </button>
+                    <button type="button" class="cal-nav-btn" id="cal-next" aria-label="Next month">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="cal-weekdays" aria-hidden="true">
+                  <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+                </div>
+                <div class="cal-days" id="cal-days" role="grid" aria-label="Available dates"></div>
+                <p class="cal-prompt" id="cal-prompt">Select a date to view available times</p>
+                <div class="slot-drawer" id="slot-drawer" aria-hidden="true" inert>
+                  <div class="slot-drawer-inner">
+                    <div class="slot-divider">
+                      <div class="slot-head">
+                        <p class="slot-date-label" id="slot-date-label"></p>
+                        <div class="fmt-toggle" role="group" aria-label="Time format">
+                          <button type="button" class="fmt-btn active" data-fmt="12h" aria-pressed="true">12h</button>
+                          <button type="button" class="fmt-btn" data-fmt="24h" aria-pressed="false">24h</button>
+                        </div>
+                      </div>
+                      <div class="slot-grid" id="slot-grid" role="group" aria-label="Available times"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="cal-embed-stage" id="cal-embed-stage" hidden>
+                <div class="cal-embed-bar">
+                  <button type="button" class="cal-back-btn" id="cal-back-btn">
+                    <svg class="cta-ico cta-ico--left" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                    Change date or time
+                  </button>
+                  <span class="cal-embed-summary" id="cal-embed-summary"></span>
+                </div>
+                <div class="cal-wrap"><div id="cal-booking"></div></div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -286,10 +508,7 @@ button { font: inherit; cursor: pointer; }
 
   <footer class="footer">
     <div class="footer-inner">
-      <div>
-        <a class="logo" href="index.html"><img src="/assets/querent-logo-flat.svg" alt="" style="width:28px;height:28px;display:block;"><span class="logo-word">Querent</span></a>
-        <p class="footer-tag">AI automation, productized. Workflows, agents and ops that give your team its time back.</p>
-      </div>
+      <a class="logo" href="index.html"><img src="/assets/querent-logo-flat.svg" alt="" style="width:28px;height:28px;display:block;"><span class="logo-word">Querent</span></a>
       <nav class="footer-links" aria-label="Footer">
         <a href="index.html">Home</a>
         <a href="menu.html">Solutions</a>
@@ -298,11 +517,7 @@ button { font: inherit; cursor: pointer; }
         <a href="mailto:hello@querent.ai">hello@querent.ai</a>
       </nav>
     </div>
-    <div class="footer-rule"></div>
-    <div class="footer-bottom">
-      <span>© 2026 Querent Labs, Inc.</span>
-      <a href="index.html" class="cta-link"><svg class="cta-ico cta-ico--left" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Back to querent.ai</a>
-    </div>
+    <div class="footer-copy">&copy; 2026 Querent Labs, Inc.</div>
   </footer>
 
 </div>
@@ -323,13 +538,285 @@ Cal("init", { origin: "https://cal.com" });
 
 /* Cal embed themed to the page: light theme, deep brand navy as brand colour + Cal CSS variables. */
 var NAVY = "#152C5B";
-function loadCal(calLink) {
+/* Hosts: Cal.com usernames. NOTE: "joshuali" returned 404 on cal.com (checked 2026-11-26); put the real username here. */
+var HOSTS = { ben: "benquerent/30min", josh: "joshuali/30min" };
+/* Services carried in from CTAs via booking.html?service=<slug>. Default = free automation audit. */
+var SERVICES = {
+  audit:     { name: "Free automation audit",                  ttlA: "Book a free", ttlB: "automation audit." },
+  concierge: { name: "AI Concierge Services",                  ttlA: "Book a",      ttlB: "scoping call." },
+  workflow:  { name: "Workflow Automation (n8n)",              ttlA: "Book a",      ttlB: "scoping call." },
+  leadgen:   { name: "Outbound, Research & Lead Gen",          ttlA: "Book a",      ttlB: "scoping call." },
+  internal:  { name: "Internal Ops Agents",                    ttlA: "Book a",      ttlB: "scoping call." },
+  consult:   { name: "Operations Strategy & Advisory",         ttlA: "Book a",      ttlB: "scoping call." },
+  va:        { name: "AI Virtual Assistant (VA + Automation)", ttlA: "Book a free", ttlB: "strategy call." }
+};
+var slug = "audit";
+try { var q = (new URLSearchParams(location.search).get("service") || "").toLowerCase(); if (Object.prototype.hasOwnProperty.call(SERVICES, q)) slug = q; } catch (e) {}
+var SVC = SERVICES[slug];
+document.getElementById("svc-name").textContent = SVC.name;
+document.getElementById("ttl-a").textContent = SVC.ttlA;
+document.getElementById("ttl-b").textContent = SVC.ttlB;
+document.title = SVC.ttlA + " " + SVC.ttlB.replace(".", "") + " \u2014 Querent";
+if (slug !== "audit") document.getElementById("lede").textContent = "30 minutes to scope " + SVC.name + ": what we would build, the timeline and the investment. No obligations at all.";
+
+var state = {
+  host: "ben",
+  viewYear: new Date().getFullYear(),
+  viewMonth: new Date().getMonth(),
+  selectedDate: null,
+  selectedSlot: null,
+  timeFormat: "12h",
+  slots: [],
+  slotCache: {},
+  requestSeq: 0
+};
+
+var pickerStage = document.getElementById("cal-picker-stage");
+var embedStage = document.getElementById("cal-embed-stage");
+var monthLabelEl = document.getElementById("cal-month-label");
+var prevBtn = document.getElementById("cal-prev");
+var nextBtn = document.getElementById("cal-next");
+var daysEl = document.getElementById("cal-days");
+var promptEl = document.getElementById("cal-prompt");
+var slotDrawerEl = document.getElementById("slot-drawer");
+var slotDateLabelEl = document.getElementById("slot-date-label");
+var slotGridEl = document.getElementById("slot-grid");
+var embedSummaryEl = document.getElementById("cal-embed-summary");
+var backBtn = document.getElementById("cal-back-btn");
+
+function pad2(n) { return n < 10 ? "0" + n : String(n); }
+function toDateStr(y, m, d) { return y + "-" + pad2(m + 1) + "-" + pad2(d); }
+function parseDateStr(dateStr) {
+  var parts = dateStr.split("-").map(Number);
+  return new Date(parts[0], parts[1] - 1, parts[2]);
+}
+function getTzLabel() {
+  try {
+    var parts = new Intl.DateTimeFormat("en-US", { timeZoneName: "short" }).formatToParts(new Date());
+    var tz = parts.find(function (p) { return p.type === "timeZoneName"; });
+    return tz ? tz.value : "";
+  } catch (e) { return ""; }
+}
+function formatDateHeading(dateStr) {
+  var d = parseDateStr(dateStr);
+  return new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(d);
+}
+function formatSlotTime(slotObj, fmt) {
+  var d = slotObj.dateObj;
+  var h = d.getHours();
+  var m = d.getMinutes();
+  if (fmt === "24h") return pad2(h) + ":" + pad2(m);
+  var suffix = h >= 12 ? "PM" : "AM";
+  var h12 = h % 12 || 12;
+  return h12 + ":" + pad2(m) + " " + suffix;
+}
+function buildFallbackSlots(dateStr) {
+  var base = parseDateStr(dateStr);
+  var now = new Date();
+  var minLead = new Date(now.getTime() + 15 * 60000);
+  var list = [];
+  for (var mins = 9 * 60; mins < 17 * 60; mins += 30) {
+    var h = Math.floor(mins / 60);
+    var m = mins % 60;
+    var slotDate = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, 0, 0);
+    if (slotDate <= minLead) continue;
+    list.push({ dateObj: slotDate, iso: slotDate.toISOString() });
+  }
+  return list;
+}
+function isDateSelectable(y, m, d) {
+  var now = new Date();
+  var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  var target = new Date(y, m, d);
+  var dow = target.getDay();
+  if (dow === 0 || dow === 6) return false;
+  if (target < todayStart) return false;
+  if (target.getTime() === todayStart.getTime()) {
+    return buildFallbackSlots(toDateStr(y, m, d)).length > 0;
+  }
+  return true;
+}
+
+function renderCalendar() {
+  var now = new Date();
+  var curY = now.getFullYear();
+  var curM = now.getMonth();
+  var todayStr = toDateStr(curY, curM, now.getDate());
+  var firstOfMonth = new Date(state.viewYear, state.viewMonth, 1);
+  monthLabelEl.textContent = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(firstOfMonth);
+  prevBtn.disabled = (state.viewYear < curY) || (state.viewYear === curY && state.viewMonth <= curM);
+
+  var firstDow = firstOfMonth.getDay();
+  var daysInMonth = new Date(state.viewYear, state.viewMonth + 1, 0).getDate();
+  daysEl.innerHTML = "";
+  var frag = document.createDocumentFragment();
+  for (var i = 0; i < firstDow; i++) {
+    var pad = document.createElement("span");
+    pad.className = "cal-pad";
+    pad.setAttribute("aria-hidden", "true");
+    frag.appendChild(pad);
+  }
+  for (var day = 1; day <= daysInMonth; day++) {
+    var dateStr = toDateStr(state.viewYear, state.viewMonth, day);
+    var selectable = isDateSelectable(state.viewYear, state.viewMonth, day);
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "cal-day";
+    if (dateStr === todayStr) btn.classList.add("is-today");
+    if (dateStr === state.selectedDate) btn.classList.add("is-selected");
+    btn.dataset.date = dateStr;
+    btn.textContent = String(day);
+    btn.disabled = !selectable;
+    btn.setAttribute("aria-pressed", dateStr === state.selectedDate ? "true" : "false");
+    btn.setAttribute("aria-label", new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }).format(new Date(state.viewYear, state.viewMonth, day)));
+    if (selectable) {
+      btn.addEventListener("click", (function (ds) {
+        return function () { selectDate(ds); };
+      })(dateStr));
+    }
+    frag.appendChild(btn);
+  }
+  daysEl.appendChild(frag);
+}
+
+function fetchAvailableSlots(calLink, dateStr) {
+  var cacheKey = calLink + "|" + dateStr;
+  if (state.slotCache[cacheKey]) return Promise.resolve(state.slotCache[cacheKey]);
+  var parts = calLink.split("/");
+  var username = parts[0];
+  var eventSlug = parts[1] || "30min";
+  var startLocal = parseDateStr(dateStr);
+  var endLocal = new Date(startLocal.getFullYear(), startLocal.getMonth(), startLocal.getDate(), 23, 59, 59, 999);
+  var fallback = buildFallbackSlots(dateStr);
+  if (typeof AbortController === "undefined" || typeof fetch === "undefined") {
+    state.slotCache[cacheKey] = fallback;
+    return Promise.resolve(fallback);
+  }
+  var ctrl = new AbortController();
+  var timer = setTimeout(function () { ctrl.abort(); }, 650);
+  var url = "https://api.cal.com/v2/slots/available?startTime=" + encodeURIComponent(startLocal.toISOString()) + "&endTime=" + encodeURIComponent(endLocal.toISOString()) + "&eventTypeSlug=" + encodeURIComponent(eventSlug) + "&usernameList=" + encodeURIComponent(username);
+  return fetch(url, { signal: ctrl.signal, headers: { "cal-api-version": "2024-08-13" } })
+    .then(function (res) {
+      clearTimeout(timer);
+      if (!res.ok) throw new Error("cal_slots_http");
+      return res.json();
+    })
+    .then(function (json) {
+      var raw = json && json.data && json.data.slots && json.data.slots[dateStr];
+      if (!Array.isArray(raw) || !raw.length) return fallback;
+      var nowLead = new Date(Date.now() + 15 * 60000);
+      var parsed = raw.map(function (item) {
+        var iso = typeof item === "string" ? item : (item && item.time);
+        var d = iso ? new Date(iso) : null;
+        return d && !isNaN(d.getTime()) && d > nowLead ? { dateObj: d, iso: d.toISOString() } : null;
+      }).filter(Boolean);
+      var out = parsed.length ? parsed : fallback;
+      state.slotCache[cacheKey] = out;
+      return out;
+    })
+    .catch(function () {
+      clearTimeout(timer);
+      state.slotCache[cacheKey] = fallback;
+      return fallback;
+    });
+}
+
+function renderSlots(slots) {
+  state.slots = slots;
+  slotGridEl.innerHTML = "";
+  if (!slots.length) {
+    var empty = document.createElement("p");
+    empty.className = "slot-status";
+    empty.textContent = "No times left for this date. Please pick another day.";
+    slotGridEl.appendChild(empty);
+    return;
+  }
+  var frag = document.createDocumentFragment();
+  slots.forEach(function (slotObj) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "slot-btn";
+    var isChosen = state.selectedSlot && state.selectedSlot.iso === slotObj.iso;
+    if (isChosen) btn.classList.add("is-selected");
+    btn.setAttribute("aria-pressed", isChosen ? "true" : "false");
+    btn.textContent = formatSlotTime(slotObj, state.timeFormat);
+    btn.addEventListener("click", function () { selectSlot(slotObj); });
+    frag.appendChild(btn);
+  });
+  slotGridEl.appendChild(frag);
+}
+
+function selectDate(dateStr) {
+  state.selectedDate = dateStr;
+  state.selectedSlot = null;
+  renderCalendar();
+  promptEl.hidden = true;
+  slotDrawerEl.classList.add("is-open");
+  slotDrawerEl.setAttribute("aria-hidden", "false");
+  slotDrawerEl.inert = false;
+  slotDrawerEl.removeAttribute("inert");
+  var tz = getTzLabel();
+  slotDateLabelEl.innerHTML = "";
+  slotDateLabelEl.appendChild(document.createTextNode(formatDateHeading(dateStr)));
+  if (tz) {
+    var tzSpan = document.createElement("span");
+    tzSpan.className = "slot-tz";
+    tzSpan.textContent = "(" + tz + ")";
+    slotDateLabelEl.appendChild(tzSpan);
+  }
+  var cacheKey = HOSTS[state.host] + "|" + dateStr;
+  if (state.slotCache[cacheKey]) {
+    renderSlots(state.slotCache[cacheKey]);
+    return;
+  }
+  slotGridEl.innerHTML = '<p class="slot-status">Checking availability...</p>';
+  var seq = ++state.requestSeq;
+  fetchAvailableSlots(HOSTS[state.host], dateStr).then(function (slots) {
+    if (seq !== state.requestSeq || state.selectedDate !== dateStr) return;
+    renderSlots(slots);
+  });
+}
+
+function selectSlot(slotObj) {
+  state.selectedSlot = slotObj;
+  pickerStage.hidden = true;
+  embedStage.hidden = false;
+  embedSummaryEl.textContent = formatDateHeading(state.selectedDate) + " at " + formatSlotTime(slotObj, state.timeFormat);
+  loadCal(HOSTS[state.host], state.selectedDate, slotObj);
+  backBtn.focus();
+}
+
+function returnToCalendar() {
+  document.getElementById("cal-booking").innerHTML = "";
+  embedStage.hidden = true;
+  pickerStage.hidden = false;
+  renderSlots(state.slots);
+  var focusTarget = slotGridEl.querySelector(".slot-btn.is-selected") || daysEl.querySelector(".cal-day.is-selected") || prevBtn;
+  if (focusTarget) focusTarget.focus();
+}
+
+function loadCal(calLink, dateStr, slotObj) {
   var el = document.getElementById("cal-booking");
   el.innerHTML = "";
+  var cfg = {
+    layout: "month_view",
+    hideBranding: true,
+    theme: "light",
+    notes: "Service: " + SVC.name,
+    "metadata[service]": slug
+  };
+  if (dateStr) {
+    cfg.month = dateStr.slice(0, 7);
+    cfg.date = dateStr;
+  }
+  if (slotObj && slotObj.iso) {
+    cfg.slot = slotObj.iso;
+  }
   Cal("inline", {
     elementOrSelector: "#cal-booking",
     calLink: calLink,
-    config: { layout: "month_view", hideBranding: true, theme: "light" }
+    /* config keys become booking-form prefill: notes -> "Additional notes", metadata[service] -> stored on the booking */
+    config: cfg
   });
   Cal("ui", {
     theme: "light",
@@ -348,10 +835,71 @@ function switchCal(btn) {
   document.querySelectorAll(".book-tab").forEach(function (t) { t.classList.remove("active"); t.setAttribute("aria-pressed", "false"); });
   btn.classList.add("active");
   btn.setAttribute("aria-pressed", "true");
-  loadCal(btn.dataset.cal);
+  state.host = btn.dataset.host;
+  if (!embedStage.hidden && state.selectedSlot) {
+    loadCal(HOSTS[state.host], state.selectedDate, state.selectedSlot);
+  } else if (state.selectedDate) {
+    selectDate(state.selectedDate);
+  }
 }
 
-loadCal("benquerent/30min");
+prevBtn.addEventListener("click", function () {
+  if (prevBtn.disabled) return;
+  if (state.viewMonth === 0) { state.viewYear -= 1; state.viewMonth = 11; }
+  else { state.viewMonth -= 1; }
+  renderCalendar();
+});
+nextBtn.addEventListener("click", function () {
+  if (state.viewMonth === 11) { state.viewYear += 1; state.viewMonth = 0; }
+  else { state.viewMonth += 1; }
+  renderCalendar();
+});
+document.querySelectorAll(".fmt-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    state.timeFormat = btn.dataset.fmt;
+    document.querySelectorAll(".fmt-btn").forEach(function (b) {
+      var active = b === btn;
+      b.classList.toggle("active", active);
+      b.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+    if (state.slots.length) renderSlots(state.slots);
+  });
+});
+backBtn.addEventListener("click", returnToCalendar);
+
+/* Top ribbon dropdown keyboard/click support alongside hover + focus-within */
+(function () {
+  var items = document.querySelectorAll(".nav-item");
+  function closeAll(except) {
+    items.forEach(function (item) {
+      if (item !== except) {
+        item.classList.remove("is-open");
+        var tr = item.querySelector(".nav-trigger");
+        if (tr) tr.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+  items.forEach(function (item) {
+    var tr = item.querySelector(".nav-trigger");
+    if (!tr) return;
+    tr.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var open = !item.classList.contains("is-open");
+      closeAll(item);
+      item.classList.toggle("is-open", open);
+      tr.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
+  document.addEventListener("click", function () { closeAll(null); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeAll(null);
+  });
+})();
+
+renderCalendar();
 </script>
+<!-- STAGING-ONLY: DESIGN SYSTEM PANEL — REMOVE BEFORE MERGING/DEPLOYING TO MAIN -->
+<script src="/staging-ds-panel.js"></script>
+<!-- /STAGING-ONLY -->
 </body>
 </html>

@@ -2,37 +2,49 @@
 <html lang="en" data-theme="dark" data-accent="teal">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>AI-Powered Virtual Assistants — Querent</title>
 <meta name="description" content="Place an AI-supercharged VA in your business. Querent combines trained virtual assistants with custom automations so your team runs faster from day one." />
 <link rel="icon" type="image/svg+xml" href="/assets/querent-logo-flat.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&amp;family=Source+Sans+3:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
 <script type="text/javascript">
 (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, [L, namespace, ar[2]]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
 Cal("init", "30min", { origin: "https://cal.com" });
 Cal.ns["30min"]("ui", { theme: "dark", styles: { branding: { brandColor: "#2563EB" } }, hideEventTypeDetails: true, layout: "month_view" });
 </script>
 <style>
+/* LOCAL-MOD LM-0002: brand colour variables. Values are identical to the literals they replace, so the page looks the same by default.
+   The staging design-system preview can override them to try other palettes (see staging-ds-panel.js). */
+:root {
+  --c-night: #0A0B0E; --c-on-night: #ECEEF2; --c-slate-400: #94A3B8; --c-slate-500: #64748B;
+  --c-blue-300: #93C5FD; --c-blue-400: #60A5FA; --c-blue-600: #2563EB; --c-blue-700: #1D4ED8;
+  --c-navy-900: #0D1B38; --c-navy-800: #152C5B; --c-cyan-500: #06B6D4; --c-cyan-300: #22D3EE;
+  --c-panel-light: #E8EEFA; --c-panel-dark-end: #0B1226; --c-panel-dark-start: #111C38; --c-canvas: #F4F4F2;
+  --rgb-blue-600: 37 99 235; --rgb-blue-300: 147 197 253; --rgb-blue-700: 29 78 216; --rgb-cyan-500: 6 182 212;
+  --rgb-navy-800: 21 44 91; --rgb-navy-900: 13 27 56; --rgb-night: 10 11 14; --rgb-blue-400: 96 165 250; --rgb-cyan-300: 34 211 238;
+  --c-va-accent: oklch(0.72 0.14 185); --c-va-accent-2: oklch(0.65 0.12 195);
+}
+
 /* ================================================================
    Querent — VA Offer Landing Page
-   Design system: Querent AI (dark, teal accent, Geist)
+   Design system: Querent AI (dark, teal accent, Bricolage Grotesque + Source Sans 3)
    ================================================================ */
 
 /* ---------- Tokens ---------- */
 :root {
-  --bg: #0A0B0E;
+  --bg: var(--c-night);
   --bg-elev: #13151A;
   --bg-elev-2: #1B1E25;
-  --ink: #ECEEF2;
+  --ink: var(--c-on-night);
   --ink-dim: #8A8F99;
   --ink-mute: #5A5F69;
   --line: rgba(255,255,255,0.08);
   --line-strong: rgba(255,255,255,0.16);
-  --accent: oklch(0.72 0.14 185);
-  --accent-2: oklch(0.65 0.12 195);
-  --accent-soft: oklch(0.72 0.14 185 / 0.14);
+  --accent: var(--c-va-accent);
+  --accent-2: var(--c-va-accent-2);
+  --accent-soft: color-mix(in oklab, var(--c-va-accent) 14%, transparent);
   --ok: oklch(0.78 0.16 150);
   --maxw: 1280px;
   --pad: 64px;
@@ -41,15 +53,15 @@ Cal.ns["30min"]("ui", { theme: "dark", styles: { branding: { brandColor: "#2563E
   --radius-sm: 8px;
 }
 [data-theme="light"] {
-  --bg: #F4F4F2;
+  --bg: var(--c-canvas);
   --bg-elev: #FFFFFF;
   --bg-elev-2: #F8F8F6;
-  --ink: #0A0B0E;
+  --ink: var(--c-night);
   --ink-dim: #5A5F69;
   --ink-mute: #8A8F99;
   --line: rgba(0,0,0,0.10);
   --line-strong: rgba(0,0,0,0.18);
-  --accent-soft: oklch(0.72 0.14 185 / 0.10);
+  --accent-soft: color-mix(in oklab, var(--c-va-accent) 10%, transparent);
 }
 
 /* ---------- Base ---------- */
@@ -58,13 +70,16 @@ html, body { margin: 0; padding: 0; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-size: 16px;
   line-height: 1.5;
   letter-spacing: -0.005em;
+}
+h1, h2, h3, .h1, .h2, .h3, .title, .why-now-headline, .faq-title, .cta-h2, .proc2-card-title, .stat-num, .value-num, .case-stat-num, .logo-word {
+  font-family: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
 }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; }
@@ -74,7 +89,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 
 /* ---------- Header ---------- */
 .hdr {
-  position: sticky; top: 0; z-index: 50;
+  position: sticky; top: 0; z-index: 60; overflow: visible;
   background: color-mix(in oklab, var(--bg) 80%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -99,9 +114,61 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   background: var(--bg); border-radius: 3px;
 }
 .logo-word { font-size: 18px; }
-.nav { display: flex; gap: 32px; }
-.nav a { color: var(--ink-dim); font-size: 14px; font-weight: 600; transition: color .15s ease; }
-.nav a:hover, .nav a.is-active { color: var(--ink); }
+.nav { display: flex; align-items: center; gap: 32px; }
+.nav > a,
+.nav-trigger {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 0;
+  color: var(--ink-dim); font-size: 14px; font-weight: 600;
+  background: transparent; border: 0; font-family: inherit; line-height: 1.2;
+  cursor: pointer; position: relative;
+  transition: color var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.nav > a:hover, .nav > a.is-active,
+.nav-trigger:hover, .nav-trigger.is-active,
+.nav-item:hover > .nav-trigger, .nav-item:focus-within > .nav-trigger { color: var(--ink); }
+.nav > a.is-active::after,
+.nav-trigger.is-active::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 2px; background: var(--ink); border-radius: 2px;
+}
+.nav-item { position: relative; display: inline-flex; align-items: center; }
+.nav-chev {
+  width: 14px; height: 14px; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform var(--dur-fast, 240ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.nav-item:hover .nav-chev,
+.nav-item:focus-within .nav-chev { transform: rotate(180deg); }
+.nav-dd {
+  position: absolute; top: calc(100% + 8px); left: -12px; min-width: 248px;
+  padding: 8px; border-radius: 16px;
+  background: linear-gradient(165deg, var(--c-panel-dark-start) 0%, var(--c-night) 100%);
+  border: 1px solid rgb(var(--rgb-blue-300) / .16);
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, .72);
+  color: var(--c-on-night);
+  display: flex; flex-direction: column; gap: 2px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translate3d(0, -6px, 0);
+  transition: opacity var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1)), transform var(--dur-fast, 240ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)), visibility 0s linear var(--dur-fast, 240ms);
+  z-index: 70;
+}
+.nav-dd::before { content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px; }
+.nav-item:hover .nav-dd,
+.nav-item:focus-within .nav-dd {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: translate3d(0, 0, 0); transition-delay: 0s;
+}
+.nav-dd a {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 38px; padding: 8px 12px; border-radius: 10px;
+  font-size: 14px; font-weight: 500; color: var(--c-slate-400);
+  white-space: nowrap;
+  transition: background-color var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1)), color var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.nav-dd a:hover, .nav-dd a:focus-visible { background: rgb(var(--rgb-blue-300) / .10); color: var(--c-on-night); }
+.nav-dd a.is-active { background: rgb(var(--rgb-blue-600) / .16); color: var(--c-on-night); }
+.nav-dd-sep { height: 1px; background: rgb(var(--rgb-blue-300) / .12); margin: 4px 8px; }
 .hdr-actions { display: flex; align-items: center; gap: 12px; }
 .theme-toggle {
   width: 36px; height: 36px;
@@ -124,24 +191,24 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 /* ---------- Buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
-  padding: 12px 20px;
-  border-radius: 10px;
+  padding: var(--pad-button, 12px 20px);
+  border-radius: var(--r-btn, 10px);
   font-size: 14px; font-weight: 500;
-  border: 1px solid transparent;
+  border: var(--bw-button, 1px) solid transparent;
   transition: all 0.15s ease;
   white-space: nowrap;
   gap: 8px;
 }
-.btn-lg { padding: 16px 28px; font-size: 16px; border-radius: 12px; }
+.btn-lg { padding: 16px 28px; font-size: 16px; border-radius: var(--r-btn, 12px); }
 .btn-primary {
-  background: var(--accent); color: #0A0B0E;
-  border-color: var(--accent);
-  box-shadow: 0 8px 24px -8px var(--accent);
+  background: var(--accent); color: var(--c-night);
+  border-color: var(--bc-button, var(--accent));
+  box-shadow: 0 calc(8px * var(--shk-button, 1)) calc(24px * var(--shk-button, 1)) calc(-8px * var(--shk-button, 1)) var(--accent);
 }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 32px -8px var(--accent); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 calc(12px * var(--shk-button, 1)) calc(32px * var(--shk-button, 1)) calc(-8px * var(--shk-button, 1)) var(--accent); }
 .btn-ghost {
   background: transparent; color: var(--ink);
-  border-color: var(--line-strong);
+  border-color: var(--bc-button, var(--line-strong));
 }
 .btn-ghost:hover { border-color: var(--ink); }
 
@@ -166,7 +233,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 :is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--cal { transform: translate3d(0, -1.5px, 0); }
 :is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--mail { transform: translate3d(0, -1px, 0) scale(1.06); }
 @media (prefers-reduced-motion: reduce) {
-  .cta-ico { transition: none; }
+  .cta-ico, .nav-dd, .nav-chev { transition: none !important; }
+  .nav-item:hover .nav-dd, .nav-item:focus-within .nav-dd { transform: none; }
   :is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico { transform: none; }
 }
 
@@ -177,16 +245,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   padding: 0 var(--pad);
 }
 .section { margin-top: var(--gap-section); }
-
-.eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: 'Geist Mono', monospace;
-  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 20px;
-}
-.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-mute); display: inline-block; }
-.dot-live { background: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 25%, transparent); }
 
 .h1 {
   font-size: clamp(42px, 5.6vw, 78px);
@@ -217,17 +275,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   margin: 0 auto;
   padding: 100px var(--pad) 60px;
 }
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--accent-soft);
-  border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
-  color: var(--accent);
-  font-family: 'Geist Mono', monospace;
-  font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase;
-  padding: 6px 12px; border-radius: 100px;
-  margin-bottom: 32px;
-}
-.hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: var(--gap-button, 12px); }
 
 /* ---------- Stats strip ---------- */
 .stats-strip {
@@ -235,10 +283,11 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: var(--bw-panel, 1px) solid var(--bc-panel, var(--line));
+  border-radius: var(--r-panel, var(--radius));
   overflow: hidden;
   margin-top: 72px;
+  box-shadow: 0 calc(24px * var(--shk-panel, 0)) calc(56px * var(--shk-panel, 0)) calc(-28px * var(--shk-panel, 0)) rgba(0,0,0,0.45);
 }
 .stat-item {
   background: var(--bg-elev);
@@ -256,20 +305,21 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 .steps-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  gap: var(--gap-card, 24px);
   margin-top: 48px;
 }
 .step-card {
   background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 32px 28px;
+  border: var(--bw-card, 1px) solid var(--bc-card, var(--line));
+  border-radius: var(--r-card, var(--radius));
+  padding: var(--pad-card, 32px 28px);
   display: flex; flex-direction: column; gap: 16px;
   transition: border-color 0.2s ease;
+  box-shadow: 0 calc(18px * var(--shk-card, 0)) calc(40px * var(--shk-card, 0)) calc(-24px * var(--shk-card, 0)) rgba(0,0,0,0.45);
 }
 .step-card:hover { border-color: var(--line-strong); }
 .step-num {
-  font-family: 'Geist Mono', monospace;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase;
   color: var(--accent);
   background: var(--accent-soft);
@@ -289,14 +339,15 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 .offer-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: var(--gap-card, 24px);
   margin-top: 48px;
 }
 .offer-card {
   background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 36px;
+  border: var(--bw-card, 1px) solid var(--bc-card, var(--line));
+  border-radius: var(--r-card, var(--radius));
+  padding: var(--pad-card, 36px);
+  box-shadow: 0 calc(18px * var(--shk-card, 0)) calc(40px * var(--shk-card, 0)) calc(-24px * var(--shk-card, 0)) rgba(0,0,0,0.45);
 }
 .offer-card.highlight {
   border-color: color-mix(in oklab, var(--accent) 40%, transparent);
@@ -304,7 +355,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 }
 .offer-tag {
   display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'Geist Mono', monospace;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
   padding: 4px 10px; border-radius: 4px;
   margin-bottom: 20px;
@@ -334,20 +385,21 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 .usecase-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: var(--gap-card, 20px);
   margin-top: 48px;
 }
 .usecase-card {
   background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 28px;
+  border: var(--bw-card, 1px) solid var(--bc-card, var(--line));
+  border-radius: var(--r-card, var(--radius));
+  padding: var(--pad-card, 28px);
   transition: border-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 calc(18px * var(--shk-card, 0)) calc(40px * var(--shk-card, 0)) calc(-24px * var(--shk-card, 0)) rgba(0,0,0,0.45);
 }
 .usecase-card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
 .usecase-icon { font-size: 28px; margin-bottom: 16px; }
 .usecase-role {
-  font-family: 'Geist Mono', monospace;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--accent); margin-bottom: 8px;
 }
@@ -358,8 +410,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   grid-template-columns: 1fr 1fr;
   gap: 2px;
   background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: var(--bw-panel, 1px) solid var(--bc-panel, var(--line));
+  border-radius: var(--r-panel, var(--radius));
   overflow: hidden;
   margin-top: 48px;
 }
@@ -378,7 +430,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 .diff-row > div:last-child { font-size: 14px; }
 .diff-header > div {
   background: var(--bg-elev-2) !important;
-  font-family: 'Geist Mono', monospace;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--ink-dim);
   padding: 16px 28px;
@@ -390,22 +442,23 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 /* ---------- CTA banner ---------- */
 .cta-banner {
   background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 72px 64px;
+  border: var(--bw-panel, 1px) solid var(--bc-panel, var(--line));
+  border-radius: var(--r-panel, var(--radius));
+  padding: var(--pad-panel, 72px 64px);
   text-align: center;
   margin-top: var(--gap-section);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 calc(28px * var(--shk-panel, 0)) calc(64px * var(--shk-panel, 0)) calc(-32px * var(--shk-panel, 0)) rgba(0,0,0,0.5);
 }
 .cta-banner::before {
   content: "";
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 50% -20%, oklch(0.72 0.14 185 / 0.15) 0%, transparent 65%);
+  background: radial-gradient(ellipse at 50% -20%, color-mix(in oklab, var(--c-va-accent) 15%, transparent) 0%, transparent 65%);
   pointer-events: none;
 }
 .cta-banner-inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
-.cta-banner-ctas { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.cta-banner-ctas { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--gap-button, 12px); margin-top: 32px; }
 
 /* ---------- Footer ---------- */
 footer {
@@ -438,6 +491,11 @@ footer a:hover { color: var(--ink); }
   .hero-wrap { padding-top: 64px; }
   .h1 { font-size: clamp(36px, 9vw, 52px); }
   .nav { display: none; }
+  /* LM-0002 mobile: tap targets >= 44px */
+  .hdr .btn-ico-m { font-size: 0; gap: 0; width: 44px; height: 44px; min-height: 44px; padding: 0; flex: none; }
+  .hdr .btn-ico-m .cta-ico { width: 20px; height: 20px; }
+  .logo, .hdr .btn, .theme-toggle { min-height: 44px; }
+  .theme-toggle { min-width: 44px; }
 }
 </style>
 </head>
@@ -451,22 +509,40 @@ footer a:hover { color: var(--ink); }
       <div class="logo-mark"></div>
       <span class="logo-word">Querent</span>
     </a>
-    <nav class="nav">
-      <a href="/index.html">Home</a>
-      <a href="/menu.html">Solutions</a>
-      <a href="/va.html" class="is-active">AI VAs</a>
-      <a href="/booking.html">Book a Call</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <div class="nav-item">
+        <a href="menu.html" class="nav-trigger is-active" aria-haspopup="true">Services<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
+        <div class="nav-dd" role="menu" aria-label="Services">
+          <a href="menu.html" role="menuitem">All Services</a>
+          <a href="menu.html#concierge" role="menuitem">AI Concierge</a>
+          <a href="menu.html#workflow" role="menuitem">Workflow Automation</a>
+          <a href="menu.html#leadgen" role="menuitem">Outbound &amp; Lead Gen</a>
+          <a href="menu.html#internal" role="menuitem">Internal Ops Agents</a>
+          <a href="menu.html#consult" role="menuitem">Strategy &amp; Advisory</a>
+          <span class="nav-dd-sep" aria-hidden="true"></span>
+          <a href="va.html" class="is-active" role="menuitem">AI Virtual Assistants</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <button type="button" class="nav-trigger" aria-haspopup="true">Company<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="nav-dd" role="menu" aria-label="Company">
+          <a href="index.html#why-now" role="menuitem">Why Now</a>
+          <a href="index.html#case" role="menuitem">Case Studies</a>
+          <a href="index.html#process" role="menuitem">Process</a>
+          <a href="index.html#faq" role="menuitem">FAQ</a>
+          <span class="nav-dd-sep" aria-hidden="true"></span>
+          <a href="booking.html" role="menuitem">Book a Call</a>
+        </div>
+      </div>
     </nav>
     <div class="hdr-actions">
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
         <svg class="theme-toggle-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
         <svg class="theme-toggle-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
-      <a href="/booking.html"
-         data-cal-link="benquerent/30min"
-         data-cal-namespace="30min"
-         data-cal-config='{"layout":"month_view"}'
-         class="btn btn-primary">
+      <a href="/booking.html?service=va"
+         class="btn btn-primary btn-ico-m" aria-label="Book a call">
         <svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
         Book a call
       </a>
@@ -476,10 +552,6 @@ footer a:hover { color: var(--ink); }
 
 <!-- ── Hero ── -->
 <section class="hero-wrap wrap">
-  <div class="hero-badge">
-    <span class="dot dot-live"></span>
-    New offer — VA + Automation bundle
-  </div>
   <h1 class="h1" style="max-width:900px">
     Your next hire is<br><em>AI-supercharged</em>
   </h1>
@@ -487,10 +559,7 @@ footer a:hover { color: var(--ink); }
     Querent places trained virtual assistants in your business — and wires them with custom automations from day one. Less hand-holding. More output.
   </p>
   <div class="hero-ctas">
-    <a href="/booking.html"
-       data-cal-link="benquerent/30min"
-       data-cal-namespace="30min"
-       data-cal-config='{"layout":"month_view"}'
+    <a href="/booking.html?service=va"
        class="btn btn-primary btn-lg">
       Get your AI VA
       <svg class="cta-ico cta-ico--right" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -517,7 +586,6 @@ footer a:hover { color: var(--ink); }
 
 <!-- ── How it works ── -->
 <section class="section wrap" id="how-it-works">
-  <div class="eyebrow"><span class="dot"></span> How it works</div>
   <h2 class="h2">From intake to <em>in your Slack</em> in days</h2>
   <p class="lede lede-sm">No long recruiting cycles. We match, train, and wire up your VA with the tools your business already runs on.</p>
 
@@ -551,7 +619,6 @@ footer a:hover { color: var(--ink); }
 
 <!-- ── What's included ── -->
 <section class="section wrap" id="offer">
-  <div class="eyebrow"><span class="dot"></span> What's included</div>
   <h2 class="h2">The full bundle — <em>VA + automations</em></h2>
 
   <div class="offer-grid">
@@ -588,7 +655,6 @@ footer a:hover { color: var(--ink); }
 
 <!-- ── Use cases ── -->
 <section class="section wrap" id="use-cases">
-  <div class="eyebrow"><span class="dot"></span> Use cases</div>
   <h2 class="h2">Works across every <em>type of business</em></h2>
 
   <div class="usecase-grid">
@@ -633,7 +699,6 @@ footer a:hover { color: var(--ink); }
 
 <!-- ── Why different ── -->
 <section class="section wrap" id="compare">
-  <div class="eyebrow"><span class="dot"></span> Why Querent VAs</div>
   <h2 class="h2">Not just a hire. A <em>system</em>.</h2>
   <p class="lede lede-sm">Most VA agencies drop someone in your Slack and call it done. We build the infrastructure around them first.</p>
 
@@ -669,14 +734,10 @@ footer a:hover { color: var(--ink); }
 <div class="wrap">
   <div class="cta-banner">
     <div class="cta-banner-inner">
-      <div class="eyebrow" style="justify-content:center"><span class="dot dot-live"></span> Get started</div>
       <h2 class="h2">Ready to place your<br><em>AI-supercharged VA?</em></h2>
       <p class="lede-sm" style="text-align:center;max-width:440px;margin:12px auto 0">Book a 30-minute call. We'll map your ops, identify automation wins, and match you with the right person.</p>
       <div class="cta-banner-ctas">
-        <a href="/booking.html"
-           data-cal-link="benquerent/30min"
-           data-cal-namespace="30min"
-           data-cal-config='{"layout":"month_view"}'
+        <a href="/booking.html?service=va"
            class="btn btn-primary btn-lg">
           <svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
           Book a free strategy call
@@ -707,5 +768,8 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
 });
 </script>
+<!-- STAGING-ONLY: DESIGN SYSTEM PANEL — REMOVE BEFORE MERGING/DEPLOYING TO MAIN -->
+<script src="/staging-ds-panel.js"></script>
+<!-- /STAGING-ONLY -->
 </body>
 </html>
