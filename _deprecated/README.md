@@ -8,6 +8,8 @@ Note: the GitHub repo itself is public, so these files can still be read on GitH
 - `menu-v1-priced.html`: the services page as it was on 2026-11-26 (staging `fc4cf27`), with per-offer price ranges.
   Archived because those prices were placeholders and didn't reflect current market rates. Kept in case parts of
   this version are needed later.
+- `va-v1-single-offer.html`: the AI Virtual Assistants page as it was before the v0.5 two-option redesign
+  (staging `00fbdae`): a single VA + automations bundle and the "standard VA agency" comparison table.
 
 ## Notes for the querent.ai site
 

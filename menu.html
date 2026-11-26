@@ -513,6 +513,36 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
   .hdr .btn-primary:hover { background: var(--c-blue-700); }
 }
 </style>
+<style id="v05-light-header">
+/* v0.5: header colour-matches the page canvas instead of the dark ribbon (solid tint + blur, not transparent) */
+.hdr {
+  background: rgb(244 244 242 / 0.88); color: var(--c-night);
+  border-bottom: 1px solid rgb(21 44 91 / 0.08);
+  box-shadow: 0 8px 24px -22px rgb(13 27 56 / 0.35);
+  --ink: var(--c-night); --ink-dim: #5A5F69; --line: rgb(21 44 91 / 0.10);
+  --btn-bg: var(--c-navy-900); --btn-line: var(--c-navy-900);
+}
+.hdr .logo, .hdr .logo-word { color: var(--c-navy-900); }
+.hdr .nav > a, .hdr .nav-trigger { color: #5A6275; }
+.hdr .nav > a:hover, .hdr .nav > a.is-active,
+.hdr .nav-trigger:hover, .hdr .nav-trigger.is-active,
+.hdr .nav-item:hover > .nav-trigger, .hdr .nav-item:focus-within > .nav-trigger { color: var(--c-navy-900); }
+.hdr .nav > a.is-active::after, .hdr .nav-trigger.is-active::after { background: var(--c-navy-900); }
+.hdr .nav-dd {
+  background: #FFFFFF; color: var(--c-night);
+  border: 1px solid rgb(21 44 91 / 0.10);
+  box-shadow: 0 24px 48px -20px rgb(13 27 56 / 0.28);
+}
+.hdr .nav-dd a { color: #4B5363; }
+.hdr .nav-dd a:hover, .hdr .nav-dd a:focus-visible { background: rgb(37 99 235 / 0.07); color: var(--c-navy-900); }
+.hdr .nav-dd a.is-active { background: rgb(37 99 235 / 0.11); color: var(--c-navy-900); }
+.hdr .nav-dd-sep { background: rgb(21 44 91 / 0.08); }
+.hdr .hdr-menu { color: var(--c-navy-900); }
+.hdr .m-nav { background: #F4F4F2; border-bottom: 1px solid rgb(21 44 91 / 0.10); }
+.hdr .m-nav-grp { color: #7A8192; border-top-color: rgb(21 44 91 / 0.08); }
+.hdr .m-nav a { color: #2B3345; border-bottom-color: rgb(21 44 91 / 0.06); }
+.hdr .m-nav a:hover, .hdr .m-nav a:focus-visible { color: var(--c-navy-900); }
+</style>
 </head>
 <body data-active="hero">
 <div class="ambient" aria-hidden="true"><div class="amb amb-hero"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-concierge"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-workflow"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-leadgen"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-internal"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-consult"><div class="blob b1"></div><div class="blob b2"></div></div></div>
@@ -550,7 +580,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
           <a href="va.html" class="nav-trigger" aria-haspopup="true">AI Virtual Assistants<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
           <div class="nav-dd" role="menu" aria-label="AI Virtual Assistants">
             <a href="va.html#how-it-works" role="menuitem">How It Works</a>
-            <a href="va.html#offer" role="menuitem">What You Get</a>
+            <a href="va.html#offer" role="menuitem">Two Options</a>
             <a href="va.html#use-cases" role="menuitem">Use Cases</a>
             <a href="va.html#compare" role="menuitem">Compare</a>
           </div>

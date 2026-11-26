@@ -553,6 +553,16 @@ body::before {
 }
 .hero-stats .stat-num { color: #FFFFFF; }
 .hero-stats .stat-lbl { color: var(--c-blue-300); }
+/* v0.5: hero body + CTA sized to match the rest of the site; metrics on an even 3-column grid with matched labels */
+@media (min-width: 769px) {
+  .hero-copy .lede { font-size: clamp(19px, 1.45vw, 22px); line-height: 1.5; max-width: 30em; }
+  .hero-copy .hero-cta .btn { font-size: 16px; padding: 16px 26px; min-height: 56px; gap: 10px; }
+  .hero-copy .hero-cta .btn .cta-ico { width: 18px; height: 18px; }
+  .hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; align-items: start; }
+  .hero-stats .stat { gap: 10px; }
+  .hero-stats .stat-num { font-size: clamp(34px, 3vw, 44px); line-height: 1; white-space: nowrap; }
+  .hero-stats .stat-lbl { font-size: 14px; line-height: 1.4; max-width: 24ch; min-height: 2.8em; }
+}
 .band-invert { margin-top: 0; }
 .hero-copy {
   flex: 1;
@@ -2633,6 +2643,36 @@ html.rv .why-now-reveal {
 .cta-list { list-style: disc; padding-left: 18px; }
 .cta-list li { display: list-item; }
 </style>
+<style id="v05-light-header">
+/* v0.5: header colour-matches the page canvas instead of the dark ribbon (solid tint + blur, not transparent) */
+.hdr {
+  background: rgb(244 244 242 / 0.88); color: var(--c-night);
+  border-bottom: 1px solid rgb(21 44 91 / 0.08);
+  box-shadow: 0 8px 24px -22px rgb(13 27 56 / 0.35);
+  --ink: var(--c-night); --ink-dim: #5A5F69; --line: rgb(21 44 91 / 0.10);
+  --btn-bg: var(--c-navy-900); --btn-line: var(--c-navy-900);
+}
+.hdr .logo, .hdr .logo-word { color: var(--c-navy-900); }
+.hdr .nav > a, .hdr .nav-trigger { color: #5A6275; }
+.hdr .nav > a:hover, .hdr .nav > a.is-active,
+.hdr .nav-trigger:hover, .hdr .nav-trigger.is-active,
+.hdr .nav-item:hover > .nav-trigger, .hdr .nav-item:focus-within > .nav-trigger { color: var(--c-navy-900); }
+.hdr .nav > a.is-active::after, .hdr .nav-trigger.is-active::after { background: var(--c-navy-900); }
+.hdr .nav-dd {
+  background: #FFFFFF; color: var(--c-night);
+  border: 1px solid rgb(21 44 91 / 0.10);
+  box-shadow: 0 24px 48px -20px rgb(13 27 56 / 0.28);
+}
+.hdr .nav-dd a { color: #4B5363; }
+.hdr .nav-dd a:hover, .hdr .nav-dd a:focus-visible { background: rgb(37 99 235 / 0.07); color: var(--c-navy-900); }
+.hdr .nav-dd a.is-active { background: rgb(37 99 235 / 0.11); color: var(--c-navy-900); }
+.hdr .nav-dd-sep { background: rgb(21 44 91 / 0.08); }
+.hdr .hdr-menu { color: var(--c-navy-900); }
+.hdr .m-nav { background: #F4F4F2; border-bottom: 1px solid rgb(21 44 91 / 0.10); }
+.hdr .m-nav-grp { color: #7A8192; border-top-color: rgb(21 44 91 / 0.08); }
+.hdr .m-nav a { color: #2B3345; border-bottom-color: rgb(21 44 91 / 0.06); }
+.hdr .m-nav a:hover, .hdr .m-nav a:focus-visible { color: var(--c-navy-900); }
+</style>
 </head>
 <body>
 <div class="app">
@@ -2669,7 +2709,7 @@ html.rv .why-now-reveal {
           <a href="va.html" class="nav-trigger" aria-haspopup="true">AI Virtual Assistants<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
           <div class="nav-dd" role="menu" aria-label="AI Virtual Assistants">
             <a href="va.html#how-it-works" role="menuitem">How It Works</a>
-            <a href="va.html#offer" role="menuitem">What You Get</a>
+            <a href="va.html#offer" role="menuitem">Two Options</a>
             <a href="va.html#use-cases" role="menuitem">Use Cases</a>
             <a href="va.html#compare" role="menuitem">Compare</a>
           </div>
@@ -2699,7 +2739,7 @@ html.rv .why-now-reveal {
       <section class="hero" data-reveal>
         <div class="hero-bg" aria-hidden="true"><span class="hero-blob hero-blob--blue"></span><span class="hero-blob hero-blob--cyan"></span><span class="hero-blob hero-blob--navy"></span><span class="hero-blob hero-blob--ice"></span></div>
         <div class="hero-main-row">
-          <h1 class="hero-headline"><span class="hero-intro">Take back your time with custom</span><span class="hero-typed-line"><em id="hero-typed" data-full="AI Workflows"></em><span id="hero-period" style="opacity:0;color:var(--c-navy-800);font-weight:800;">.</span><span class="hero-typed-caret" id="hero-caret" aria-hidden="true"></span></span></h1>
+          <h1 class="hero-headline"><span class="hero-intro">Take back your time with curated</span><span class="hero-typed-line"><em id="hero-typed" data-full="AI Workflows"></em><span id="hero-period" style="opacity:0;color:var(--c-navy-800);font-weight:800;">.</span><span class="hero-typed-caret" id="hero-caret" aria-hidden="true"></span></span></h1>
           <div class="hero-visual">
             <div class="viz-stage" id="hero-constellation">
               <div class="viz-field">
@@ -2724,9 +2764,9 @@ html.rv .why-now-reveal {
           </div>
         </div>
         <div class="hero-stats">
-          <div class="stat" style="--i:0"><span class="stat-num">$1.4M</span><span class="stat-lbl">saved across clients in '25</span></div>
-          <div class="stat" style="--i:1"><span class="stat-num">38</span><span class="stat-lbl">workflows shipped to production</span></div>
-          <div class="stat" style="--i:2"><span class="stat-num">14d</span><span class="stat-lbl">average time to deploy</span></div>
+          <div class="stat" style="--i:0"><span class="stat-num">138+</span><span class="stat-lbl">workflows shipped to production</span></div>
+          <div class="stat" style="--i:1"><span class="stat-num">14d</span><span class="stat-lbl">average time to integrate</span></div>
+          <div class="stat" style="--i:2"><span class="stat-num">$4.2M+</span><span class="stat-lbl">generated or saved for clients (2026 YTD)</span></div>
         </div>
       </div><!-- end hero-bottom -->
     </section>
@@ -3310,34 +3350,34 @@ html.rv .why-now-reveal {
       <div class="proc2" id="proc2">
         <div class="proc2-rail" role="tablist" aria-label="Four-step path">
           <button class="proc2-node is-active" style="--i:0" role="tab" id="proc2-tab-0" aria-controls="proc2-panel-0" aria-selected="true" data-step="0">
-            <span class="proc2-body"><span class="proc2-bar" aria-hidden="true"><i></i></span><span class="proc2-time"><span class="proc2-sr">Audit, </span>Week 1</span></span>
+            <span class="proc2-body"><span class="proc2-bar" aria-hidden="true"><i></i></span><span class="proc2-time"><span class="proc2-sr">Audit, </span>Phase 1</span></span>
           </button>
           <button class="proc2-node" style="--i:1" role="tab" id="proc2-tab-1" aria-controls="proc2-panel-1" aria-selected="false" tabindex="-1" data-step="1">
-            <span class="proc2-body"><span class="proc2-bar" aria-hidden="true"><i></i></span><span class="proc2-time"><span class="proc2-sr">Strategy, </span>Week 2</span></span>
+            <span class="proc2-body"><span class="proc2-bar" aria-hidden="true"><i></i></span><span class="proc2-time"><span class="proc2-sr">Strategy, </span>Phase 2</span></span>
           </button>
           <button class="proc2-node" style="--i:2" role="tab" id="proc2-tab-2" aria-controls="proc2-panel-2" aria-selected="false" tabindex="-1" data-step="2">
-            <span class="proc2-body"><span class="proc2-bar" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="proc2-time"><span class="proc2-sr">Build, </span>Weeks 3–6</span></span>
+            <span class="proc2-body"><span class="proc2-bar" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="proc2-time"><span class="proc2-sr">Build, </span>Phase 3</span></span>
           </button>
           <button class="proc2-node" style="--i:3" role="tab" id="proc2-tab-3" aria-controls="proc2-panel-3" aria-selected="false" tabindex="-1" data-step="3">
-            <span class="proc2-body"><span class="proc2-bar proc2-bar--open" aria-hidden="true"><i></i></span><span class="proc2-time"><span class="proc2-sr">Deploy, </span>Week 7+</span></span>
+            <span class="proc2-body"><span class="proc2-bar proc2-bar--open" aria-hidden="true"><i></i></span><span class="proc2-time"><span class="proc2-sr">Deploy, </span>Phase 4</span></span>
           </button>
         </div>
         <div class="proc2-cards">
           <div class="proc2-card is-active" role="tabpanel" id="proc2-panel-0" aria-labelledby="proc2-tab-0" data-step="0">
-            <div class="proc2-card-head"><h3 class="proc2-card-title">Audit</h3><span class="proc2-card-week">Week 1</span></div>
-            <div class="proc2-bubble"><span class="proc2-avatar" aria-hidden="true"><img src="/assets/querent-logo-flat.svg" alt="" width="18" height="18"></span><div class="proc2-msg"><span class="proc2-from">Querent <i>· Week 1</i><span class="proc2-dots" aria-hidden="true"><b></b><b></b><b></b></span></span><p class="proc2-card-desc">We inventory every repetitive workflow, score it for AI fit, and surface the top 3 ROI opportunities.</p></div></div>
+            <div class="proc2-card-head"><h3 class="proc2-card-title">Audit</h3><span class="proc2-card-week">Phase 1</span></div>
+            <div class="proc2-bubble"><span class="proc2-avatar" aria-hidden="true"><img src="/assets/querent-logo-flat.svg" alt="" width="18" height="18"></span><div class="proc2-msg"><span class="proc2-from">Querent <i>· Phase 1</i><span class="proc2-dots" aria-hidden="true"><b></b><b></b><b></b></span></span><p class="proc2-card-desc">We inventory every repetitive workflow, score it for AI fit, and surface the top 3 ROI opportunities.</p></div></div>
           </div>
           <div class="proc2-card" role="tabpanel" id="proc2-panel-1" aria-labelledby="proc2-tab-1" data-step="1">
-            <div class="proc2-card-head"><h3 class="proc2-card-title">Strategy</h3><span class="proc2-card-week">Week 2</span></div>
-            <div class="proc2-bubble"><span class="proc2-avatar" aria-hidden="true"><img src="/assets/querent-logo-flat.svg" alt="" width="18" height="18"></span><div class="proc2-msg"><span class="proc2-from">Querent <i>· Week 2</i><span class="proc2-dots" aria-hidden="true"><b></b><b></b><b></b></span></span><p class="proc2-card-desc">Scoped build plan, success metrics, vendor decisions, and a fixed‑price proposal. You sign off on the before/after metric we'll be measured on.</p></div></div>
+            <div class="proc2-card-head"><h3 class="proc2-card-title">Strategy</h3><span class="proc2-card-week">Phase 2</span></div>
+            <div class="proc2-bubble"><span class="proc2-avatar" aria-hidden="true"><img src="/assets/querent-logo-flat.svg" alt="" width="18" height="18"></span><div class="proc2-msg"><span class="proc2-from">Querent <i>· Phase 2</i><span class="proc2-dots" aria-hidden="true"><b></b><b></b><b></b></span></span><p class="proc2-card-desc">Scoped build plan, success metrics, vendor decisions, and a fixed‑price proposal. You sign off on the before/after metric we'll be measured on.</p></div></div>
           </div>
           <div class="proc2-card" role="tabpanel" id="proc2-panel-2" aria-labelledby="proc2-tab-2" data-step="2">
-            <div class="proc2-card-head"><h3 class="proc2-card-title">Build</h3><span class="proc2-card-week">Weeks 3–6</span></div>
-            <div class="proc2-bubble"><span class="proc2-avatar" aria-hidden="true"><img src="/assets/querent-logo-flat.svg" alt="" width="18" height="18"></span><div class="proc2-msg"><span class="proc2-from">Querent <i>· Weeks 3–6</i><span class="proc2-dots" aria-hidden="true"><b></b><b></b><b></b></span></span><p class="proc2-card-desc">We build, test, and stage the system in your stack. Daily Loom updates. Weekly working demos. You see exactly what's being shipped.</p></div></div>
+            <div class="proc2-card-head"><h3 class="proc2-card-title">Build</h3><span class="proc2-card-week">Phase 3</span></div>
+            <div class="proc2-bubble"><span class="proc2-avatar" aria-hidden="true"><img src="/assets/querent-logo-flat.svg" alt="" width="18" height="18"></span><div class="proc2-msg"><span class="proc2-from">Querent <i>· Phase 3</i><span class="proc2-dots" aria-hidden="true"><b></b><b></b><b></b></span></span><p class="proc2-card-desc">We build, test, and stage the system in your stack. Daily Loom updates. Weekly working demos. You see exactly what's being shipped.</p></div></div>
           </div>
           <div class="proc2-card" role="tabpanel" id="proc2-panel-3" aria-labelledby="proc2-tab-3" data-step="3">
-            <div class="proc2-card-head"><h3 class="proc2-card-title">Deploy</h3><span class="proc2-card-week">Week 7+</span></div>
-            <div class="proc2-bubble"><span class="proc2-avatar" aria-hidden="true"><img src="/assets/querent-logo-flat.svg" alt="" width="18" height="18"></span><div class="proc2-msg"><span class="proc2-from">Querent <i>· Week 7+</i><span class="proc2-dots" aria-hidden="true"><b></b><b></b><b></b></span></span><p class="proc2-card-desc">Production launch with monitoring, retraining, and a 21‑day SLA. Hand off to your team or stay on retainer for ongoing tuning, new flows, and strategy hours.</p></div></div>
+            <div class="proc2-card-head"><h3 class="proc2-card-title">Deploy</h3><span class="proc2-card-week">Phase 4</span></div>
+            <div class="proc2-bubble"><span class="proc2-avatar" aria-hidden="true"><img src="/assets/querent-logo-flat.svg" alt="" width="18" height="18"></span><div class="proc2-msg"><span class="proc2-from">Querent <i>· Phase 4</i><span class="proc2-dots" aria-hidden="true"><b></b><b></b><b></b></span></span><p class="proc2-card-desc">Production launch with monitoring, retraining, and a 21‑day SLA. Hand off to your team or stay on retainer for ongoing tuning, new flows, and strategy hours.</p></div></div>
           </div>
         </div>
       </div>
@@ -3824,7 +3864,7 @@ html.rv .why-now-reveal {
       }
     }
 
-    function setStep(idx) {
+    function setStep(idx, fast) {
       cur = idx;
       nodes.forEach(function (n, i) {
         var on = i === idx;
@@ -3834,7 +3874,7 @@ html.rv .why-now-reveal {
         n.tabIndex = on ? 0 : -1;
       });
       cards.forEach(function (c, i) { c.classList.toggle('is-active', i === idx); });
-      typeCard(cards[idx]);
+      typeCard(cards[idx], fast);
       centerActiveNode(idx, true);
     }
     /* Querent "typing": the full text stays in a visually hidden copy for screen readers; a visible copy streams in
@@ -3850,8 +3890,9 @@ html.rv .why-now-reveal {
       var vis = document.createElement('span'); vis.className = 'proc2-typed'; vis.setAttribute('aria-hidden', 'true'); vis.textContent = full;
       p.appendChild(sr); p.appendChild(vis);
     });
-    function typeCard(card) {
+    function typeCard(card, fast) {
       if (reduced || !card) return;
+      var lead = fast ? 90 : 260, step = fast ? 12 : 22;
       clearTimeout(typeTimer); clearInterval(typeTick);
       cards.forEach(function (c) {
         c.classList.remove('is-typing', 'is-thinking');
@@ -3870,10 +3911,10 @@ html.rv .why-now-reveal {
           vis.textContent = words.slice(0, i).join(' ');
           if (i >= words.length) {
             clearInterval(typeTick);
-            typeTimer = setTimeout(function () { card.classList.remove('is-typing'); }, 700);
+            typeTimer = setTimeout(function () { card.classList.remove('is-typing'); }, 500);
           }
-        }, 38);
-      }, 520);
+        }, step);
+      }, lead);
     }
     function schedule() {
       clearTimeout(timer); timer = null;
@@ -3883,7 +3924,7 @@ html.rv .why-now-reveal {
     }
     function select(idx, focusIt) {
       if (!live) return;
-      setStep(idx);
+      setStep(idx, true);
       if (focusIt) nodes[idx].focus();
       schedule();
     }

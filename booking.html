@@ -430,6 +430,110 @@ button { font: inherit; cursor: pointer; }
 .footer-links { gap: 8px clamp(16px, 3vw, 28px); min-width: 0; }
 .footer-links a { overflow-wrap: anywhere; }
 </style>
+<style id="v05-light-header">
+/* v0.5: header colour-matches the page canvas instead of the dark ribbon (solid tint + blur, not transparent) */
+.hdr {
+  background: rgb(244 244 242 / 0.88); color: var(--c-night);
+  border-bottom: 1px solid rgb(21 44 91 / 0.08);
+  box-shadow: 0 8px 24px -22px rgb(13 27 56 / 0.35);
+  --ink: var(--c-night); --ink-dim: #5A5F69; --line: rgb(21 44 91 / 0.10);
+  --btn-bg: var(--c-navy-900); --btn-line: var(--c-navy-900);
+}
+.hdr .logo, .hdr .logo-word { color: var(--c-navy-900); }
+.hdr .nav > a, .hdr .nav-trigger { color: #5A6275; }
+.hdr .nav > a:hover, .hdr .nav > a.is-active,
+.hdr .nav-trigger:hover, .hdr .nav-trigger.is-active,
+.hdr .nav-item:hover > .nav-trigger, .hdr .nav-item:focus-within > .nav-trigger { color: var(--c-navy-900); }
+.hdr .nav > a.is-active::after, .hdr .nav-trigger.is-active::after { background: var(--c-navy-900); }
+.hdr .nav-dd {
+  background: #FFFFFF; color: var(--c-night);
+  border: 1px solid rgb(21 44 91 / 0.10);
+  box-shadow: 0 24px 48px -20px rgb(13 27 56 / 0.28);
+}
+.hdr .nav-dd a { color: #4B5363; }
+.hdr .nav-dd a:hover, .hdr .nav-dd a:focus-visible { background: rgb(37 99 235 / 0.07); color: var(--c-navy-900); }
+.hdr .nav-dd a.is-active { background: rgb(37 99 235 / 0.11); color: var(--c-navy-900); }
+.hdr .nav-dd-sep { background: rgb(21 44 91 / 0.08); }
+.hdr .hdr-menu { color: var(--c-navy-900); }
+.hdr .m-nav { background: #F4F4F2; border-bottom: 1px solid rgb(21 44 91 / 0.10); }
+.hdr .m-nav-grp { color: #7A8192; border-top-color: rgb(21 44 91 / 0.08); }
+.hdr .m-nav a { color: #2B3345; border-bottom-color: rgb(21 44 91 / 0.06); }
+.hdr .m-nav a:hover, .hdr .m-nav a:focus-visible { color: var(--c-navy-900); }
+</style>
+<style id="v05-booking">
+/* v0.5 booking: tighter, a little snazzier, still minimal */
+.hdr .btn { color: var(--c-navy-900); border-color: rgb(21 44 91 / 0.16); background: transparent; }
+.hdr .btn:hover { background: rgb(21 44 91 / 0.06); border-color: rgb(21 44 91 / 0.28); }
+.hdr .nav-dd-panel { background: #FFFFFF; border-color: rgb(21 44 91 / 0.10); box-shadow: 0 24px 48px -20px rgb(13 27 56 / 0.28); }
+.hdr .nav-dd-panel a { color: #4B5363; }
+.hdr .nav-dd-panel a:hover, .hdr .nav-dd-panel a:focus-visible { background: rgb(37 99 235 / 0.07); color: var(--c-navy-900); }
+
+.page { padding-top: 56px; padding-bottom: 72px; }
+.grid { align-items: center; }
+.intro { top: 96px; }
+.h1 { margin-bottom: 16px; }
+.h1 em { background: linear-gradient(92deg, var(--navy-700) 10%, #2563EB 95%); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: 0.06em; }
+.lede { margin-bottom: 18px; max-width: 44ch; }
+
+.bk-get { list-style: none; margin: 0 0 28px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.bk-get[hidden] { display: none; }
+.bk-get li {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px 7px 9px; border-radius: 999px;
+  font-size: 13px; font-weight: 600; color: var(--navy-700);
+  background: rgb(37 99 235 / 0.07); border: 1px solid rgb(37 99 235 / 0.16);
+}
+.bk-get svg { width: 14px; height: 14px; fill: none; stroke: #2563EB; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* details: three compact tiles instead of tall rows */
+.detail-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; border-top: 0; }
+.detail-item {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+  padding: 14px 14px 16px; border: 1px solid rgb(21 44 91 / 0.08); border-radius: 16px;
+  background: rgb(255 255 255 / 0.6); box-shadow: 0 10px 24px -22px rgb(13 27 56 / 0.4);
+}
+.detail-icon { width: 34px; height: 34px; border-radius: 10px; background: rgb(37 99 235 / 0.10); color: var(--navy-700); }
+.detail-icon svg { width: 18px; height: 18px; }
+.detail-text h4 { font-size: 14.5px; margin-bottom: 3px; }
+.detail-text p { font-size: 13px; line-height: 1.4; }
+
+/* card */
+.book-card {
+  border-radius: 22px; border: 1px solid rgb(21 44 91 / 0.08);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 30px 60px -34px rgb(13 27 56 / 0.42), 0 0 0 6px rgb(37 99 235 / 0.04);
+}
+.book-card::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; z-index: 2;
+  background: linear-gradient(90deg, transparent, #2563EB 30%, #06B6D4 70%, transparent); opacity: 0.55;
+}
+.book-top { padding: 14px 18px; }
+.book-body { height: var(--bk-body-h, clamp(420px, calc(100svh - 300px), 476px)); }
+.book-tab { display: inline-flex; align-items: center; gap: 8px; padding: 0 16px 0 8px; }
+.book-tab::before {
+  content: attr(data-initials); display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.02em; color: #FFFFFF;
+  background: linear-gradient(140deg, #8A93A6, #5A6275); transition: background var(--dur-fast) var(--ease-soft);
+}
+.book-tab.active::before { background: linear-gradient(140deg, #2563EB, var(--navy-700)); }
+.cal-month-title { font-size: 17px; }
+.cal-weekdays span { font-size: 10.5px; letter-spacing: 0.08em; }
+.cal-day:not(:disabled) { background: rgb(37 99 235 / 0.08); color: var(--navy-700); font-weight: 700; }
+.cal-day:hover:not(:disabled) { background: rgb(37 99 235 / 0.16); }
+.cal-day.is-selected, .cal-day.is-selected:hover { background: var(--navy-700); color: #FFFFFF; box-shadow: 0 8px 18px -10px rgb(13 27 56 / 0.7); }
+.slot-btn { background: rgb(37 99 235 / 0.07); color: var(--navy-700); }
+.slot-btn:hover { background: rgb(37 99 235 / 0.15); }
+
+@media (max-width: 980px) {
+  .grid { align-items: start; }
+}
+@media (max-width: 768px) {
+  .page { padding-top: var(--m-pad-y); }
+  .bk-get { margin-bottom: 18px; }
+  .detail-list { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .detail-item { flex-direction: row; align-items: center; gap: 12px; padding: 10px 12px; }
+  .detail-text h4 { margin: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .book-tab::before { transition: none; } }
+</style>
 </head>
 <body>
 <div class="app">
@@ -470,7 +574,7 @@ button { font: inherit; cursor: pointer; }
           <div class="nav-dd">
             <div class="nav-dd-panel">
               <a href="va.html#how-it-works">How It Works</a>
-              <a href="va.html#offer">What You Get</a>
+              <a href="va.html#offer">Two Options</a>
               <a href="va.html#use-cases">Use Cases</a>
               <a href="va.html#compare">Compare</a>
             </div>
@@ -489,14 +593,19 @@ button { font: inherit; cursor: pointer; }
 
         <section class="intro">
           <div class="intro-copy"><h1 class="h1 rise" style="--i:1"><span id="ttl-a">Book a free</span><em id="ttl-b">automation audit.</em></h1>
-          <p class="lede rise" id="lede" style="--i:2">We'll map your top 3 AI‑automatable workflows and model the ROI.</p></div>
+          <p class="lede rise" id="lede" style="--i:2">We map how your team works, find the top 3 workflows worth handing to AI, and model the ROI on each.</p>
+          <ul class="bk-get rise" id="bk-get" style="--i:2" aria-label="You leave with">
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Workflow inventory</li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>ROI scorecard</li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Build vs. buy call</li>
+          </ul></div>
           <ul class="detail-list">
             <li class="detail-item rise" style="--i:3">
               <div class="detail-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
               <div class="detail-text">
-                <h4>30-minute session</h4>
+                <h4>30 minutes</h4>
                 <p>We come prepared with research on your business.</p>
               </div>
             </li>
@@ -506,7 +615,7 @@ button { font: inherit; cursor: pointer; }
               </div>
               <div class="detail-text">
                 <h4>Google Meet</h4>
-                <p>Link sent on confirmation.</p>
+                <p>Link sent the moment you book.</p>
               </div>
             </li>
             <li class="detail-item rise" style="--i:5">
@@ -514,7 +623,7 @@ button { font: inherit; cursor: pointer; }
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
               </div>
               <div class="detail-text">
-                <h4>Written brief included</h4>
+                <h4>Written brief</h4>
                 <p>Yours to keep, whether or not you hire us.</p>
               </div>
             </li>
@@ -527,8 +636,8 @@ button { font: inherit; cursor: pointer; }
               <p class="book-service">Booking: <strong id="svc-name">Free automation audit</strong></p>
               <div class="book-head" id="book-head" data-view="date">
                 <div class="book-selector" id="book-selector" role="group" aria-label="Host">
-                  <button type="button" class="book-tab active" data-host="ben" aria-pressed="true" onclick="switchCal(this)">Ben Tsan</button>
-                  <button type="button" class="book-tab" data-host="josh" aria-pressed="false" onclick="switchCal(this)">Josh Li</button>
+                  <button type="button" class="book-tab active" data-host="ben" data-initials="BT" aria-pressed="true" onclick="switchCal(this)">Ben Tsan</button>
+                  <button type="button" class="book-tab" data-host="josh" data-initials="JL" aria-pressed="false" onclick="switchCal(this)">Josh Li</button>
                 </div>
                 <nav class="book-trail" id="book-trail" aria-label="Your selection" inert>
                   <button type="button" class="trail-btn" id="trail-host"></button>
@@ -631,17 +740,18 @@ var HOSTS = { ben: "benquerent/30min", josh: "joshuali/30min" };
 var SERVICES = {
   audit:     { name: "Free automation audit",                  ttlA: "Book a free", ttlB: "automation audit." },
   concierge: { name: "AI Concierge Services",                  ttlA: "Book a",      ttlB: "scoping call." },
-  workflow:  { name: "Workflow Automation (n8n)",              ttlA: "Book a",      ttlB: "scoping call." },
+  workflow:  { name: "Workflow Automation",                    ttlA: "Book a",      ttlB: "scoping call." },
   leadgen:   { name: "Outbound, Research & Lead Gen",          ttlA: "Book a",      ttlB: "scoping call." },
   internal:  { name: "Internal Ops Agents",                    ttlA: "Book a",      ttlB: "scoping call." },
   consult:   { name: "Operations Strategy & Advisory",         ttlA: "Book a",      ttlB: "scoping call." },
-  va:        { name: "AI Virtual Assistant (VA + Automation)", ttlA: "Book a free", ttlB: "strategy call." }
+  va:        { name: "AI Virtual Assistants",                  ttlA: "Book a free", ttlB: "strategy call." }
 };
 var slug = "audit";
 try { var q = (new URLSearchParams(location.search).get("service") || "").toLowerCase(); if (Object.prototype.hasOwnProperty.call(SERVICES, q)) slug = q; } catch (e) {}
 var SVC = SERVICES[slug];
 document.getElementById("svc-name").textContent = SVC.name;
 if (slug === "audit") document.querySelector(".book-service").style.display = "none"; // the page heading already says it
+if (slug !== "audit") { var bkGet = document.getElementById("bk-get"); if (bkGet) bkGet.hidden = true; } // audit deliverables only
 document.getElementById("ttl-a").textContent = SVC.ttlA;
 document.getElementById("ttl-b").textContent = SVC.ttlB;
 document.title = SVC.ttlA + " " + SVC.ttlB.replace(".", "") + " | Querent";

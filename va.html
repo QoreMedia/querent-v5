@@ -732,6 +732,123 @@ html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0);
   setTimeout(function () { if (!window.__vaMotion) root.classList.remove('va-motion'); }, 2500);
 })();
 </script>
+<style id="v05-light-header">
+/* v0.5: header colour-matches the page canvas instead of the dark ribbon (solid tint + blur, not transparent) */
+.hdr {
+  background: rgb(244 244 242 / 0.88); color: var(--c-night);
+  border-bottom: 1px solid rgb(21 44 91 / 0.08);
+  box-shadow: 0 8px 24px -22px rgb(13 27 56 / 0.35);
+  --ink: var(--c-night); --ink-dim: #5A5F69; --line: rgb(21 44 91 / 0.10);
+  --btn-bg: var(--c-navy-900); --btn-line: var(--c-navy-900);
+}
+.hdr .logo, .hdr .logo-word { color: var(--c-navy-900); }
+.hdr .nav > a, .hdr .nav-trigger { color: #5A6275; }
+.hdr .nav > a:hover, .hdr .nav > a.is-active,
+.hdr .nav-trigger:hover, .hdr .nav-trigger.is-active,
+.hdr .nav-item:hover > .nav-trigger, .hdr .nav-item:focus-within > .nav-trigger { color: var(--c-navy-900); }
+.hdr .nav > a.is-active::after, .hdr .nav-trigger.is-active::after { background: var(--c-navy-900); }
+.hdr .nav-dd {
+  background: #FFFFFF; color: var(--c-night);
+  border: 1px solid rgb(21 44 91 / 0.10);
+  box-shadow: 0 24px 48px -20px rgb(13 27 56 / 0.28);
+}
+.hdr .nav-dd a { color: #4B5363; }
+.hdr .nav-dd a:hover, .hdr .nav-dd a:focus-visible { background: rgb(37 99 235 / 0.07); color: var(--c-navy-900); }
+.hdr .nav-dd a.is-active { background: rgb(37 99 235 / 0.11); color: var(--c-navy-900); }
+.hdr .nav-dd-sep { background: rgb(21 44 91 / 0.08); }
+.hdr .hdr-menu { color: var(--c-navy-900); }
+.hdr .m-nav { background: #F4F4F2; border-bottom: 1px solid rgb(21 44 91 / 0.10); }
+.hdr .m-nav-grp { color: #7A8192; border-top-color: rgb(21 44 91 / 0.08); }
+.hdr .m-nav a { color: #2B3345; border-bottom-color: rgb(21 44 91 / 0.06); }
+.hdr .m-nav a:hover, .hdr .m-nav a:focus-visible { color: var(--c-navy-900); }
+</style>
+<style id="v05-va">
+/* v0.5 VA page: two offer streams */
+.section > .lede { margin-top: 4px; max-width: 62ch; font-size: 17px; line-height: 1.6; }
+
+.opt-base {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 28px;
+  padding: 12px 18px; border-radius: 18px; background: rgb(255 255 255 / 0.66);
+  border: 1px solid rgb(21 44 91 / 0.08);
+}
+.opt-base-lbl {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.02em; color: #FFFFFF;
+  background: var(--c-navy-800); padding: 5px 10px; border-radius: 999px;
+}
+.opt-base ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.opt-base li { display: inline-flex; align-items: center; gap: 7px; font-size: 14.5px; font-weight: 600; color: var(--ink); }
+.opt-base svg, .opt-chips svg { width: 15px; height: 15px; fill: none; stroke: var(--c-blue-600); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+.opt-grid { margin-top: 16px; align-items: stretch; }
+.opt-card { display: flex; flex-direction: column; gap: 0; padding: clamp(22px, 2.6vw, 34px); }
+.opt-card .h3 { font-size: clamp(1.3rem, 1.8vw, 1.6rem); letter-spacing: -0.02em; margin: 10px 0 8px; }
+.opt-card > .lede-sm { font-size: 15.5px; }
+.opt-head { display: flex; align-items: center; gap: 10px; }
+.opt-num {
+  font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 13px; font-weight: 700;
+  padding: 5px 11px; border-radius: 999px; color: var(--c-blue-700); background: rgb(var(--rgb-blue-600) / 0.10);
+}
+.opt-kicker { font-size: 13px; font-weight: 600; color: var(--ink-dim); }
+.offer-card.highlight .opt-num { color: #FFFFFF; background: rgb(var(--rgb-blue-300) / 0.18); }
+.offer-card.highlight .opt-kicker { color: var(--c-slate-400); }
+
+.opt-visual { margin: 18px 0 2px; }
+.opt-chat { display: grid; gap: 8px; padding: 12px; border-radius: 16px; background: #FFFFFF; border: 1px solid rgb(21 44 91 / 0.08); }
+.opt-msg { display: grid; grid-template-columns: 1fr auto; column-gap: 10px; row-gap: 2px; padding: 9px 12px; border-radius: 12px; max-width: 88%; }
+.opt-msg b { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: var(--ink); }
+.opt-msg b img { display: block; }
+.opt-msg span { grid-column: 1 / -1; font-size: 14px; color: var(--ink); }
+.opt-msg i { grid-row: 1; grid-column: 2; font-style: normal; font-size: 11px; color: var(--ink-mute, #8A8F99); font-variant-numeric: tabular-nums; }
+.opt-msg--you { justify-self: end; background: rgb(21 44 91 / 0.05); border-bottom-right-radius: 4px; }
+.opt-msg--q { justify-self: start; background: rgb(var(--rgb-blue-600) / 0.09); border-bottom-left-radius: 4px; }
+
+.opt-chips { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.opt-chips li { font-size: 12.5px; font-weight: 600; padding: 6px 11px; border-radius: 999px; color: var(--c-navy-800); background: rgb(var(--rgb-blue-600) / 0.07); border: 1px solid rgb(var(--rgb-blue-600) / 0.16); }
+
+.opt-split { padding: 14px; border-radius: 16px; background: rgb(255 255 255 / 0.05); border: 1px solid rgb(var(--rgb-blue-300) / 0.16); }
+.opt-split-bar { display: flex; gap: 4px; }
+.opt-split-bar span {
+  flex: 0 0 calc(var(--w) - 3px); padding: 9px 10px; border-radius: 10px; font-size: 12.5px; font-weight: 700; color: #FFFFFF;
+  background: rgb(var(--rgb-blue-300) / 0.16);
+}
+.opt-split-bar span:last-child { background: linear-gradient(120deg, var(--c-blue-600), var(--c-cyan-500)); }
+.opt-split p { margin: 10px 0 0; font-size: 13px; color: var(--c-slate-400); }
+
+.opt-card .offer-list { margin-top: 18px; }
+.opt-fit { margin: 18px 0 0; font-size: 14.5px; color: var(--ink-dim); }
+.opt-fit b { color: var(--ink); }
+.offer-card.highlight .opt-fit { color: var(--c-slate-400); }
+.offer-card.highlight .opt-fit b { color: var(--c-on-night); }
+.opt-note { margin: 6px 0 0; font-size: 12px; color: var(--ink-mute, #8A8F99); }
+.opt-cta { margin-top: auto; align-self: flex-start; }
+.opt-card .opt-fit { margin-bottom: 22px; }
+.offer-card.highlight .btn-primary { background: #FFFFFF; color: var(--c-navy-900); border-color: #FFFFFF; }
+
+.step-num { display: inline-block; margin-bottom: 10px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: var(--c-blue-600); font-variant-numeric: tabular-nums; }
+.step-card--fork .lede-sm + .lede-sm { margin-top: 8px; }
+.fork-tag { display: inline-block; margin-right: 6px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 700; color: var(--c-blue-700); background: rgb(var(--rgb-blue-600) / 0.10); }
+.fork-tag--dark { color: #FFFFFF; background: var(--c-navy-800); }
+
+.diff-grid--3 .diff-row { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr); }
+.diff-grid--3 .diff-row > div { font-size: 15px; }
+.diff-grid--3 .diff-row > div:first-child { color: var(--ink); font-weight: 600; }
+.diff-grid--3 .diff-header > div + div { color: var(--c-blue-700); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (max-width: 900px) {
+  .diff-grid--3 .diff-row > div:first-child { display: block; }
+}
+@media (max-width: 700px) {
+  .diff-grid--3 .diff-header { display: none; }
+  .diff-grid--3 .diff-row { grid-template-columns: minmax(0, 1fr); }
+  .diff-grid--3 .diff-row > div:first-child { padding-bottom: 4px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700; }
+  .diff-grid--3 [data-opt] { display: flex; flex-direction: column; gap: 2px; }
+  .diff-grid--3 [data-opt]::after { content: attr(data-opt); order: -1; font-size: 12px; font-weight: 700; color: var(--c-blue-700); }
+  .opt-base { border-radius: 16px; }
+  .opt-msg { max-width: 94%; }
+  .opt-cta { align-self: stretch; justify-content: center; }
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -768,7 +885,7 @@ html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0);
           <a href="va.html" class="nav-trigger is-active" aria-haspopup="true">AI Virtual Assistants<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
           <div class="nav-dd" role="menu" aria-label="AI Virtual Assistants">
             <a href="#how-it-works" role="menuitem">How It Works</a>
-            <a href="#offer" role="menuitem">What You Get</a>
+            <a href="#offer" role="menuitem">Two Options</a>
             <a href="#use-cases" role="menuitem">Use Cases</a>
             <a href="#compare" role="menuitem">Compare</a>
           </div>
@@ -794,33 +911,90 @@ html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0);
     <span class="va-line"><em class="va-mark">AI-supercharged</em></span>
   </h1>
   <p class="lede">
-    Querent places trained virtual assistants in your business, and wires them with automations we curate for your team from day one. Alternatively, we can source new hires, or train someone on your team as well.
+    Querent places trained virtual assistants in your business, and wires them with automations we curate for your team from day one. Alternatively, we can source new hires, or train someone on your team.
   </p>
   <div class="hero-ctas">
-    <a href="/booking.html?service=va"
-       class="btn btn-primary btn-lg">
-      Get Your AI VA
-      <svg class="cta-ico cta-ico--right" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-    </a>
-    <a href="#how-it-works" class="btn btn-ghost btn-lg">See How It Works<svg class="cta-ico cta-ico--down" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></a>
+    <a href="#offer" class="btn btn-primary btn-lg">Compare the Two Options<svg class="cta-ico cta-ico--down" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></a>
+    <a href="/booking.html?service=va" class="btn btn-ghost btn-lg"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Strategy Call</a>
   </div>
   </div>
 
   <!-- Stats -->
   <div class="stats-strip">
     <div class="stat-item">
-      <div class="stat-num">2<span>x</span></div>
-      <div class="stat-label">Output vs. a standard VA hire</div>
+      <div class="stat-num">24<span>/7</span></div>
+      <div class="stat-label">Support in Slack, Discord, WhatsApp or your team's chat app</div>
     </div>
     <div class="stat-item">
       <div class="stat-num">72<span>hr</span></div>
-      <div class="stat-label">Average time to placement</div>
+      <div class="stat-label">Average time to place a curated AI VA</div>
     </div>
     <div class="stat-item">
       <div class="stat-num">10<span>+</span></div>
-      <div class="stat-label">Automations built into every placement</div>
+      <div class="stat-label">Automations built into every system</div>
     </div>
   </div>
+  </div>
+</section>
+
+<!-- ── Two options (v0.5) ── -->
+<section class="section wrap" id="offer">
+  <h2 class="h2">One system. Two ways to run it.</h2>
+  <p class="lede">Every engagement starts with an autonomous system built around how your team works. Then you choose who runs it day to day.</p>
+
+  <div class="opt-base" aria-label="Included in both options">
+    <span class="opt-base-lbl">Both include</span>
+    <ul>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Autonomous system built for your workflows</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Querent instruction, support and training</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Monitoring, fixes and tuning</li>
+    </ul>
+  </div>
+
+  <div class="offer-grid opt-grid">
+    <article class="offer-card opt-card" id="option-support">
+      <div class="opt-head">
+        <span class="opt-num">Option 1</span>
+        <span class="opt-kicker">Fully managed</span>
+      </div>
+      <h3 class="h3">Autonomous System + 24/7 Support</h3>
+      <p class="lede-sm">We build the system and support it around the clock, right inside the chat app your team already uses.</p>
+      <div class="opt-visual opt-chat" aria-hidden="true">
+        <div class="opt-msg opt-msg--you"><b>You</b><span>Can intake also flag VIP leads?</span><i>2:14 AM</i></div>
+        <div class="opt-msg opt-msg--q"><b><img src="/assets/querent-logo-flat.svg" alt="" width="14" height="14">Querent</b><span>On it. Live in tonight's deploy.</span><i>2:16 AM</i></div>
+      </div>
+      <ul class="opt-chips" aria-label="Where support happens"><li>Slack</li><li>Discord</li><li>WhatsApp</li><li>Teams</li><li>Your chat app*</li></ul>
+      <p class="opt-note">*Any chat app with an available API.</p>
+      <ul class="offer-list">
+        <li>Autonomous agents and workflows built for your ops</li>
+        <li>24/7 support in your team chat</li>
+        <li>New requests handled in the same thread</li>
+        <li>No new hire to manage</li>
+      </ul>
+      <p class="opt-fit"><b>Best for</b> lean teams that want it handled end to end.</p>
+      <a href="/booking.html?service=va" class="btn btn-ghost opt-cta"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Call About Option 1</a>
+    </article>
+
+    <article class="offer-card highlight opt-card" id="option-va">
+      <div class="opt-head">
+        <span class="opt-num">Option 2</span>
+        <span class="opt-kicker">System + a person</span>
+      </div>
+      <h3 class="h3">Autonomous System + Curated AI VA</h3>
+      <p class="lede-sm">We build the system, then place a curated AI VA on your team who keeps it running and keeps building on it.</p>
+      <div class="opt-visual opt-split" aria-hidden="true">
+        <div class="opt-split-bar"><span style="--w:30%">Triage</span><span style="--w:30%">Maintain</span><span style="--w:40%">Build</span></div>
+        <p>Your VA's time splits across triage, maintenance and development hours.</p>
+      </div>
+      <ul class="offer-list">
+        <li>A curated, AI-trained VA placed on your team</li>
+        <li>Triage and maintenance, with Querent instruction, support and training</li>
+        <li>Development hours to build new automations</li>
+        <li>Replacement guarantee if it's not the right fit</li>
+      </ul>
+      <p class="opt-fit"><b>Best for</b> teams that want a dedicated person and a system that keeps growing.</p>
+      <a href="/booking.html?service=va" class="btn btn-primary opt-cta"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Call About Option 2</a>
+    </article>
   </div>
 </section>
 
@@ -830,52 +1004,58 @@ html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0);
 
   <div class="steps-grid">
     <div class="step-card">
+      <span class="step-num">01</span>
       <h3 class="h3">Discovery</h3>
-      <p class="lede-sm">We map your ops: the tasks, tools, and friction points that eat your team's time every week.</p>
+      <p class="lede-sm">We map your ops: the tasks, tools and friction points that eat your team's time every week.</p>
     </div>
     <div class="step-card">
-      <h3 class="h3">Automation build</h3>
-      <p class="lede-sm">Before your VA starts, we build the automations they'll work alongside: CRM updates, inbox routing, scheduling, reporting.</p>
+      <span class="step-num">02</span>
+      <h3 class="h3">System build</h3>
+      <p class="lede-sm">We build the autonomous system around your stack: agents, workflows, CRM updates, inbox routing, reporting.</p>
+    </div>
+    <div class="step-card step-card--fork">
+      <span class="step-num">03</span>
+      <h3 class="h3">Go live</h3>
+      <p class="lede-sm"><b class="fork-tag">Option 1</b> We connect 24/7 support in your team's chat app.</p>
+      <p class="lede-sm"><b class="fork-tag fork-tag--dark">Option 2</b> We place and train your curated AI VA.</p>
     </div>
     <div class="step-card">
-      <h3 class="h3">VA placement</h3>
-      <p class="lede-sm">We match and place a trained VA, already fluent in AI tools, into your workflows with minimal onboarding from your side.</p>
-    </div>
-    <div class="step-card">
-      <h3 class="h3">Ongoing support</h3>
-      <p class="lede-sm">We stay in the loop. As your business scales, we add automations and upskill your VA to match.</p>
+      <span class="step-num">04</span>
+      <h3 class="h3">Keep building</h3>
+      <p class="lede-sm">As you scale, we add automations, or your VA puts development hours into what's next.</p>
     </div>
   </div>
 </section>
 
-<!-- ── What's included ── -->
-<section class="section wrap" id="offer">
-  <h2 class="h2">The full bundle: VA and automations</h2>
+<!-- ── Compare the options ── -->
+<section class="section wrap" id="compare">
+  <h2 class="h2">Which option fits?</h2>
 
-  <div class="offer-grid">
-    <!-- VA side -->
-    <div class="offer-card highlight">
-      <h3 class="h3">An AI-trained human in your corner</h3>
-      <ul class="offer-list">
-        <li>Pre-screened, AI-tool fluent candidates</li>
-        <li>Trained on your specific stack before day one</li>
-        <li>Ongoing AI learning. Your VA levels up as the tools do</li>
-        <li>Dedicated point of contact at Querent</li>
-        <li>Replacement guarantee if it's not the right fit</li>
-      </ul>
+  <div class="diff-grid diff-grid--3" role="table" aria-label="Option 1 compared with Option 2">
+    <div class="diff-row diff-header" role="row">
+      <div role="columnheader"><span class="sr-only">Compare</span></div>
+      <div role="columnheader">Option 1 · 24/7 Support</div>
+      <div role="columnheader">Option 2 · Curated AI VA</div>
     </div>
-
-    <!-- Automation side -->
-    <div class="offer-card">
-      <h3 class="h3">Custom workflows, built for your ops</h3>
-      <ul class="offer-list">
-        <li>CRM data entry and lead routing</li>
-        <li>Email + calendar management workflows</li>
-        <li>Intake forms to project management tools</li>
-        <li>Reporting dashboards and weekly digests</li>
-        <li>Slack/Teams notification pipelines</li>
-        <li>Custom requests: if it's repetitive, we'll automate it</li>
-      </ul>
+    <div class="diff-row" role="row">
+      <div role="rowheader">Who runs it day to day</div>
+      <div role="cell" data-opt="Option 1">Querent, in your team chat</div>
+      <div role="cell" data-opt="Option 2">Your AI VA, backed by Querent</div>
+    </div>
+    <div class="diff-row" role="row">
+      <div role="rowheader">Where you get help</div>
+      <div role="cell" data-opt="Option 1">24/7 in Slack, Discord, WhatsApp or your chat app</div>
+      <div role="cell" data-opt="Option 2">Your VA, plus Querent support and training</div>
+    </div>
+    <div class="diff-row" role="row">
+      <div role="rowheader">New automations</div>
+      <div role="cell" data-opt="Option 1">On request, in the same thread</div>
+      <div role="cell" data-opt="Option 2">Built continuously with development hours</div>
+    </div>
+    <div class="diff-row" role="row">
+      <div role="rowheader">Headcount</div>
+      <div role="cell" data-opt="Option 1">No new hire</div>
+      <div role="cell" data-opt="Option 2">A curated VA on your team</div>
     </div>
   </div>
 </section>
@@ -918,44 +1098,12 @@ html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0);
   </div>
 </section>
 
-<!-- ── Why different ── -->
-<section class="section wrap" id="compare">
-  <h2 class="h2">Not just a hire. A system.</h2>
-
-  <div class="diff-grid">
-    <div class="diff-row diff-header">
-      <div>Standard VA agency</div>
-      <div>Querent VA + Automations</div>
-    </div>
-    <div class="diff-row">
-      <div>VA placed, then you figure out onboarding</div>
-      <div>Workflows built before your VA starts</div>
-    </div>
-    <div class="diff-row">
-      <div>Generic training, no AI tool fluency</div>
-      <div>VA trained on AI tools specific to your stack</div>
-    </div>
-    <div class="diff-row">
-      <div>Manual tasks eat the VA's hours</div>
-      <div>Automations handle the repetitive work</div>
-    </div>
-    <div class="diff-row">
-      <div>No ongoing support after placement</div>
-      <div>Querent stays in the loop. Add automations as you scale</div>
-    </div>
-    <div class="diff-row">
-      <div>You manage performance and upskilling</div>
-      <div>Continuous AI learning. Your VA levels up automatically</div>
-    </div>
-  </div>
-</section>
-
 <!-- ── CTA ── -->
 <div class="wrap">
   <div class="cta-banner">
     <div class="cta-banner-inner">
-      <h2 class="h2">Ready to place<br>your VA?</h2>
-      <p class="lede-sm">A 30-minute call to find the low-hanging fruit on automation wins for your team. Then we find the right person to delegate it to.</p>
+      <h2 class="h2">Ready to pick<br>your setup?</h2>
+      <p class="lede-sm">A 30-minute call to find the low-hanging fruit on automation wins for your team. Then we decide together whether Querent runs it 24/7, or we find the right person to delegate it to.</p>
       <div class="cta-banner-ctas">
         <a href="/booking.html?service=va"
            class="btn btn-primary btn-lg">
