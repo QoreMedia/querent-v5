@@ -317,7 +317,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   transition: border-color 0.2s ease;
   box-shadow: 0 calc(18px * var(--shk-card, 0)) calc(40px * var(--shk-card, 0)) calc(-24px * var(--shk-card, 0)) rgba(0,0,0,0.45);
 }
-.step-card:hover { border-color: var(--line-strong); }
 .step-num {
   font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase;
@@ -396,7 +395,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   transition: border-color 0.2s ease, transform 0.2s ease;
   box-shadow: 0 calc(18px * var(--shk-card, 0)) calc(40px * var(--shk-card, 0)) calc(-24px * var(--shk-card, 0)) rgba(0,0,0,0.45);
 }
-.usecase-card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
 .usecase-icon { font-size: 28px; margin-bottom: 16px; }
 .usecase-role {
   font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
@@ -676,14 +674,10 @@ body { background: var(--bg); color: var(--ink); }
 .app .btn { transition: translate var(--dur-fast) var(--ease-soft), background-color var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft), box-shadow var(--dur-fast) var(--ease-soft); }
 .app .btn:hover { translate: 0 -2px; transform: none; }
 
-/* card hover (uses translate so it never fights the entrance animation) */
-.step-card, .usecase-card, .offer-card { transition: translate var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft), box-shadow var(--dur-fast) var(--ease-soft); }
-.usecase-card .h3 { transition: color var(--dur-fast) var(--ease-soft); }
-@media (hover: hover) {
-  .step-card:hover, .usecase-card:hover, .offer-card:not(.highlight):hover { translate: 0 -4px; transform: none; border-color: rgb(var(--rgb-blue-600) / .45); box-shadow: 0 22px 40px -28px rgb(var(--rgb-navy-900) / .45); }
-  .offer-card.highlight:hover { translate: 0 -4px; box-shadow: 0 26px 44px -26px rgb(var(--rgb-navy-900) / .75); }
-  .usecase-card:hover .h3 { color: var(--c-blue-700); }
-}
+/* info cards are not interactive: no hover lift/glow, so they don't read as buttons */
+.step-card, .usecase-card, .offer-card { cursor: default; }
+.step-card:hover, .usecase-card:hover, .offer-card:hover { translate: none; transform: none; border-color: var(--bc-card, var(--panel-light-line)); }
+.offer-card.highlight:hover { border-color: var(--panel-dark-line); }
 
 @media (prefers-reduced-motion: reduce) { .step-card, .usecase-card, .offer-card, .usecase-card .h3, .app .btn { transition: none; } }
 /* header button never glows; full-width hero buttons on phones */
@@ -773,18 +767,18 @@ html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0);
         <div class="nav-item">
           <a href="va.html" class="nav-trigger is-active" aria-haspopup="true">AI Virtual Assistants<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
           <div class="nav-dd" role="menu" aria-label="AI Virtual Assistants">
-            <a href="#how-it-works" role="menuitem">How it works</a>
-            <a href="#offer" role="menuitem">What you get</a>
-            <a href="#use-cases" role="menuitem">Use cases</a>
+            <a href="#how-it-works" role="menuitem">How It Works</a>
+            <a href="#offer" role="menuitem">What You Get</a>
+            <a href="#use-cases" role="menuitem">Use Cases</a>
             <a href="#compare" role="menuitem">Compare</a>
           </div>
         </div>
     </nav>
     <div class="hdr-actions">
       <a href="/booking.html?service=va"
-         class="btn btn-primary btn-ico-m" aria-label="Book a call">
+         class="btn btn-primary btn-ico-m" aria-label="Book a Call">
         <svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-        Book a call
+        Book a Call
       </a>
     </div>
   </div>
@@ -800,15 +794,15 @@ html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0);
     <span class="va-line"><em class="va-mark">AI-supercharged</em></span>
   </h1>
   <p class="lede">
-    Querent places trained virtual assistants in your business, and wires them with custom automations from day one.
+    Querent places trained virtual assistants in your business, and wires them with automations we curate for your team from day one. Alternatively, we can source new hires, or train someone on your team as well.
   </p>
   <div class="hero-ctas">
     <a href="/booking.html?service=va"
        class="btn btn-primary btn-lg">
-      Get your AI VA
+      Get Your AI VA
       <svg class="cta-ico cta-ico--right" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </a>
-    <a href="#how-it-works" class="btn btn-ghost btn-lg">See how it works<svg class="cta-ico cta-ico--down" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></a>
+    <a href="#how-it-works" class="btn btn-ghost btn-lg">See How It Works<svg class="cta-ico cta-ico--down" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></a>
   </div>
   </div>
 
@@ -832,7 +826,7 @@ html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0);
 
 <!-- ── How it works ── -->
 <section class="section wrap" id="how-it-works">
-  <h2 class="h2">From intake to your Slack in days</h2>
+  <h2 class="h2">From intake to onboarding in a few simple steps</h2>
 
   <div class="steps-grid">
     <div class="step-card">
@@ -892,33 +886,33 @@ html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0);
 
   <div class="usecase-grid">
     <div class="usecase-card">
-      <div class="usecase-role">Real estate / construction</div>
-      <h3 class="h3">Deal tracking + comms</h3>
-      <p class="lede-sm">Your VA manages the pipeline and follows up with leads. Automations keep your CRM and calendar in sync.</p>
+      <div class="usecase-role">Sales teams / B2B services</div>
+      <h3 class="h3">Lead Generation</h3>
+      <p class="lede-sm">Your VA researches prospects, builds lists and runs follow-ups. Automations enrich every lead and log each touch in your CRM.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-role">Healthcare / med-spa</div>
-      <h3 class="h3">Patient intake + scheduling</h3>
-      <p class="lede-sm">Automate appointment confirmations, reminders, and intake forms. Your VA handles the exceptions and relationship work.</p>
+      <div class="usecase-role">E-commerce / SaaS / DTC</div>
+      <h3 class="h3">Funnel Optimization</h3>
+      <p class="lede-sm">Your VA keeps landing pages, forms and email sequences tuned. Automations flag drop-offs and send conversion numbers in a weekly digest.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-role">Agencies / consulting</div>
-      <h3 class="h3">Client ops + reporting</h3>
-      <p class="lede-sm">Your VA owns client communication and status updates. Automations pull data into reports.</p>
+      <div class="usecase-role">Agencies / consulting / professional services</div>
+      <h3 class="h3">Client Ops + Reporting</h3>
+      <p class="lede-sm">Your VA owns client communication, proposals and status updates. Automations pull the data into reports.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-role">E-commerce</div>
-      <h3 class="h3">Order ops + customer support</h3>
-      <p class="lede-sm">Automate order status, refund logic, and FAQ responses. Your VA steps in for escalations and reviews.</p>
+      <div class="usecase-role">Healthcare / med-spa / real estate</div>
+      <h3 class="h3">Intake + Scheduling</h3>
+      <p class="lede-sm">Automations handle confirmations, reminders and intake forms, and keep your calendar and CRM in sync. Your VA handles the exceptions and relationship work.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-role">Professional services</div>
-      <h3 class="h3">Admin + business development</h3>
-      <p class="lede-sm">Research, outreach, scheduling and proposal follow-up, handled by your VA.</p>
+      <div class="usecase-role">E-commerce / retail</div>
+      <h3 class="h3">Order Ops + Customer Support</h3>
+      <p class="lede-sm">Automate order status, refund logic and FAQ responses. Your VA steps in for escalations and reviews.</p>
     </div>
     <div class="usecase-card">
       <div class="usecase-role">Startups / founders</div>
-      <h3 class="h3">Everything you don't have time for</h3>
+      <h3 class="h3">Everything Else</h3>
       <p class="lede-sm">From inbox zero to launch coordination, a Querent VA is your first ops hire, without the overhead.</p>
     </div>
   </div>
@@ -961,14 +955,14 @@ html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0);
   <div class="cta-banner">
     <div class="cta-banner-inner">
       <h2 class="h2">Ready to place<br>your VA?</h2>
-      <p class="lede-sm">A 30-minute call to find your automation wins and match you with the right person.</p>
+      <p class="lede-sm">A 30-minute call to find the low-hanging fruit on automation wins for your team. Then we find the right person to delegate it to.</p>
       <div class="cta-banner-ctas">
         <a href="/booking.html?service=va"
            class="btn btn-primary btn-lg">
           <svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-          Book a free strategy call
+          Book a Free Strategy Call
         </a>
-        <a href="/menu.html" class="btn btn-ghost btn-lg">See all services<svg class="cta-ico cta-ico--right" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        <a href="/menu.html" class="btn btn-ghost btn-lg">See All Services<svg class="cta-ico cta-ico--right" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
       </div>
     </div>
   </div>
@@ -980,15 +974,15 @@ html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0);
       <div class="footer-grid">
         <div class="footer-brand">
           <a class="logo" href="index.html#top"><img src="/assets/querent-logo-flat.svg" alt="" style="width:28px;height:28px;display:block;"><span class="logo-word">Querent</span></a>
-          <p class="footer-tag">AI automation, productized. Workflows, agents and ops that give your team its time back.</p>
-          <a class="footer-cta" href="booking.html"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+          <p class="footer-tag">AI automations for scaling founders and teams. Workflows, agents, marketing and operations that give your team their time back.</p>
+          <a class="footer-cta" href="booking.html"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Audit</a>
         </div>
         <nav class="footer-col" aria-label="Services">
           <h3 class="footer-h">Services</h3>
           <ul>
-            <li><a href="menu.html">Full menu of services</a></li>
+            <li><a href="menu.html">Full Menu of Services</a></li>
             <li><a href="menu.html#concierge">AI Concierge</a></li>
-            <li><a href="menu.html#workflow">n8n Workflow Automation</a></li>
+            <li><a href="menu.html#workflow">Workflow Automation</a></li>
             <li><a href="menu.html#leadgen">Outbound &amp; Research</a></li>
             <li><a href="menu.html#internal">Internal Ops Agents</a></li>
             <li><a href="menu.html#consult">Strategy &amp; Advisory</a></li>
@@ -998,7 +992,7 @@ html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0);
           <h3 class="footer-h">Explore</h3>
           <ul>
             <li><a href="index.html#top">Home</a></li>
-            <li><a href="index.html#why-now">Why now</a></li>
+            <li><a href="index.html#why-now">Why Now</a></li>
             <li><a href="index.html#services">Solutions</a></li>
             <li><a href="index.html#process">Process</a></li>
             <li><a href="index.html#faq">FAQ</a></li>

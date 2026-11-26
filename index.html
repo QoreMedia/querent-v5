@@ -1068,11 +1068,11 @@ main#top { overflow-x: clip; }
 .why-now-band .wn-armed.is-in .why-now-headline { opacity: 1; transform: none; transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
 .why-now-band .wn-armed.is-in .why-now-body { opacity: 1; transform: none; transition: opacity var(--dur-slow) var(--ease-out) var(--stagger), transform var(--dur-slow) var(--ease-out) var(--stagger); }
 .why-now-band .why-now-body {
-  font-size: var(--t-side); line-height: 1.6; max-width: 46ch;
-  color: var(--ink-dim);
-
+  font-family: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+  font-size: clamp(18px, 1.55vw, 22px); font-weight: 500; line-height: 1.42; letter-spacing: -0.012em;
+  max-width: 34ch; color: var(--ink-dim); text-wrap: pretty;
 }
-.why-now-band .why-now-body em { color: var(--ink); font-style: italic; font-weight: 500; }
+.why-now-band .why-now-body em { color: var(--c-navy-800); font-style: normal; font-weight: 700; }
 .why-now-band .value-grid { gap: var(--gap-card, 28px); align-items: stretch; grid-auto-rows: 1fr; }
 /* Collapsed by default (number + title); body expands on hover / keyboard focus / tap via grid rows 0fr -> 1fr */
 .why-now-band .value-card { cursor: default; outline: none; }
@@ -1512,8 +1512,8 @@ html.rv .why-now-reveal {
 
 @media (max-width: 980px) {
   /* .sol-band padding + radius now follow --band-pad-y / --r-band (unified design language) */
-  .sol-band .why-now-banner { flex-direction: column; align-items: flex-start; gap: 28px; padding-bottom: 36px; margin-bottom: 36px; }
-  .sol-band .why-now-headline { flex: none; }
+  .sol-band .why-now-banner { flex-direction: column; align-items: center; gap: 28px; padding-bottom: 36px; margin-bottom: 36px; }
+  .sol-band .why-now-headline { flex: none; text-align: center; text-wrap: balance; }
   .sol-grid { grid-template-columns: 1fr; gap: 36px; }
   .sol-stage { order: -1; justify-self: center; max-width: 560px; }
   .sol-band + .section { margin-top: calc(-1 * var(--r-band)); }
@@ -1695,6 +1695,44 @@ html.rv .why-now-reveal {
 #process .section-head .lede { margin: 0; max-width: 420px; }
 .proc2-card-title { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin: 0; }
 .proc2-card-desc { color: var(--ink-dim); font-size: 16px; line-height: 1.6; max-width: 720px; margin: 0; }
+
+/* Querent chat bubble: each phase is "said" by Querent; on activation the text streams in word by word (Claude-style typing) */
+.proc2-card { align-items: center; }
+.proc2-bubble { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+.proc2-avatar {
+  flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+  background: var(--c-night); box-shadow: 0 0 0 3px rgb(var(--rgb-blue-300) / 0.35), 0 8px 18px -10px rgb(var(--rgb-navy-900) / 0.6);
+}
+.proc2-avatar img { display: block; width: 18px; height: 18px; }
+.proc2-msg {
+  position: relative; min-width: 0; flex: 1;
+  padding: 12px 18px 14px; border-radius: 4px 18px 18px 18px;
+  background: rgb(255 255 255 / 0.72); border: 1px solid rgb(var(--rgb-navy-800) / 0.10);
+  box-shadow: 0 12px 28px -22px rgb(var(--rgb-navy-900) / 0.45);
+}
+.proc2-from {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
+  font-size: 12.5px; font-weight: 700; letter-spacing: 0.01em; color: var(--p-navy-d);
+}
+.proc2-from i { font-style: normal; font-weight: 600; color: var(--p-blue); }
+.proc2-dots { display: none; gap: 3px; margin-left: 4px; }
+.proc2-dots b { width: 4px; height: 4px; border-radius: 50%; background: var(--p-blue); animation: procDot 900ms ease-in-out infinite; }
+.proc2-dots b:nth-child(2) { animation-delay: 150ms; }
+.proc2-dots b:nth-child(3) { animation-delay: 300ms; }
+@keyframes procDot { 0%, 80%, 100% { opacity: 0.25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-2px); } }
+.proc2-card-desc[data-full] { display: grid; }
+.proc2-card-desc[data-full]::before { content: attr(data-full); grid-area: 1 / 1; visibility: hidden; }
+.proc2-typed { grid-area: 1 / 1; }
+.proc2-card.is-thinking .proc2-dots { display: inline-flex; }
+.proc2-card.is-typing .proc2-typed::after {
+  content: ""; display: inline-block; width: 2px; height: 1.05em; margin-left: 3px; vertical-align: -0.15em;
+  background: var(--p-blue); animation: procCaret 700ms steps(1) infinite;
+}
+@keyframes procCaret { 50% { opacity: 0; } }
+.proc2.is-static .proc2-bubble { margin-top: 8px; }
+@media (prefers-reduced-motion: reduce) {
+  .proc2-card.is-typing .proc2-typed::after, .proc2-card.is-thinking .proc2-dots { display: none; }
+}
 
 /* reduced motion: static final timeline, every step's content visible */
 .proc2.is-static .proc2-cards { grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -1958,6 +1996,10 @@ html.rv .why-now-reveal {
 .cta-list { list-style: none; padding: 0; margin: 24px 0 0; display: flex; flex-direction: column; gap: 8px; }
 .cta-list li { font-size: 14px; color: var(--ink); display: flex; gap: 10px; align-items: center; }
 .cta-list .mono { color: var(--accent); }
+.cta-list--deliv li { display: list-item; line-height: 1.45; }
+.cta-list--deliv strong { font-weight: 700; color: var(--ink); }
+.cta-list--deliv strong::after { content: " · "; font-weight: 400; color: var(--ink-mute); }
+.cta-list--deliv span { color: var(--ink-dim); }
 .cta-form { display: flex; flex-direction: column; gap: 14px; }
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field input, .field textarea {
@@ -2089,12 +2131,13 @@ html.rv .why-now-reveal {
 /* hero: dark slab on the band radius */
 .hero-bottom-band { border-radius: var(--r-band); border: 0; overflow: hidden; }
 
-/* trust: logo marquee sits in the light panel */
+/* trust: logo marquee floats on the page background (no panel); edge mask fades logos into the canvas */
 .trust-band .trust {
   width: calc(100% - 2 * var(--pad)); max-width: calc(var(--maxw) - 2 * var(--pad));
   padding: 30px 0 14px; overflow: hidden;
-  background: var(--panel-light); border: 1px solid var(--panel-light-line); border-radius: var(--r-panel); box-shadow: var(--panel-light-shadow);
+  background: transparent; border: 0; border-radius: 0; box-shadow: none;
 }
+.trust-band .trust-label { color: var(--ink-mute); }
 .trust-band .trust-row { padding-top: 14px; }
 
 /* why-now: dark cards use the dark panel */
@@ -2109,32 +2152,29 @@ html.rv .why-now-reveal {
 
 /* LOCAL-MOD LM-0002: on desktop the heading, tabs and card fit one screen; sizes follow the viewport height */
 @media (min-width: 981px) {
-  .sol-band { padding-block: clamp(40px, 7svh, var(--band-pad-y)); }
-  .sol-band .why-now-banner { padding-bottom: clamp(14px, 2.6svh, 32px); margin-bottom: clamp(12px, 2.4svh, 28px); }
-  .sol-band .why-now-headline { flex: 0 1 auto; max-width: 22em; font-size: clamp(30px, 5.6svh, 48px); text-wrap: balance; }
-  .sol-tabs { margin-bottom: clamp(12px, 2.4svh, 28px); }
-  .sol-grid { padding-block: clamp(16px, 3svh, 36px); }
-  .sol-stage { max-width: clamp(380px, calc((74svh - 120px) * 52 / 36.3), 760px); }
+  /* compressed so heading + tabs + card fit under the sticky header on a 13" laptop (~1440x800 viewport) */
+  .sol-band { padding-block: clamp(32px, 5.2svh, 72px) clamp(36px, 6svh, 80px); }
+  .sol-band .why-now-banner { justify-content: center; padding-bottom: clamp(10px, 1.8svh, 24px); margin-bottom: clamp(8px, 1.4svh, 18px); }
+  .sol-band .why-now-headline { flex: 0 1 auto; max-width: 24em; margin-inline: auto; text-align: center; font-size: clamp(28px, 4.6svh, 44px); text-wrap: balance; }
+  .sol-tabs { margin-bottom: clamp(10px, 1.8svh, 22px); }
+  .sol-grid { padding-block: clamp(14px, 2.4svh, 30px); gap: clamp(28px, 3vw, 44px); }
+  .sol-stage { max-width: clamp(360px, calc((64svh - 150px) * 52 / 36.3), 720px); }
 }
 
-/* LOCAL-MOD LM-0002: the FAQ fits one screen at any desktop scale; the chat area takes the spare height
-   and the question chips sit in an even grid */
+/* LOCAL-MOD LM-0002: the FAQ fits one screen at any desktop scale; the chat area takes the spare height.
+   Suggested questions now sit inside the chat window, just above the input bar, as compact pills. */
 @media (min-width: 769px) {
-  .faq-band { padding-block: clamp(56px, 8svh, var(--band-pad-y)); }
-  #faq { display: flex; flex-direction: column; height: clamp(460px, calc(100svh - 96px), 880px); }
-  .faq-head { flex: none; margin-bottom: clamp(14px, 2.4svh, 32px); }
-  .faq-title { font-size: clamp(56px, 13svh, 132px); }
-  .faq-box { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: var(--pad-panel, clamp(12px, 2.2svh, 22px)); }
+  .faq-band { padding-block: clamp(36px, 5.5svh, 80px); }
+  #faq { display: flex; flex-direction: column; height: clamp(420px, calc(100svh - 190px), 700px); }
+  .faq-head { flex: none; margin-bottom: clamp(10px, 1.8svh, 22px); }
+  .faq-title { font-size: clamp(40px, 7.2svh, 84px); }
+  .faq-box { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: var(--pad-panel, clamp(12px, 2svh, 20px)); }
   .faq-box .faq-screen { flex: 1 1 0; height: auto; min-height: 96px; }
-  .faq-input-box { flex: none; min-height: 0; margin-top: 10px; }
-  .faq-chat-input { min-height: 46px; max-height: 66px; }
-  .faq-chips { flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: clamp(8px, 1.6svh, 14px); }
-  .faq-chip { border-radius: var(--r-chip, 14px); padding: var(--pad-chip, clamp(6px, 1.2svh, 10px) 14px); }
+  .faq-input-box { flex: none; min-height: 0; margin-top: 8px; }
+  .faq-chat-input { min-height: 40px; max-height: 60px; }
+  .faq-chips { flex: none; display: flex; flex-wrap: wrap; gap: 6px 8px; margin-top: 8px; }
+  .faq-chip { border-radius: var(--r-pill, 999px); padding: 6px 13px; font-size: 13.5px; line-height: 1.3; }
 }
-@media (min-width: 769px) and (max-width: 1100px) {
-  .faq-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
 /* process: light panels (schedule phases stay unboxed) */
 .proc2-card { background: var(--panel-light); border-color: var(--bc-panel, var(--panel-light-line)); border-width: var(--bw-panel, 1px); border-radius: var(--r-panel); }
 .proc2-card.is-active { border-color: var(--panel-light-line); box-shadow: 0 calc(16px * var(--shk-panel, 1)) calc(36px * var(--shk-panel, 1)) calc(-28px * var(--shk-panel, 1)) rgb(var(--rgb-navy-900) / 0.35); }
@@ -2353,16 +2393,16 @@ html.rv .why-now-reveal {
   .sol-dots { margin-bottom: 8px; }
   .faq-chips {
     display: flex; flex-wrap: nowrap; align-items: stretch; gap: 10px;
-    width: 100%; max-width: 100%; min-width: 0; margin-top: 10px; padding: 4px 2px 6px;
+    width: 100%; max-width: 100%; min-width: 0; margin-top: 8px; padding: 2px 2px 4px;
     overflow-x: auto; overflow-y: hidden;
     scroll-snap-type: x mandatory; scroll-padding-inline: 2px;
     -webkit-overflow-scrolling: touch; scrollbar-width: none;
   }
   .faq-chips::-webkit-scrollbar { display: none; }
   .faq-chip {
-    flex: 0 0 78%; scroll-snap-align: start; box-sizing: border-box;
+    flex: 0 0 auto; max-width: 82%; scroll-snap-align: start; box-sizing: border-box;
     display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-    min-height: 76px; padding: 12px 14px; border-radius: var(--r-card);
+    min-height: 44px; padding: 8px 14px; border-radius: 22px;
     background: var(--field-bg); border: 1px solid var(--pill-line);
     box-shadow: 0 1px 2px rgb(var(--rgb-navy-900) / 0.06);
     font-size: clamp(0.84rem, 0.8rem + 0.25vw, 0.94rem); line-height: 1.4; font-weight: 500;
@@ -2628,15 +2668,15 @@ html.rv .why-now-reveal {
         <div class="nav-item">
           <a href="va.html" class="nav-trigger" aria-haspopup="true">AI Virtual Assistants<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
           <div class="nav-dd" role="menu" aria-label="AI Virtual Assistants">
-            <a href="va.html#how-it-works" role="menuitem">How it works</a>
-            <a href="va.html#offer" role="menuitem">What you get</a>
-            <a href="va.html#use-cases" role="menuitem">Use cases</a>
+            <a href="va.html#how-it-works" role="menuitem">How It Works</a>
+            <a href="va.html#offer" role="menuitem">What You Get</a>
+            <a href="va.html#use-cases" role="menuitem">Use Cases</a>
             <a href="va.html#compare" role="menuitem">Compare</a>
           </div>
         </div>
       </nav>
       <div class="hdr-actions">
-        <a href="booking.html" class="btn btn-primary btn-sm btn-ico-m" aria-label="Book a call"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a call</a>
+        <a href="booking.html" class="btn btn-primary btn-sm btn-ico-m" aria-label="Book a Call"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Call</a>
         <button class="hdr-menu" id="hdr-menu" type="button" aria-expanded="false" aria-controls="m-nav" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="mm-open" d="M4 7h16M4 12h16M4 17h16"/><path class="mm-close" d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
     </div>
@@ -2646,9 +2686,9 @@ html.rv .why-now-reveal {
       <a href="#why-now">Why Now</a>
       <a href="#process">Process</a>
       <a href="#faq">FAQ</a>
-      <a href="booking.html">Book a call</a>
+      <a href="booking.html">Book a Call</a>
       <span class="m-nav-grp mono">Services</span>
-      <a href="menu.html">All services</a>
+      <a href="menu.html">All Services</a>
       <span class="m-nav-grp mono">AI Virtual Assistants</span>
       <a href="va.html">Overview</a>
     </nav>
@@ -2680,7 +2720,7 @@ html.rv .why-now-reveal {
             We design, build, and deploy AI agents and automation systems for scaling teams. Ship outcomes, not headcount.
           </p>
           <div class="hero-cta">
-            <a href="booking.html" class="btn btn-primary"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+            <a href="booking.html" class="btn btn-primary"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Audit</a>
           </div>
         </div>
         <div class="hero-stats">
@@ -2694,7 +2734,7 @@ html.rv .why-now-reveal {
     <!-- ========== Trust + Why AI · Why now (Inverted Light Band) ========== -->
     <div class="band-invert trust-band" data-reveal>
     <section class="trust">
-      <div class="trust-label" data-rv>Trusted by operators at</div>
+      <div class="trust-label" data-rv>Trusted by Operators at</div>
       <div class="trust-row" data-rv role="group" aria-label="Trusted by operators at Clear Path Capital, WeAreMutuals, Hanoi Drip and Enjoy Shift">
         <div class="trust-track">
           <!-- Set A is the real list; set B is an identical aria-hidden copy for the seamless loop. Each set repeats the 4 logos twice so one set always exceeds the viewport width. -->
@@ -2730,7 +2770,7 @@ html.rv .why-now-reveal {
       <div class="why-now-banner" id="why-now-banner">
         <h2 class="why-now-headline"><span class="wn-line">The window to operate</span><br><span class="wn-line">without AI is <span class="wn-mark">closing fast.</span></span></h2>
         <p class="why-now-body">
-          The economics already favor teams that automate. What matters is where to start, and how to ship it without burning a year of runway.
+          The economics already favor teams that automate. What matters is where to start, and how to ship it <em>without burning precious runway.</em>
         </p>
       </div>
       <div class="value-grid">
@@ -2754,7 +2794,7 @@ html.rv .why-now-reveal {
           <div class="value-num">3.5×</div>
           <div class="value-key">ROI on AI initiatives</div>
           <div class="value-more"><div class="value-more-inner">
-          <p class="value-desc">Average return of $3.50 for every $1 invested in AI. Leaders see up to 8×.</p>
+          <p class="value-desc">Average return of $3.50 for every $1 invested in AI. Leading adopters see up to 8×.</p>
           <div class="value-src mono">Source: IDC · Microsoft, 2024</div>
           </div></div>
         </div>
@@ -2901,8 +2941,8 @@ html.rv .why-now-reveal {
         <div class="sol-tabs" data-rv role="tablist" aria-label="Solutions" aria-orientation="horizontal">
           <button class="sol-tab" role="tab" id="sol-tab-0" aria-controls="sol-panel-0" aria-selected="true" tabindex="0">Concierge<i aria-hidden="true"></i></button>
           <button class="sol-tab" role="tab" id="sol-tab-1" aria-controls="sol-panel-1" aria-selected="false" tabindex="-1">Workflows<i aria-hidden="true"></i></button>
-          <button class="sol-tab" role="tab" id="sol-tab-2" aria-controls="sol-panel-2" aria-selected="false" tabindex="-1">Lead gen<i aria-hidden="true"></i></button>
-          <button class="sol-tab" role="tab" id="sol-tab-3" aria-controls="sol-panel-3" aria-selected="false" tabindex="-1">Ops agents<i aria-hidden="true"></i></button>
+          <button class="sol-tab" role="tab" id="sol-tab-2" aria-controls="sol-panel-2" aria-selected="false" tabindex="-1">Lead Gen<i aria-hidden="true"></i></button>
+          <button class="sol-tab" role="tab" id="sol-tab-3" aria-controls="sol-panel-3" aria-selected="false" tabindex="-1">Ops Agents<i aria-hidden="true"></i></button>
           <button class="sol-tab" role="tab" id="sol-tab-4" aria-controls="sol-panel-4" aria-selected="false" tabindex="-1">Advisory<i aria-hidden="true"></i></button>
         </div>
 
@@ -2916,7 +2956,7 @@ html.rv .why-now-reveal {
                   <h3 class="sol-title">AI Concierge Services</h3>
                   <p class="sol-lead">Chat + voice agents that answer, qualify, and book 24/7.</p>
                   <div class="sol-build-wrap"><p class="sol-build" id="sol-build-0">A unified concierge layer for chat, voice, and SMS. Trained on your knowledge base and wired to your calendar, CRM, and ticketing. Sub‑second voice responses with human handoff when confidence drops.</p></div>
-                  <button type="button" class="sol-more-btn" aria-expanded="false" aria-controls="sol-build-0"><span>More details</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4"/></svg></button>
+                  <button type="button" class="sol-more-btn" aria-expanded="false" aria-controls="sol-build-0"><span>More Details</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4"/></svg></button>
                 </div>
                 <div class="sol-slide" aria-hidden="true" inert>
                   <ul class="sol-list">
@@ -2940,7 +2980,7 @@ html.rv .why-now-reveal {
                   <h3 class="sol-title">Workflow Automation (n8n)</h3>
                   <p class="sol-lead">No‑code &amp; low‑code plumbing across the tools you already pay for, built on n8n and owned by you.</p>
                   <div class="sol-build-wrap"><p class="sol-build" id="sol-build-1">End‑to‑end automation in n8n, the open‑source self‑hostable workflow engine. No per‑task pricing, no vendor lock‑in, no caps on run volume. We wire Google Workspace, Slack, and your CRM into resilient flows with retries, alerts, and dashboards your team trusts.</p></div>
-                  <button type="button" class="sol-more-btn" aria-expanded="false" aria-controls="sol-build-1"><span>More details</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4"/></svg></button>
+                  <button type="button" class="sol-more-btn" aria-expanded="false" aria-controls="sol-build-1"><span>More Details</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4"/></svg></button>
                 </div>
                 <div class="sol-slide" aria-hidden="true" inert>
                   <ul class="sol-list">
@@ -2965,7 +3005,7 @@ html.rv .why-now-reveal {
                   <h3 class="sol-title">Outbound, Research &amp; Lead Gen</h3>
                   <p class="sol-lead">Researched, personalized outbound at a volume humans can't touch.</p>
                   <div class="sol-build-wrap"><p class="sol-build" id="sol-build-2">Agents run prospecting from start to finish. They find accounts that match your ideal customer, research each one (10‑K filings, news, hiring signals, tech stack), write a personalized first message, and sort replies into your rep's calendar.</p></div>
-                  <button type="button" class="sol-more-btn" aria-expanded="false" aria-controls="sol-build-2"><span>More details</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4"/></svg></button>
+                  <button type="button" class="sol-more-btn" aria-expanded="false" aria-controls="sol-build-2"><span>More Details</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4"/></svg></button>
                 </div>
                 <div class="sol-slide" aria-hidden="true" inert>
                   <ul class="sol-list">
@@ -2989,7 +3029,7 @@ html.rv .why-now-reveal {
                   <h3 class="sol-title">Internal Ops Agents</h3>
                   <p class="sol-lead">Agents that handle invoicing, data entry, and the boring middle.</p>
                   <div class="sol-build-wrap"><p class="sol-build" id="sol-build-3">Internal agents that read PDFs, update CRMs, and reconcile spreadsheets. Approvals stay with humans; typing doesn't.</p></div>
-                  <button type="button" class="sol-more-btn" aria-expanded="false" aria-controls="sol-build-3"><span>More details</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4"/></svg></button>
+                  <button type="button" class="sol-more-btn" aria-expanded="false" aria-controls="sol-build-3"><span>More Details</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4"/></svg></button>
                 </div>
                 <div class="sol-slide" aria-hidden="true" inert>
                   <ul class="sol-list">
@@ -3012,7 +3052,7 @@ html.rv .why-now-reveal {
                   <h3 class="sol-title">Operations Strategy &amp; Advisory</h3>
                   <p class="sol-lead">A blanket retainer for everything the build offers don't cover.</p>
                   <div class="sol-build-wrap"><p class="sol-build" id="sol-build-4">Strategy hours, on retainer. We sit with your team during conception and design: aligning resources, scoping budgets, choosing tools, and writing the brief so the eventual build is the right one. Whether we ship it or someone else does.</p></div>
-                  <button type="button" class="sol-more-btn" aria-expanded="false" aria-controls="sol-build-4"><span>More details</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4"/></svg></button>
+                  <button type="button" class="sol-more-btn" aria-expanded="false" aria-controls="sol-build-4"><span>More Details</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4"/></svg></button>
                 </div>
                 <div class="sol-slide" aria-hidden="true" inert>
                   <ul class="sol-list">
@@ -3163,7 +3203,7 @@ html.rv .why-now-reveal {
           if (btn) {
             btn.setAttribute('aria-expanded', 'false');
             var lbl = btn.querySelector('span');
-            if (lbl) lbl.textContent = 'More details';
+            if (lbl) lbl.textContent = 'More Details';
           }
         });
         root.classList.toggle('is-reading', !!root.querySelector('.sol-panel.is-more-open'));
@@ -3232,7 +3272,7 @@ html.rv .why-now-reveal {
             p.classList.toggle('is-more-open', open);
             moreBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
             var lbl = moreBtn.querySelector('span');
-            if (lbl) lbl.textContent = open ? 'Hide details' : 'More details';
+            if (lbl) lbl.textContent = open ? 'Hide Details' : 'More Details';
             root.classList.toggle('is-reading', open);
           });
         }
@@ -3285,19 +3325,19 @@ html.rv .why-now-reveal {
         <div class="proc2-cards">
           <div class="proc2-card is-active" role="tabpanel" id="proc2-panel-0" aria-labelledby="proc2-tab-0" data-step="0">
             <div class="proc2-card-head"><h3 class="proc2-card-title">Audit</h3><span class="proc2-card-week">Week 1</span></div>
-            <p class="proc2-card-desc">We inventory every repetitive workflow, score it for AI fit, and surface the top 3 ROI opportunities.</p>
+            <div class="proc2-bubble"><span class="proc2-avatar" aria-hidden="true"><img src="/assets/querent-logo-flat.svg" alt="" width="18" height="18"></span><div class="proc2-msg"><span class="proc2-from">Querent <i>· Week 1</i><span class="proc2-dots" aria-hidden="true"><b></b><b></b><b></b></span></span><p class="proc2-card-desc">We inventory every repetitive workflow, score it for AI fit, and surface the top 3 ROI opportunities.</p></div></div>
           </div>
           <div class="proc2-card" role="tabpanel" id="proc2-panel-1" aria-labelledby="proc2-tab-1" data-step="1">
             <div class="proc2-card-head"><h3 class="proc2-card-title">Strategy</h3><span class="proc2-card-week">Week 2</span></div>
-            <p class="proc2-card-desc">Scoped build plan, success metrics, vendor decisions, and a fixed‑price proposal. You sign off on the before/after metric we'll be measured on.</p>
+            <div class="proc2-bubble"><span class="proc2-avatar" aria-hidden="true"><img src="/assets/querent-logo-flat.svg" alt="" width="18" height="18"></span><div class="proc2-msg"><span class="proc2-from">Querent <i>· Week 2</i><span class="proc2-dots" aria-hidden="true"><b></b><b></b><b></b></span></span><p class="proc2-card-desc">Scoped build plan, success metrics, vendor decisions, and a fixed‑price proposal. You sign off on the before/after metric we'll be measured on.</p></div></div>
           </div>
           <div class="proc2-card" role="tabpanel" id="proc2-panel-2" aria-labelledby="proc2-tab-2" data-step="2">
             <div class="proc2-card-head"><h3 class="proc2-card-title">Build</h3><span class="proc2-card-week">Weeks 3–6</span></div>
-            <p class="proc2-card-desc">We build, test, and stage the system in your stack. Daily Loom updates. Weekly working demos. You see exactly what's being shipped.</p>
+            <div class="proc2-bubble"><span class="proc2-avatar" aria-hidden="true"><img src="/assets/querent-logo-flat.svg" alt="" width="18" height="18"></span><div class="proc2-msg"><span class="proc2-from">Querent <i>· Weeks 3–6</i><span class="proc2-dots" aria-hidden="true"><b></b><b></b><b></b></span></span><p class="proc2-card-desc">We build, test, and stage the system in your stack. Daily Loom updates. Weekly working demos. You see exactly what's being shipped.</p></div></div>
           </div>
           <div class="proc2-card" role="tabpanel" id="proc2-panel-3" aria-labelledby="proc2-tab-3" data-step="3">
             <div class="proc2-card-head"><h3 class="proc2-card-title">Deploy</h3><span class="proc2-card-week">Week 7+</span></div>
-            <p class="proc2-card-desc">Production launch with monitoring, retraining, and a 21‑day SLA. Hand off to your team or stay on retainer for ongoing tuning, new flows, and strategy hours.</p>
+            <div class="proc2-bubble"><span class="proc2-avatar" aria-hidden="true"><img src="/assets/querent-logo-flat.svg" alt="" width="18" height="18"></span><div class="proc2-msg"><span class="proc2-from">Querent <i>· Week 7+</i><span class="proc2-dots" aria-hidden="true"><b></b><b></b><b></b></span></span><p class="proc2-card-desc">Production launch with monitoring, retraining, and a 21‑day SLA. Hand off to your team or stay on retainer for ongoing tuning, new flows, and strategy hours.</p></div></div>
           </div>
         </div>
       </div>
@@ -3317,18 +3357,18 @@ html.rv .why-now-reveal {
               </div>
           </div>
         </div>
+        <div class="faq-chips faq-chips--in" id="faq-chips" role="group" aria-label="Frequently asked questions"></div>
         <div class="faq-input-box">
           <textarea class="faq-chat-input" id="faq-input" rows="2" placeholder="Type your question" aria-label="Chat message"></textarea>
           <button type="button" class="faq-chat-send" id="faq-send" aria-label="Send">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
           </button>
         </div>
-        <div class="faq-chips" id="faq-chips" role="group" aria-label="Frequently asked questions"></div>
         <!-- Source of the FAQ content (questions + answers); shown as chips + answers by JS, plain list without JS -->
           <div class="faq" id="faq-list">
             <div class="faq-row is-open" data-rv>
               <div class="faq-q"><span class="mono dim">01</span><span>How is pricing structured?</span><span class="faq-toggle">−</span></div>
-              <div class="faq-a">Fixed price per build, scoped to an outcome metric. Most builds land between $8k–$45k; retainers and strategy hours start at $4.5k/mo. The final price depends on complexity, integrations and ongoing support.</div>
+              <div class="faq-a">Every engagement is priced by complexity and outcome, then quoted as a fixed price before any build starts. The final number depends on the integrations, the data involved and how much ongoing support you want. Retainers and strategy hours are available for ongoing work, and the free audit tells you what a build would cost before you commit.</div>
             </div>
             <div class="faq-row" data-rv>
               <div class="faq-q"><span class="mono dim">02</span><span>Do you replace our staff with AI?</span><span class="faq-toggle">+</span></div>
@@ -3369,17 +3409,17 @@ html.rv .why-now-reveal {
         <div class="cta-copy">
           <h2 class="h2 cta-h2" data-rv>Get a free<br>automation audit.</h2>
           <p class="lede lede-sm" data-rv>
-            We'll map your top 3 AI‑automatable workflows, model the ROI and send you a written brief, whether or not you hire us.
+            We map how your team works today, find the top 3 workflows worth handing to AI, and put real numbers on each. You keep the written brief, whether or not you hire us.
           </p>
-          <ul class="cta-list" data-rv>
-            <li>Workflow inventory worksheet</li>
-            <li>ROI scorecard (your numbers)</li>
-            <li>Build vs. buy recommendation</li>
+          <ul class="cta-list cta-list--deliv" data-rv>
+            <li><strong>Workflow inventory</strong><span>Every repetitive task mapped and ranked by AI fit.</span></li>
+            <li><strong>ROI scorecard</strong><span>Hours and dollars saved, modeled on your numbers.</span></li>
+            <li><strong>Build vs. buy call</strong><span>Custom build, off‑the‑shelf tool, or not worth automating.</span></li>
           </ul>
         </div>
         <div class="cta-action-panel" data-rv>
           <p class="lede lede-sm" style="margin-bottom:32px;">30 minutes on Google Meet. Pick a time that works for you.</p>
-          <a href="booking.html" class="btn btn-primary btn-block" style="font-size:16px;padding:16px 24px;"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+          <a href="booking.html" class="btn btn-primary btn-block" style="font-size:16px;padding:16px 24px;"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Audit</a>
           <p class="mono dim" style="text-align:center;margin-top:16px;font-size:10px;">We reply within 1 business day.</p>
         </div>
       </div>
@@ -3392,15 +3432,15 @@ html.rv .why-now-reveal {
       <div class="footer-grid">
         <div class="footer-brand" data-rv>
           <a class="logo" href="#top"><img src="/assets/querent-logo-flat.svg" alt="" style="width:28px;height:28px;display:block;"><span class="logo-word">Querent</span></a>
-          <p class="footer-tag">AI automation, productized. Workflows, agents and ops that give your team its time back.</p>
-          <a class="footer-cta" href="booking.html"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+          <p class="footer-tag">AI automations for scaling founders and teams. Workflows, agents, marketing and operations that give your team their time back.</p>
+          <a class="footer-cta" href="booking.html"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Audit</a>
         </div>
         <nav class="footer-col" data-rv aria-label="Services">
           <h3 class="footer-h">Services</h3>
           <ul>
-            <li><a href="menu.html">Full menu of services</a></li>
+            <li><a href="menu.html">Full Menu of Services</a></li>
             <li><a href="menu.html#concierge">AI Concierge</a></li>
-            <li><a href="menu.html#workflow">n8n Workflow Automation</a></li>
+            <li><a href="menu.html#workflow">Workflow Automation</a></li>
             <li><a href="menu.html#leadgen">Outbound &amp; Research</a></li>
             <li><a href="menu.html#internal">Internal Ops Agents</a></li>
             <li><a href="menu.html#consult">Strategy &amp; Advisory</a></li>
@@ -3410,7 +3450,7 @@ html.rv .why-now-reveal {
           <h3 class="footer-h">Explore</h3>
           <ul>
             <li><a href="#top">Home</a></li>
-            <li><a href="#why-now">Why now</a></li>
+            <li><a href="#why-now">Why Now</a></li>
             <li><a href="#services">Solutions</a></li>
             <li><a href="#process">Process</a></li>
             <li><a href="#faq">FAQ</a></li>
@@ -3794,7 +3834,46 @@ html.rv .why-now-reveal {
         n.tabIndex = on ? 0 : -1;
       });
       cards.forEach(function (c, i) { c.classList.toggle('is-active', i === idx); });
+      typeCard(cards[idx]);
       centerActiveNode(idx, true);
+    }
+    /* Querent "typing": the full text stays in a visually hidden copy for screen readers; a visible copy streams in
+       word by word (Claude-style) each time a phase activates, after a short "typing" indicator */
+    var typeTimer = null, typeTick = null;
+    cards.forEach(function (c) {
+      var p = c.querySelector('.proc2-card-desc');
+      if (!p || p.dataset.full) return;
+      var full = p.textContent.trim();
+      p.dataset.full = full;
+      p.textContent = '';
+      var sr = document.createElement('span'); sr.className = 'proc2-sr'; sr.textContent = full;
+      var vis = document.createElement('span'); vis.className = 'proc2-typed'; vis.setAttribute('aria-hidden', 'true'); vis.textContent = full;
+      p.appendChild(sr); p.appendChild(vis);
+    });
+    function typeCard(card) {
+      if (reduced || !card) return;
+      clearTimeout(typeTimer); clearInterval(typeTick);
+      cards.forEach(function (c) {
+        c.classList.remove('is-typing', 'is-thinking');
+        var v = c.querySelector('.proc2-typed'), p = c.querySelector('.proc2-card-desc');
+        if (v && p) v.textContent = p.dataset.full;
+      });
+      var p = card.querySelector('.proc2-card-desc'), vis = card.querySelector('.proc2-typed');
+      if (!p || !vis) return;
+      var words = p.dataset.full.split(/\s+/), i = 0;
+      vis.textContent = '';
+      card.classList.add('is-typing', 'is-thinking');
+      typeTimer = setTimeout(function () {
+        card.classList.remove('is-thinking');
+        typeTick = setInterval(function () {
+          i++;
+          vis.textContent = words.slice(0, i).join(' ');
+          if (i >= words.length) {
+            clearInterval(typeTick);
+            typeTimer = setTimeout(function () { card.classList.remove('is-typing'); }, 700);
+          }
+        }, 38);
+      }, 520);
     }
     function schedule() {
       clearTimeout(timer); timer = null;
@@ -3860,6 +3939,7 @@ html.rv .why-now-reveal {
       proc.classList.add('is-live');
       window.removeEventListener('resize', measure);
       centerActiveNode(cur, false);
+      typeCard(cards[cur]);
       schedule();
     }
 
@@ -4078,7 +4158,7 @@ html.rv .why-now-reveal {
     if (showBookBtn) {
       var btn = document.createElement('button');
       btn.className = 'faq-book';
-      btn.textContent = 'Book a free audit'; btn.insertBefore(calIcon(), btn.firstChild);
+      btn.textContent = 'Book a Free Audit'; btn.insertBefore(calIcon(), btn.firstChild);
       btn.addEventListener('click', openCalendly);
       msg.appendChild(btn);
     }
@@ -4096,7 +4176,7 @@ html.rv .why-now-reveal {
     msg.appendChild(bubble);
     var btn = document.createElement('button');
     btn.className = 'faq-book';
-    btn.textContent = 'Book a free audit'; btn.insertBefore(calIcon(), btn.firstChild);
+    btn.textContent = 'Book a Free Audit'; btn.insertBefore(calIcon(), btn.firstChild);
     btn.addEventListener('click', openCalendly);
     msg.appendChild(btn);
     messagesEl.appendChild(msg);
@@ -4205,7 +4285,7 @@ html.rv .why-now-reveal {
         if (hasBookDemo) {
           var btn = document.createElement('button');
           btn.className = 'faq-book';
-          btn.textContent = 'Book a free audit'; btn.insertBefore(calIcon(), btn.firstChild);
+          btn.textContent = 'Book a Free Audit'; btn.insertBefore(calIcon(), btn.firstChild);
           btn.addEventListener('click', openCalendly);
           agentBubble.parentNode.appendChild(btn);
         }

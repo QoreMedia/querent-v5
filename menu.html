@@ -2,6 +2,9 @@
 <html lang="en" data-theme="light" data-accent="blue">
 <head>
 <meta charset="utf-8" />
+<!-- INTERNAL NOTE (2026-11-26): per-offer prices removed; they were placeholders and did not reflect current market rates.
+     The service lineup and offer stack below are expected to change. Revisit before relying on this page for quoting.
+     The previous priced version is archived (not served) at _deprecated/menu-v1-priced.html. -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Menu of Services | Querent</title>
 <link rel="icon" type="image/svg+xml" href="/assets/querent-logo-flat.svg" />
@@ -264,9 +267,19 @@ body[data-active="cta"] .amb-consult { opacity: 1; }
 .svc-tag { color: var(--blue); font-weight: 500; }
 .svc-head::after { content: ""; flex: 0 1 64px; height: 1px; background: var(--line-strong); }
 .svc-sub { font-size: 19px; line-height: 1.45; color: var(--ink); margin: 0 0 22px; max-width: 520px; }
-.svc-price { margin: 0 0 28px; display: flex; flex-direction: column; gap: 4px; }
-.svc-price strong { font-size: clamp(26px, 2.6vw, 34px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
-.svc-price span { color: var(--ink-dim); font-size: 14px; }
+/* complexity meter + "good fit for" tags (replaces per-offer prices) */
+.svc-fit { margin: 0 0 28px; display: flex; flex-direction: column; gap: 14px; }
+.svc-cx { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.svc-cx-lbl { color: var(--ink-dim); font-weight: 600; letter-spacing: 0.01em; }
+.svc-cx-bars { display: inline-flex; gap: 4px; }
+.svc-cx-bars i { width: 22px; height: 6px; border-radius: 6px; background: rgb(var(--rgb-navy-800, 21 44 91) / 0.14); }
+.svc-cx-bars i.on { background: var(--c-blue-600, #2563EB); }
+.svc-cx-val { font-weight: 700; color: var(--ink); }
+.svc-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.svc-tags li {
+  font-size: 13px; font-weight: 600; line-height: 1; padding: 8px 12px; border-radius: 999px;
+  color: var(--c-navy-800, #152C5B); background: rgb(37 99 235 / 0.08); border: 1px solid rgb(37 99 235 / 0.18);
+}
 .svc-actions { display: flex; flex-wrap: wrap; gap: var(--gap-button, 12px); align-items: center; }
 .svc-actions .btn-block { width: auto; padding: 12px 20px; }
 /* LOCAL-MOD LM-0002: the details button answers the press at once and keeps its width when the label changes */
@@ -405,9 +418,9 @@ body[data-active="cta"] .amb-consult { opacity: 1; }
   .svc { padding: var(--m-pad-y) 0; }
   .svc-inner, .svc--flip .svc-inner { row-gap: var(--m-gap); }
   .svc-sub { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; margin-bottom: 14px; }
-  .svc-price { margin-bottom: 18px; }
-  .svc-price strong { font-size: clamp(1.35rem, 5vw + 0.3rem, 1.85rem); overflow-wrap: anywhere; }
-  .svc-price span, .svc-detail-body, .svc-list li, .meta-row, .svc-works { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
+  .svc-fit { margin-bottom: 18px; gap: 10px; }
+  .svc-tags li { font-size: 12.5px; padding: 7px 11px; }
+  .svc-detail-body, .svc-list li, .meta-row, .svc-works { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
   .svc-more-body { margin-top: var(--m-gap); grid-template-columns: 1fr; padding: clamp(14px, 4vw, 22px); gap: var(--m-gap); }
   .cta-wrap { padding: var(--m-pad-y) var(--m-pad-x); }
   .cta { padding: clamp(18px, 4vw, 24px) clamp(14px, 4vw, 18px); gap: var(--m-gap); border-radius: 20px; }
@@ -539,15 +552,15 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
         <div class="nav-item">
           <a href="va.html" class="nav-trigger" aria-haspopup="true">AI Virtual Assistants<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
           <div class="nav-dd" role="menu" aria-label="AI Virtual Assistants">
-            <a href="va.html#how-it-works" role="menuitem">How it works</a>
-            <a href="va.html#offer" role="menuitem">What you get</a>
-            <a href="va.html#use-cases" role="menuitem">Use cases</a>
+            <a href="va.html#how-it-works" role="menuitem">How It Works</a>
+            <a href="va.html#offer" role="menuitem">What You Get</a>
+            <a href="va.html#use-cases" role="menuitem">Use Cases</a>
             <a href="va.html#compare" role="menuitem">Compare</a>
           </div>
         </div>
       </nav>
       <div class="hdr-actions">
-        <a href="booking.html" class="btn btn-primary btn-sm btn-ico-m" aria-label="Book a call"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a call</a>
+        <a href="booking.html" class="btn btn-primary btn-sm btn-ico-m" aria-label="Book a Call"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Call</a>
       </div>
     </div>
   </header>
@@ -557,10 +570,10 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
     <!-- ========== Page hero ========== -->
     <section class="hero" id="top" data-sec="hero">
       <div class="hero-copy">
-        <h1 class="h1 rv" style="--d:0">What we ship<br>and what it costs.</h1>
-        <p class="lede rv" style="--d:1">Five offers, each with a fixed price per outcome. Pick one, stack a few, or start with a strategy retainer.</p>
+        <h1 class="h1 rv" style="--d:0">What we ship<br>and who it&rsquo;s for.</h1>
+        <p class="lede rv" style="--d:1">Curated offers, each priced by complexity and outcome. Pick one, stack a few, or start with a strategy retainer to structure things out.</p>
         <div class="hero-cta rv" style="--d:2">
-        <a href="booking.html" class="btn btn-primary"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+        <a href="booking.html" class="btn btn-primary"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Audit</a>
         </div>
       </div>
       <div class="hero-vis"><svg viewBox="0 0 440 340" role="img" aria-label="Five stacked service layers">
@@ -582,10 +595,10 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
         <div class="svc-main">
           <h2 class="h2 rv" style="--d:1">AI Concierge Services</h2>
           <p class="svc-sub rv" style="--d:2">Chat + voice agents that answer, qualify and book 24/7.</p>
-          <p class="svc-price rv" style="--d:3"><strong>$12k–$28k build</strong><span>$2.4k+/mo retainer (optional)</span></p>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span><span class="svc-cx-val">Medium</span></div><ul class="svc-tags" aria-label="Good fit for"><li>Clinics &amp; med&#8209;spas</li><li>Property management</li><li>Professional services</li><li>E&#8209;commerce support</li></ul></div>
           <div class="svc-actions rv" style="--d:4">
-          <a href="booking.html?service=concierge" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
-            <button type="button" class="tog" aria-expanded="false" aria-controls="more-concierge"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <a href="booking.html?service=concierge" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-concierge"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
         <div class="svc-stage rv" style="--d:2"><div class="stage">
@@ -599,9 +612,9 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
         </div></div>
         <div class="svc-more" id="more-concierge" role="region" aria-label="AI Concierge Services details">
           <div class="svc-more-clip"><div class="svc-more-body">
-            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">A unified concierge layer for inbound. Trained on your knowledge base, wired to your calendar, CRM, and ticketing. Sub‑second voice responses with confident human handoff. Replaces the after‑hours desk; lifts the day‑shift's ceiling.</p><p class="svc-works"><b>Works with</b>: Voiceflow &middot; Vapi &middot; ElevenLabs &middot; Twilio &middot; Intercom &middot; HubSpot &middot; OpenAI</p></div>
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">A unified concierge layer for inbound chat, voice and messaging, running on the model that fits each job. Trained on your knowledge base and wired to your calendar, CRM and ticketing, with fast voice responses and a clean human handoff when confidence drops. Covers the after‑hours desk and frees up the day shift.</p><p class="svc-works"><b>Works with</b>: Claude &middot; OpenAI &middot; Vapi &middot; ElevenLabs &middot; Twilio &middot; WhatsApp &middot; Discord &middot; Intercom &middot; HubSpot</p></div>
             <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Property management, clinics, professional services, e‑commerce support</div><div class="meta-row"><span class="mono dim">Timeline</span>3–4 weeks from kickoff to production</div><div class="meta-row"><span class="mono dim">Ownership</span>You own the trained agent, prompts, and integrations</div></div>
-            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Trained chat + voice agent</li><li>Web + Slack + WhatsApp + phone install</li><li>Calendar + CRM writeback</li><li>Ticket auto‑routing &amp; escalation</li><li>Weekly QA &amp; retraining report</li><li>Handoff playbook for your team</li></ul></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Trained chat + voice agent</li><li>Web, phone, WhatsApp, Slack or Discord install</li><li>Calendar + CRM writeback</li><li>Ticket auto‑routing &amp; escalation</li><li>Weekly QA &amp; retraining report</li><li>Handoff playbook for your team</li></ul></div>
           </div></div>
         </div>
       </div>
@@ -613,12 +626,12 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
       <div class="svc-bg" aria-hidden="true"></div>
       <div class="svc-inner">
         <div class="svc-main">
-          <h2 class="h2 rv" style="--d:1">Workflow Automation (n8n)</h2>
-          <p class="svc-sub rv" style="--d:2">No‑code &amp; low‑code plumbing across the tools you already pay for, built on n8n, owned by you.</p>
-          <p class="svc-price rv" style="--d:3"><strong>$8k–$24k per workflow</strong><span>volume discounts on bundles</span></p>
+          <h2 class="h2 rv" style="--d:1">Workflow Automation</h2>
+          <p class="svc-sub rv" style="--d:2">Multi‑model workflows and agents across the tools you already pay for, owned by you.</p>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i></i><i></i></span><span class="svc-cx-val">Low to medium</span></div><ul class="svc-tags" aria-label="Good fit for"><li>Ops teams</li><li>Agencies</li><li>Founders</li><li>Finance &amp; admin</li></ul></div>
           <div class="svc-actions rv" style="--d:4">
-          <a href="booking.html?service=workflow" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
-            <button type="button" class="tog" aria-expanded="false" aria-controls="more-workflow"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <a href="booking.html?service=workflow" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-workflow"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
         <div class="svc-stage rv" style="--d:2"><div class="stage">
@@ -633,11 +646,11 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
   <g class="node" style="--k:3"><rect x="352" y="148" width="88" height="64" rx="16" fill="#2563EB"/><path d="M380 180 l9 9 l17 -19" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></g>
 </svg>
         </div></div>
-        <div class="svc-more" id="more-workflow" role="region" aria-label="Workflow Automation (n8n) details">
+        <div class="svc-more" id="more-workflow" role="region" aria-label="Workflow Automation details">
           <div class="svc-more-clip"><div class="svc-more-body">
-            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">End‑to‑end automation built primarily in n8n: the open‑source, self‑hostable workflow engine that means no per‑task pricing, no vendor lock‑in, and no caps on run volume. We wire Google Workspace (Drive, Gmail, Calendar, Sheets), Slack, and your CRM into resilient flows with retries, alerts, and dashboards your team trusts. We'll also work in Zapier or Make if your team already lives there.</p><p class="svc-works"><b>Works with</b>: n8n &middot; Google Workspace &middot; Slack &middot; Zapier &middot; Make &middot; Airtable</p></div>
-            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Operations teams drowning in Sheets/Gmail/Slack copy‑paste</div><div class="meta-row"><span class="mono dim">Timeline</span>2–4 weeks per flow; longer for multi‑system replatforms</div><div class="meta-row"><span class="mono dim">Ownership</span>Full source, in your own VPC.</div></div>
-            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Workflow audit &amp; opportunity map</li><li>Self‑hosted n8n setup in your VPC</li><li>Google Workspace + Slack integration</li><li>Built + monitored flows with retry logic</li><li>Failure alerts to Slack on‑call</li><li>Runbook + handoff training</li></ul></div>
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">End‑to‑end automation that orchestrates multiple models and nodes. n8n runs the flow, models like Claude, GPT and Grok handle the reasoning, and agent runtimes such as Claude Code, Hermes Agent and Grok Bot take on the longer, multi‑step jobs. We wire Google Workspace, your CRM and your team chat (Slack, Discord, WhatsApp or whichever app we settle on in the build) into resilient flows with retries, alerts, approvals and dashboards your team trusts. Already on Zapier or Make? We work there too.</p><p class="svc-works"><b>Works with</b>: n8n &middot; Claude &middot; Claude Code &middot; Hermes Agent &middot; Grok Bot &middot; OpenAI &middot; Google Workspace &middot; Slack &middot; Discord &middot; WhatsApp &middot; Zapier &middot; Make</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Teams copy‑pasting between Sheets, inboxes, chat and the CRM</div><div class="meta-row"><span class="mono dim">Timeline</span>2–4 weeks per flow; longer for multi‑system replatforms</div><div class="meta-row"><span class="mono dim">Ownership</span>Full source and credentials, hosted in your own cloud</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Workflow audit &amp; opportunity map</li><li>Self‑hosted n8n with multi‑model routing</li><li>Agent runtimes for long, multi‑step jobs</li><li>Slack, Discord or WhatsApp control &amp; approvals</li><li>Monitored flows with retries &amp; failure alerts</li><li>Runbook + handoff training</li></ul></div>
           </div></div>
         </div>
       </div>
@@ -650,11 +663,11 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
       <div class="svc-inner">
         <div class="svc-main">
           <h2 class="h2 rv" style="--d:1">Outbound, Research &amp; Lead Gen</h2>
-          <p class="svc-sub rv" style="--d:2">Researched, personalized outbound at a volume humans can't touch.</p>
-          <p class="svc-price rv" style="--d:3"><strong>$15k–$35k build</strong><span>$3.5k+/mo retainer for tuning + scale</span></p>
+          <p class="svc-sub rv" style="--d:2">Researched, personalized outbound and lead gen, run by a team of agents.</p>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="svc-cx-val">Medium to high</span></div><ul class="svc-tags" aria-label="Good fit for"><li>B2B sales teams</li><li>Agencies &amp; consultancies</li><li>SaaS</li><li>Recruiting</li></ul></div>
           <div class="svc-actions rv" style="--d:4">
-          <a href="booking.html?service=leadgen" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
-            <button type="button" class="tog" aria-expanded="false" aria-controls="more-leadgen"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <a href="booking.html?service=leadgen" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-leadgen"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
         <div class="svc-stage rv" style="--d:2"><div class="stage">
@@ -669,9 +682,9 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
         </div></div>
         <div class="svc-more" id="more-leadgen" role="region" aria-label="Outbound, Research &amp; Lead Gen details">
           <div class="svc-more-clip"><div class="svc-more-body">
-            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">Agents run prospecting from start to finish. They find accounts that match your ideal customer, research each one (10‑K filings, news, hiring signals, tech stack), write a personalized first message, and sort replies into your rep's calendar. SDRs stop researching and start closing.</p><p class="svc-works"><b>Works with</b>: Clay &middot; Apollo &middot; Smartlead &middot; Perplexity API &middot; OpenAI &middot; HubSpot</p></div>
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">A team of agents runs prospecting from start to finish. They find accounts that match your ideal customer, research each one across multiple models and live sources (filings, news, hiring signals, tech stack), draft a personalized first touch for email or social, and route replies into your rep's calendar and CRM. Your team spends its time on conversations, not research.</p><p class="svc-works"><b>Works with</b>: Clay &middot; Apollo &middot; Smartlead &middot; Perplexity &middot; Claude &middot; OpenAI &middot; Grok Bot &middot; HubSpot &middot; Slack &middot; Discord</p></div>
             <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>B2B teams with a defined ICP and a closing process that works</div><div class="meta-row"><span class="mono dim">Timeline</span>3–5 weeks to first booked meetings</div><div class="meta-row"><span class="mono dim">Ownership</span>Lists, sequences, and account briefs delivered into your tools</div></div>
-            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>ICP &amp; list pipeline (Clay/Apollo)</li><li>Account research agent with per‑lead briefs</li><li>Personalized sequence builder</li><li>Reply classifier &amp; sentiment routing</li><li>Booking &amp; pipeline dashboard</li><li>Weekly performance review</li></ul></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>ICP &amp; list pipeline (Clay/Apollo)</li><li>Multi‑model research agent with per‑lead briefs</li><li>Personalized email &amp; social sequences</li><li>Reply classifier &amp; sentiment routing</li><li>Lead alerts in Slack or Discord</li><li>Booking &amp; pipeline dashboard</li></ul></div>
           </div></div>
         </div>
       </div>
@@ -684,11 +697,11 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
       <div class="svc-inner">
         <div class="svc-main">
           <h2 class="h2 rv" style="--d:1">Internal Ops Agents</h2>
-          <p class="svc-sub rv" style="--d:2">Agents that handle invoicing, data entry, and the boring middle.</p>
-          <p class="svc-price rv" style="--d:3"><strong>$10k–$30k per agent</strong><span>volume pricing for multi‑agent rollouts</span></p>
+          <p class="svc-sub rv" style="--d:2">Agents that handle invoicing, data entry and the busywork in between.</p>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="svc-cx-val">Medium to high</span></div><ul class="svc-tags" aria-label="Good fit for"><li>Finance</li><li>HR &amp; people ops</li><li>Project management</li><li>Multi&#8209;location teams</li></ul></div>
           <div class="svc-actions rv" style="--d:4">
-          <a href="booking.html?service=internal" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
-            <button type="button" class="tog" aria-expanded="false" aria-controls="more-internal"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <a href="booking.html?service=internal" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-internal"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
         <div class="svc-stage rv" style="--d:2"><div class="stage">
@@ -723,9 +736,9 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
         </div></div>
         <div class="svc-more" id="more-internal" role="region" aria-label="Internal Ops Agents details">
           <div class="svc-more-clip"><div class="svc-more-body">
-            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">Internal agents that read PDFs, update CRMs, and reconcile spreadsheets. Approvals stay with humans; typing doesn't. Quietly removes hours from finance, HR, and PM workflows.</p><p class="svc-works"><b>Works with</b>: LlamaIndex &middot; Notion &middot; QuickBooks &middot; Airtable &middot; Slack</p></div>
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">Internal agents that read PDFs and inboxes, update your CRM and accounting tools, and reconcile spreadsheets. Approvals stay with humans and arrive in Slack, Discord or Teams; the typing doesn't. Quietly removes hours from finance, HR and PM workflows.</p><p class="svc-works"><b>Works with</b>: Claude &middot; OpenAI &middot; Hermes Agent &middot; LlamaIndex &middot; Notion &middot; QuickBooks &middot; Airtable &middot; Slack &middot; Discord</p></div>
             <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Finance, ops, and HR teams hand‑keying data between systems</div><div class="meta-row"><span class="mono dim">Timeline</span>2–6 weeks depending on document complexity</div><div class="meta-row"><span class="mono dim">Ownership</span>Full source + audit logs + SOPs in your accounts</div></div>
-            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Document extraction agent</li><li>ERP / CRM writeback</li><li>Audit log + approvals UI</li><li>SOP automation</li><li>Error‑rate monitoring</li><li>Quarterly accuracy review</li></ul></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Document &amp; inbox extraction agent</li><li>ERP / CRM writeback</li><li>Audit log + approvals in chat</li><li>SOP automation</li><li>Error‑rate monitoring</li><li>Quarterly accuracy review</li></ul></div>
           </div></div>
         </div>
       </div>
@@ -738,11 +751,11 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
       <div class="svc-inner">
         <div class="svc-main">
           <h2 class="h2 rv" style="--d:1">Operations Strategy &amp; Advisory</h2>
-          <p class="svc-sub rv" style="--d:2">A blanket retainer for everything the build offers don't cover.</p>
-          <p class="svc-price rv" style="--d:3"><strong>From $4.5k/mo</strong><span>10 strategy hours + async Slack</span></p>
+          <p class="svc-sub rv" style="--d:2">A fractional AI strategy partner for the decisions the builds don't cover.</p>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span><span class="svc-cx-val">Scoped to you</span></div><ul class="svc-tags" aria-label="Good fit for"><li>Founders &amp; CEOs</li><li>Leadership teams</li><li>Pre&#8209;build planning</li><li>AI roadmaps</li></ul></div>
           <div class="svc-actions rv" style="--d:4">
-          <a href="booking.html?service=consult" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
-            <button type="button" class="tog" aria-expanded="false" aria-controls="more-consult"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <a href="booking.html?service=consult" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-consult"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
         <div class="svc-stage rv" style="--d:2"><div class="stage">
@@ -760,9 +773,9 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
         </div></div>
         <div class="svc-more" id="more-consult" role="region" aria-label="Operations Strategy &amp; Advisory details">
           <div class="svc-more-clip"><div class="svc-more-body">
-            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">We sit with your team during conception and design: aligning resources, scoping budgets, choosing tools and writing the brief, so the eventual build is the right one, whether we ship it or someone else does.</p><p class="svc-works"><b>Format</b>: Workshop‑led &middot; Async + weekly working sessions &middot; Custom</p></div>
-            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Leaders evaluating where AI/automation fits their roadmap</div><div class="meta-row"><span class="mono dim">Timeline</span>Ongoing · monthly minimum, no long contracts</div><div class="meta-row"><span class="mono dim">Ownership</span>All artifacts (briefs, decision docs, roadmaps) yours</div></div>
-            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Workflow inventory &amp; ROI scorecard</li><li>Build vs. buy decision docs</li><li>Vendor &amp; tool selection</li><li>Architecture &amp; systems design with your team</li><li>Org‑design and resourcing input</li><li>90‑day operations roadmap</li></ul></div>
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">We sit with your leadership while ideas are still taking shape: choosing models and tools, designing how agents, people and VAs work together, setting data and security guardrails, and writing the brief so the eventual build is the right one, whether we ship it or someone else does.</p><p class="svc-works"><b>Format</b>: Workshops &middot; Weekly working sessions &middot; Async in Slack or Discord</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Leaders deciding where AI fits their roadmap and org</div><div class="meta-row"><span class="mono dim">Timeline</span>Ongoing, month to month, no long contracts</div><div class="meta-row"><span class="mono dim">Ownership</span>All briefs, decision docs and roadmaps are yours</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>AI opportunity map &amp; prioritized roadmap</li><li>Model, agent &amp; vendor selection</li><li>Agent architecture &amp; systems design</li><li>Data, security &amp; usage guardrails</li><li>Team enablement: workshops &amp; playbooks</li><li>Build oversight &amp; vendor management</li></ul></div>
           </div></div>
         </div>
       </div>
@@ -779,7 +792,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
           </p>
         </div>
         <div class="svc-page-final">
-          <a href="index.html#cta" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+          <a href="index.html#cta" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Audit</a>
           <a href="mailto:hello@querent.ai" class="btn btn-ghost btn-block"><svg class="cta-ico cta-ico--mail" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Email hello@querent.ai</a>
           <div class="mono dim cta-fine">We reply within 1 business day.</div>
         </div>
@@ -793,15 +806,15 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
       <div class="footer-grid">
         <div class="footer-brand">
           <a class="logo" href="index.html#top"><img src="/assets/querent-logo-flat.svg" alt="" style="width:28px;height:28px;display:block;"><span class="logo-word">Querent</span></a>
-          <p class="footer-tag">AI automation, productized. Workflows, agents and ops that give your team its time back.</p>
-          <a class="footer-cta" href="booking.html"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+          <p class="footer-tag">AI automations for scaling founders and teams. Workflows, agents, marketing and operations that give your team their time back.</p>
+          <a class="footer-cta" href="booking.html"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Audit</a>
         </div>
         <nav class="footer-col" aria-label="Services">
           <h3 class="footer-h">Services</h3>
           <ul>
-            <li><a href="#top">Full menu of services</a></li>
+            <li><a href="#top">Full Menu of Services</a></li>
             <li><a href="#concierge">AI Concierge</a></li>
-            <li><a href="#workflow">n8n Workflow Automation</a></li>
+            <li><a href="#workflow">Workflow Automation</a></li>
             <li><a href="#leadgen">Outbound &amp; Research</a></li>
             <li><a href="#internal">Internal Ops Agents</a></li>
             <li><a href="#consult">Strategy &amp; Advisory</a></li>
@@ -811,7 +824,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
           <h3 class="footer-h">Explore</h3>
           <ul>
             <li><a href="index.html#top">Home</a></li>
-            <li><a href="index.html#why-now">Why now</a></li>
+            <li><a href="index.html#why-now">Why Now</a></li>
             <li><a href="index.html#services">Solutions</a></li>
             <li><a href="index.html#process">Process</a></li>
             <li><a href="index.html#faq">FAQ</a></li>
