@@ -2659,8 +2659,19 @@ html.rv .why-now-reveal {
 .mono, .m-nav-grp { text-transform: none; letter-spacing: 0; font-size: 13px; }
 /* LOCAL-MOD LM-0002: sentence-case hero stat and device captions */
 .stat-lbl, .cap i, .trust-label { text-transform: none !important; letter-spacing: 0 !important; }
-/* LOCAL-MOD LM-0002: full-bleed hero band has square edges (no corner slivers at the screen edge); footer headings sentence case */
-.hero-bottom-band { border-radius: 0 !important; }
+/* LOCAL-MOD LM-0002: footer headings sentence case */
+/* keep the curved band; carry the hero gradient down behind its corners */
+.hero-bg { bottom: calc(-1 * var(--r-band)); }
+/* process timeline is a plain number line (names stay available to screen readers); no rule above the week */
+.proc2-node .proc2-txt { position: absolute !important; width: 1px !important; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.proc2-card-head::before { content: none !important; }
+@media (max-width: 720px) {
+  .proc2-rail { display: flex !important; justify-content: space-between; align-items: center; overflow: visible !important; gap: 0 !important; background: linear-gradient(var(--line-strong), var(--line-strong)) center / 100% 2px no-repeat; }
+  .proc2-rail .proc2-node, .proc2-rail .proc2-body { flex: 0 0 auto !important; width: auto !important; min-width: 44px !important; min-height: 44px !important; padding: 0 !important; margin: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; justify-content: center; align-items: center; }
+  .proc2-rail .proc2-marker { background-color: var(--bg); }
+  .proc2-rail .proc2-node.is-active .proc2-marker { background-color: var(--p-navy); }
+  .proc2-rail::before, .proc2-rail::after, .proc2-rail .proc2-node::before, .proc2-rail .proc2-node::after { display: none !important; }
+}
 .footer-h { text-transform: none !important; letter-spacing: 0 !important; font-size: 14px; }
 </style>
 </head>
