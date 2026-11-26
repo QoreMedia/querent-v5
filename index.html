@@ -553,6 +553,19 @@ body::before {
 }
 .hero-stats .stat-num { color: #FFFFFF; }
 .hero-stats .stat-lbl { color: var(--c-blue-300); }
+/* v0.3 (querent): keep "Book a Free Audit" above the fold on laptop screens. Hero spacing and the
+   constellation scale with viewport height; the dark band's padding is tightened to match. */
+@media (min-width: 981px) {
+  main#top .hero { padding-top: clamp(20px, 3.6svh, 64px); padding-bottom: calc(clamp(28px, 4.6svh, 64px) + var(--r-band)); }
+  .hero-main-row .hero-visual {
+    flex: 0 1 min(57%, calc((100svh - 330px) * 1.5));
+    max-width: min(680px, calc((100svh - 330px) * 1.5));
+  }
+  .hero-copy { padding-top: clamp(28px, 4svh, 48px); padding-bottom: clamp(28px, 4svh, 48px); justify-content: center; }
+  .hero-bottom .hero-stats { padding-top: clamp(28px, 4svh, 48px); padding-bottom: clamp(28px, 4svh, 48px); }
+  .hero-copy .lede { margin-bottom: 0; }
+  .hero-copy .hero-cta { margin-top: clamp(16px, 2.4svh, 24px); }
+}
 /* v0.5: hero body + CTA sized to match the rest of the site; metrics on an even 3-column grid with matched labels */
 @media (min-width: 769px) {
   .hero-copy .lede { font-size: clamp(19px, 1.45vw, 22px); line-height: 1.5; max-width: 30em; }
