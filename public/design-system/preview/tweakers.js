@@ -1,0 +1,1023 @@
+// Live tweakers: exploration tools for the colour and font sections.
+// They change the open page only. The official palette and fonts are always the default; nothing is saved.
+(() => {
+  // ---------- OKLCH math ----------
+  const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+  const gam = (c) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055);
+  const toLin = (L, C, h) => {
+    const a = C * Math.cos((h * Math.PI) / 180), b = C * Math.sin((h * Math.PI) / 180);
+    const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+    const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+    const s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
+    return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s];
+  };
+  const inGamut = (v) => v.every((x) => x >= -0.0005 && x <= 1.0005);
+  const rgb = (L, C, h) => {
+    let c = C;
+    while (c > 0 && !inGamut(toLin(L, c, h))) c -= 0.004;
+    return toLin(L, Math.max(c, 0), h).map((x) => Math.min(1, Math.max(0, x)));
+  };
+  const hex = (l) => '#' + l.map((x) => Math.round(gam(x) * 255).toString(16).padStart(2, '0')).join('');
+  const fromHex = (h) => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => lin(v / 255)); };
+  const toOklch = ([r, g, b]) => {
+    const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+    const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+    const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+    const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+    const a = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+    const bb = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+    return [L, Math.hypot(a, bb), ((Math.atan2(bb, a) * 180) / Math.PI + 360) % 360];
+  };
+  const lum = (l) => 0.2126 * l[0] + 0.7152 * l[1] + 0.0722 * l[2];
+  const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+  // Move lightness in one direction until the colour reaches the contrast target against bg.
+  const ensure = (L, C, h, bg, min, dir) => {
+    let l = L;
+    while (l > 0.02 && l < 0.99 && ratio(rgb(l, C, h), bg) < min) l += dir * 0.005;
+    return rgb(l, C, h);
+  };
+  const o = (L, C, h, a) => `oklch(${L.toFixed(3)} ${C.toFixed(3)} ${h.toFixed(1)}${a == null ? '' : ' / ' + a})`;
+  const trip = (l) => l.map((x) => Math.round(gam(x) * 255)).join(' ');
+
+  const OFFICIAL = {
+    '--bg': '#F4F4F2', '--bg-elev': '#FFFFFF', '--bg-elev-2': '#EAEAE6', '--ink': '#0A0B0E', '--ink-dim': '#5A5F69', '--ink-mute': '#8A8F99',
+    '--night': '#0A0B0E', '--navy-900': '#0D1B38', '--navy-800': '#152C5B', '--blue-700': '#1D4ED8', '--blue-600': '#2563EB', '--blue-400': '#60A5FA', '--blue-300': '#93C5FD', '--cyan-500': '#06B6D4',
+    '--ok': hex(rgb(0.62, 0.16, 150)), '--warn': hex(rgb(0.68, 0.16, 70)), '--danger': '#B42318',
+  };
+  const NAMES = Object.keys(OFFICIAL);
+  const sheet = document.createElement('style');
+  sheet.id = 'q-tweak-color';
+  document.head.appendChild(sheet);
+  const state = {};
+  let extra = '';
+  let hue = null;
+  let calTints = null;
+
+  // ---------- derivation from one anchor ----------
+  function derive(anchorHex) {
+    const [aL, aC, h] = toOklch(fromHex(anchorHex));
+    hue = h;
+    calTints = null;
+    const C = Math.max(aC, 0.05), tc = Math.min(0.012, C * 0.08), white = [1, 1, 1];
+    const bg = rgb(0.965, tc, h), night = rgb(0.14, Math.min(0.03, C * 0.2), h);
+    const blue600 = ensure(Math.min(0.62, Math.max(0.45, aL)), C, h, white, 4.5, -1);
+    const bL = toOklch(blue600)[0];
+    const cyanH = (h + 310) % 360;
+    const d = {
+      '--bg': bg, '--bg-elev': white, '--bg-elev-2': rgb(0.93, tc * 1.3, h),
+      '--ink': ensure(0.17, tc * 1.5, h, bg, 12, -1), '--ink-dim': ensure(0.46, tc * 2, h, bg, 4.5, -1), '--ink-mute': ensure(0.62, tc * 2, h, bg, 3, -1),
+      '--night': night, '--blue-600': blue600, '--blue-700': ensure(bL - 0.07, C, h, white, 4.5, -1),
+      '--navy-900': ensure(0.25, C * 0.55, h, white, 7, -1), '--navy-800': ensure(0.32, C * 0.6, h, white, 4.5, -1),
+      '--blue-400': ensure(0.72, C * 0.85, h, night, 4.5, 1), '--blue-300': ensure(0.84, C * 0.5, h, night, 4.5, 1),
+      '--cyan-500': rgb(0.72, C * 0.8, cyanH),
+    };
+    const out = {};
+    for (const k of Object.keys(d)) out[k] = hex(d[k]);
+    calTints = { '--cal-bg-muted': hex(rgb(0.972, Math.min(0.02, C * 0.1), h)), '--cal-bg-emphasis': hex(rgb(0.94, Math.min(0.03, C * 0.14), h)), '--cal-border': hex(rgb(0.9, Math.min(0.035, C * 0.17), h)), '--cal-border-emphasis': hex(rgb(0.82, Math.min(0.06, C * 0.3), h)) };
+    const panelBase = o(0.945, Math.min(0.03, C * 0.25), h);
+    extra = `--night-2: ${hex(rgb(0.19, Math.min(0.03, C * 0.2), h))}; --on-night: ${hex(rgb(0.94, tc, h))}; --on-night-dim: ${hex(ensure(0.74, tc * 3, h, night, 4.5, 1))}; --on-night-mute: ${hex(ensure(0.6, tc * 3, h, night, 3, 1))};
+      --accent-soft: ${o(0.17, 0.01, h, 0.08)}; --line: ${o(0.2, 0.01, h, 0.1)}; --line-strong: ${o(0.2, 0.01, h, 0.18)};
+      --panel-light: radial-gradient(ellipse 60% 70% at 85% 0%, ${o(bL, C, h, 0.14)}, transparent 70%), ${panelBase};
+      --panel-light-line: ${o(bL, C, h, 0.16)};
+      --panel-dark: radial-gradient(ellipse 70% 80% at 100% 0%, ${o(bL, C, h, 0.22)}, transparent 70%), linear-gradient(160deg, ${o(0.22, C * 0.5, h)} 0%, ${o(0.17, C * 0.45, h)} 100%);
+      --panel-dark-line: ${o(0.82, C * 0.4, h, 0.16)};
+      --panel-dark-start: ${o(0.22, C * 0.5, h)}; --panel-dark-end: ${o(0.17, C * 0.45, h)};
+      --field-line: ${o(bL, C, h, 0.18)}; --field-ring: 0 0 0 3px ${o(bL, C, h, 0.18)}; --pill-line: ${o(bL, C, h, 0.2)};
+      --hairline-on-night: ${o(0.82, C * 0.4, h, 0.14)}; --hairline-on-night-strong: ${o(0.82, C * 0.4, h, 0.24)};
+      --btn-dark-line: ${o(0.82, C * 0.4, h, 0.32)}; --tile-dark-bg: ${o(bL, C, h, 0.14)}; --tile-dark-line: ${o(0.82, C * 0.4, h, 0.18)};
+      --halo-core: ${o(bL, C, h, 0.3)}; --halo-mid: ${o(bL, C, h, 0.1)}; --wash-bottom: ${o(0.92, C * 0.2, h, 0.6)};
+      --blob-blue: ${trip(rgb(bL, C, h))}; --blob-cyan: ${trip(rgb(0.72, C * 0.8, cyanH))}; --blob-navy: ${trip(d['--navy-900'])}; --blob-ice: ${trip(d['--blue-300'])};
+      --ds-tint: ${panelBase};`;
+    return out;
+  }
+
+  function render() {
+    const props = NAMES.filter((n) => state[n]).map((n) => `${n}: ${state[n]};`).join(' ');
+    let dark = '';
+    if (hue !== null && extra) {
+      dark = `[data-q-theme="dark"] { --bg-elev: ${o(0.2, 0.02, hue, 0.85)}; --bg-elev-2: ${o(0.24, 0.03, hue)}; --ground-bg: radial-gradient(ellipse 55% 60% at 86% 18%, ${o(0.5, 0.15, hue, 0.24)}, transparent 70%), radial-gradient(ellipse 48% 55% at 14% 84%, ${o(0.7, 0.1, (hue + 310) % 360, 0.12)}, transparent 70%), var(--night); }`;
+    }
+    sheet.textContent = `:root { ${extra} ${props} } ${dark}`;
+    if (typeof renderEdgeSheet === 'function' && (edgeCount() || iconStroke !== null)) renderEdgeSheet();
+    updatePickers();
+    updateReport();
+    push();
+    updateNow();
+  }
+
+  // ---------- colour UI ----------
+  const grid = document.getElementById('q-picks');
+  const report = document.getElementById('q-report');
+  const anchor = document.getElementById('q-anchor');
+  const picks = {};
+  let source = 'Official Querent';
+  const manual = new Set();
+  const GROUPS = [
+    ['Backgrounds', [['--bg', 'Page'], ['--bg-elev', 'Raised'], ['--bg-elev-2', 'Well'], ['--night', 'Dark ground']]],
+    ['Text', [['--ink', 'Main'], ['--ink-dim', 'Muted'], ['--ink-mute', 'Hint']]],
+    ['Accents', [['--blue-600', 'Accent'], ['--blue-700', 'Accent hover'], ['--blue-400', 'Accent on dark'], ['--blue-300', 'Highlight'], ['--navy-900', 'Button'], ['--navy-800', 'Button on dark'], ['--cyan-500', 'Partner']]],
+    ['Status', [['--ok', 'Success'], ['--warn', 'Warning'], ['--danger', 'Error']]],
+  ];
+  if (grid) {
+    GROUPS.forEach(([title, items]) => {
+      const group = document.createElement('div');
+      group.className = 'q-group';
+      const h = document.createElement('p');
+      h.className = 'q-tweak__label';
+      h.textContent = title;
+      const row = document.createElement('div');
+      row.className = 'q-pick-grid';
+      items.forEach(([n, short]) => {
+        const label = document.createElement('label');
+        label.className = 'q-pick';
+        const input = document.createElement('input');
+        input.type = 'color';
+        input.value = OFFICIAL[n].toLowerCase();
+        input.setAttribute('aria-label', short + ' (' + n + ')');
+        const name = document.createElement('span');
+        name.className = 'q-pick__label';
+        name.innerHTML = '<b></b><span></span>';
+        name.firstChild.textContent = short;
+        name.lastChild.textContent = n;
+        input.addEventListener('input', () => { state[n] = input.value; manual.add(n); render(); });
+        label.append(input, name);
+        row.appendChild(label);
+        picks[n] = input;
+      });
+      group.append(h, row);
+      grid.appendChild(group);
+    });
+  }
+  const current = (n) => state[n] || OFFICIAL[n];
+  function updatePickers() { NAMES.forEach((n) => { if (picks[n]) picks[n].value = current(n).toLowerCase(); }); }
+  function updateReport() {
+    if (!report) return;
+    const c = (n) => fromHex(current(n));
+    const W = [1, 1, 1];
+    const rows = [
+      ['ink on bg', c('--ink'), c('--bg'), 4.5], ['ink-dim on bg', c('--ink-dim'), c('--bg'), 4.5], ['ink-mute on bg (placeholder)', c('--ink-mute'), c('--bg'), 3],
+      ['white on navy-900 (button)', W, c('--navy-900'), 4.5], ['white on blue-600 (message)', W, c('--blue-600'), 4.5], ['blue-400 on night (icon)', c('--blue-400'), c('--night'), 4.5],
+    ];
+    report.innerHTML = '';
+    rows.forEach(([name, a, b, min]) => {
+      const r = ratio(a, b), ok = r >= min;
+      [name, r.toFixed(1) + ':1', ok ? 'pass ' + min : 'below ' + min].forEach((t, i) => {
+        const s = document.createElement('span');
+        if (i && !ok) s.className = 'is-fail';
+        s.textContent = t;
+        report.appendChild(s);
+      });
+    });
+  }
+  const presets = document.querySelectorAll('.q-preset');
+  const official = document.querySelector('[data-preset="official"]');
+  const unpress = (except) => presets.forEach((b) => b.setAttribute('aria-pressed', String(b === except)));
+  function applyAnchor(hx, name) { Object.keys(state).forEach((k) => delete state[k]); manual.clear(); source = name; Object.assign(state, derive(hx)); render(); }
+  function clearColorState() {
+    Object.keys(state).forEach((k) => delete state[k]);
+    manual.clear();
+    source = 'Official Querent';
+    calTints = null;
+    extra = '';
+    hue = null;
+    sheet.textContent = '';
+    if (anchor) anchor.value = '#2563eb';
+    unpress(official);
+    updatePickers();
+    updateReport();
+  }
+  function reset() {
+    clearColorState();
+    push();
+    updateNow();
+  }
+  // Mini palette on each preset: page, highlight, accent, button, partner.
+  const strip = (cols) => cols.map((c) => '<i style="background:' + c + '"></i>').join('');
+  const preview = (hx) => { const e = extra, hh = hue; const d = derive(hx); extra = e; hue = hh; return [d['--bg'], d['--blue-300'], d['--blue-600'], d['--navy-900'], d['--cyan-500']]; };
+  presets.forEach((b) => {
+    const sw = b.querySelector('.q-preset__sw');
+    if (b === official) {
+      if (sw) sw.innerHTML = strip([OFFICIAL['--bg'], OFFICIAL['--blue-300'], OFFICIAL['--blue-600'], OFFICIAL['--navy-900'], OFFICIAL['--cyan-500']]);
+      return;
+    }
+    const hx = hex(rgb(0.58, 0.19, Number(b.dataset.anchorH)));
+    if (sw) sw.innerHTML = strip(preview(hx));
+    b.addEventListener('click', () => { unpress(b); if (anchor) anchor.value = hx; applyAnchor(hx, (b.dataset.name || b.textContent.trim() || 'Custom') + ' anchor'); });
+  });
+  if (official) official.addEventListener('click', reset);
+  if (anchor) anchor.addEventListener('input', () => { unpress(null); applyAnchor(anchor.value, 'Custom anchor'); });
+  document.querySelectorAll('[data-color-reset]').forEach((b) => b.addEventListener('click', reset));
+  updateReport();
+
+  // ---------- logo variant switcher ----------
+  const LOGO_LABELS = {
+    flat: 'Flat mark',
+    line: 'Line mark',
+    wordmark: 'Wordmark',
+    monogram: 'Monogram',
+    icon: 'Icon only',
+    lockup: 'Lockup',
+    stacked: 'Stacked',
+  };
+  let logoVariant = 'flat';
+  const logoOpts = document.querySelectorAll('.q-logo-opt[data-logo]');
+  function setLogoVariant(v, silent) {
+    logoVariant = Object.prototype.hasOwnProperty.call(LOGO_LABELS, v) ? v : 'flat';
+    logoOpts.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.logo === logoVariant)));
+    if (!silent) {
+      syncLogo();
+      updateNow();
+    }
+  }
+  logoOpts.forEach((b) => b.addEventListener('click', () => setLogoVariant(b.dataset.logo)));
+
+  // ---------- current selection summary (top of the page) ----------
+  const nowSw = document.getElementById('now-swatches');
+  const nowPal = document.getElementById('now-palette');
+  const nowOther = document.getElementById('now-other');
+  const nowLogo = document.getElementById('now-logo');
+  const nowTypePreset = document.getElementById('now-type-preset');
+  const nowShape = document.getElementById('now-shape');
+  function updateNow() {
+    if (nowSw) nowSw.innerHTML = strip(['--bg', '--ink', '--blue-600', '--navy-900', '--blue-300', '--cyan-500'].map(current));
+    if (nowPal) nowPal.textContent = manual.size && source === 'Official Querent' ? 'Official with edits' : source;
+    if (nowLogo) nowLogo.textContent = LOGO_LABELS[logoVariant] || 'Flat mark';
+    if (nowOther) {
+      const parts = [];
+      if (manual.size) parts.push(manual.size + (manual.size === 1 ? ' colour edit' : ' colour edits'));
+      const n = edgeCount() + (iconStroke !== null ? 1 : 0);
+      if (n) parts.push(n + (n === 1 ? ' shape edit' : ' shape edits'));
+      const t = Object.keys(typeVars).length;
+      if (t) parts.push(t + (t === 1 ? ' type edit' : ' type edits'));
+      nowOther.textContent = parts.length ? parts.join(', ') : 'None';
+    }
+    if (nowTypePreset) {
+      nowTypePreset.textContent = typePreset === 'custom' ? 'Custom' : (TYPE_PRESETS[typePreset] ? TYPE_PRESETS[typePreset].label : 'Sleek');
+    }
+    if (nowShape) {
+      nowShape.textContent = shapePreset === 'custom' ? 'Custom' : (SHAPE_PRESETS[shapePreset] ? SHAPE_PRESETS[shapePreset].label : 'Default');
+    }
+    ROLES.forEach((role) => {
+      const el = document.getElementById('now-' + role);
+      const s = sel[role];
+      if (!el || !s || !FONTS[role][Number(s.value)]) return;
+      const [name, , fb] = FONTS[role][Number(s.value)];
+      el.textContent = name;
+      el.style.fontFamily = "'" + name + "', " + fb;
+    });
+  }
+  document.querySelectorAll('[data-jump]').forEach((b) => b.addEventListener('click', () => {
+    const target = document.getElementById(b.dataset.jump);
+    if (!target) return;
+    const calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    target.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+    const focus = document.getElementById(b.dataset.focus);
+    if (focus) setTimeout(() => { const f = focus.matches('input,select,button') ? focus : focus.querySelector('input'); if (f) f.focus({ preventScroll: true }); }, calm ? 0 : 600);
+  }));
+
+  // ---------- fonts & typography (curated 2-font pool, Google Fonts only) ----------
+  const FONTS = {
+    display: [
+      ['Bricolage Grotesque', '400;500;600;700;800', 'sans-serif'],
+      ['Instrument Serif', '400', 'serif'],
+      ['Syne', '400;500;600;700;800', 'sans-serif'],
+      ['Fraunces', '400;500;600;700;800', 'serif'],
+      ['Archivo', '400;500;600;700;800', 'sans-serif'],
+      ['Newsreader', '400;500;600;700', 'serif'],
+    ],
+    body: [
+      ['Source Sans 3', '400;500;600;700', 'sans-serif'],
+      ['IBM Plex Sans', '400;500;600;700', 'sans-serif'],
+      ['Work Sans', '400;500;600;700;800', 'sans-serif'],
+      ['Lora', '400;500;600;700', 'serif'],
+      ['Public Sans', '400;500;600;700;800', 'sans-serif'],
+      ['Manrope', '400;500;600;700;800', 'sans-serif'],
+    ],
+  };
+  const TYPE_PRESETS = {
+    sleek: { label: 'Sleek', display: 'Bricolage Grotesque', body: 'Source Sans 3' },
+    editorial: { label: 'Editorial', display: 'Instrument Serif', body: 'IBM Plex Sans' },
+    stylized: { label: 'Stylized', display: 'Syne', body: 'Work Sans' },
+    classic: { label: 'Classic', display: 'Fraunces', body: 'Lora' },
+    technical: { label: 'Technical', display: 'Archivo', body: 'Public Sans' },
+    studio: { label: 'Studio', display: 'Newsreader', body: 'Manrope' },
+  };
+  const fsheet = document.createElement('style');
+  fsheet.id = 'q-tweak-type';
+  document.head.appendChild(fsheet);
+  const loaded = new Set();
+  const load = (name, weights) => {
+    if (loaded.has(name)) return;
+    loaded.add(name);
+    const enc = encodeURIComponent(name).replace(/%20/g, '+');
+    if (document.head.querySelector('link[href*="' + enc + '"]')) return;
+    const l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=' + enc + ':wght@' + weights + '&display=swap';
+    document.head.appendChild(l);
+  };
+  load(FONTS.display[0][0], FONTS.display[0][1]);
+  load(FONTS.body[0][0], FONTS.body[0][1]);
+
+  const sel = {};
+  const ROLES = ['display', 'body'];
+  let typePreset = 'sleek';
+  const typePresetBtns = document.querySelectorAll('#q-type-presets [data-type-preset]');
+  const typeVars = {};
+  const SITE_TYPE_VARS = ['--t-size-head', '--t-size-body', '--t-align', '--t-pad-top', '--t-pad-bottom', '--t-pad-left', '--t-leading', '--t-tracking'];
+
+  function syncTypePresetButtons() {
+    typePresetBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.typePreset === typePreset)));
+  }
+  function detectTypePreset() {
+    const dName = sel.display ? FONTS.display[Number(sel.display.value)][0] : FONTS.display[0][0];
+    const bName = sel.body ? FONTS.body[Number(sel.body.value)][0] : FONTS.body[0][0];
+    const hit = Object.keys(TYPE_PRESETS).find((k) => TYPE_PRESETS[k].display === dName && TYPE_PRESETS[k].body === bName);
+    typePreset = hit || 'custom';
+    syncTypePresetButtons();
+  }
+
+  ROLES.forEach((role) => {
+    const el = document.getElementById('q-font-' + role);
+    if (!el) return;
+    sel[role] = el;
+    FONTS[role].forEach(([n], i) => {
+      const op = document.createElement('option');
+      op.value = String(i);
+      op.textContent = i === 0 ? n + ' (default)' : n;
+      el.appendChild(op);
+    });
+    el.addEventListener('change', () => {
+      detectTypePreset();
+      applyFonts();
+    });
+  });
+
+  typePresetBtns.forEach((b) => {
+    b.addEventListener('click', () => {
+      const key = b.dataset.typePreset;
+      const p = TYPE_PRESETS[key];
+      if (!p) return;
+      const dIdx = FONTS.display.findIndex(([n]) => n === p.display);
+      const bIdx = FONTS.body.findIndex(([n]) => n === p.body);
+      if (sel.display && dIdx >= 0) sel.display.value = String(dIdx);
+      if (sel.body && bIdx >= 0) sel.body.value = String(bIdx);
+      typePreset = key;
+      syncTypePresetButtons();
+      applyFonts();
+    });
+  });
+
+  // Populate numeric & currency typography specimens dynamically (zero static mock currency in HTML).
+  const typeNum = document.getElementById('q-type-num');
+  if (typeNum) typeNum.textContent = '148,420';
+  const typeCur = document.getElementById('q-type-cur');
+  if (typeCur) typeCur.textContent = '$42,500';
+
+  function renderTypeSheet() {
+    const parts = [];
+    ROLES.forEach((role) => {
+      if (!sel[role] || Number(sel[role].value) === 0) return;
+      const [n, w, fb] = FONTS[role][Number(sel[role].value)];
+      load(n, w);
+      parts.push('--font-' + role + ": '" + n + "', " + fb + ';');
+      if (role === 'body') parts.push("--font-sans: '" + n + "', " + fb + ';');
+    });
+    Object.keys(typeVars).forEach((k) => {
+      parts.push(k + ': ' + typeVars[k] + ';');
+    });
+    fsheet.textContent = parts.length ? ':root { ' + parts.join(' ') + ' }' : '';
+  }
+  function applyFonts() {
+    renderTypeSheet();
+    push();
+    updateNow();
+  }
+
+  // ---------- typography modal controls ----------
+  function setCtlOutput(el, text) {
+    if (!el) return;
+    const out = (el.id && document.querySelector('output[for="' + el.id + '"]')) ||
+      (el.parentElement && el.parentElement.querySelector('output')) ||
+      (el.closest && el.closest('.q-ctl, .q-modal__field, .q-field-row, label') && el.closest('.q-ctl, .q-modal__field, .q-field-row, label').querySelector('output'));
+    if (out) out.textContent = text;
+  }
+  const TYPE_MODAL_CTLS = [
+    { id: 'qt-head-scale', css: '--t-size-head', def: '1', fmt: (v) => String(v), out: (v) => Number(v).toFixed(2).replace(/\.00$/, '') + 'x' },
+    { id: 'qt-body-size', css: '--t-size-body', def: '16', fmt: (v) => v + 'px', out: (v) => v + 'px' },
+    { id: 'qt-pad-top', css: '--t-pad-top', def: '0', fmt: (v) => v + 'px', out: (v) => v + 'px' },
+    { id: 'qt-pad-bottom', css: '--t-pad-bottom', def: '0', fmt: (v) => v + 'px', out: (v) => v + 'px' },
+    { id: 'qt-pad-left', css: '--t-pad-left', def: '0', fmt: (v) => v + 'px', out: (v) => v + 'px' },
+    { id: 'qt-leading', css: '--t-leading', def: '1.6', fmt: (v) => String(v), out: (v) => String(v) },
+    { id: 'qt-tracking', css: '--t-tracking', def: '0', fmt: (v) => v + 'em', out: (v) => v + 'em' },
+    { id: 'qt-clamp', css: '--t-card-clamp', def: '0', fmt: (v) => (v === '0' || v === 'none' || v === '' ? 'none' : String(v)), out: (v) => (v === '0' || v === 'none' || v === '' ? 'Off' : v + ' lines') },
+  ];
+  const qtDefaults = {};
+  TYPE_MODAL_CTLS.forEach((cfg) => {
+    const el = document.getElementById(cfg.id);
+    if (!el) return;
+    qtDefaults[cfg.id] = el.value !== '' ? el.value : cfg.def;
+    setCtlOutput(el, cfg.out(qtDefaults[cfg.id]));
+    const onChange = () => {
+      if (el.value === qtDefaults[cfg.id]) delete typeVars[cfg.css];
+      else typeVars[cfg.css] = cfg.fmt(el.value);
+      setCtlOutput(el, cfg.out(el.value));
+      applyFonts();
+    };
+    el.addEventListener('input', onChange);
+    el.addEventListener('change', onChange);
+  });
+  const alignBtns = document.querySelectorAll('#q-modal-type [data-t-align], [data-t-align]');
+  let alignDefault = 'left';
+  alignBtns.forEach((b) => {
+    if (b.getAttribute('aria-pressed') === 'true') alignDefault = b.dataset.tAlign || 'left';
+  });
+  alignBtns.forEach((b) => {
+    b.addEventListener('click', () => {
+      const v = b.dataset.tAlign || 'left';
+      alignBtns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      if (v === alignDefault) delete typeVars['--t-align'];
+      else typeVars['--t-align'] = v;
+      applyFonts();
+    });
+  });
+
+  function clearTypeState() {
+    Object.values(sel).forEach((el) => { el.value = '0'; });
+    typePreset = 'sleek';
+    syncTypePresetButtons();
+    Object.keys(typeVars).forEach((k) => delete typeVars[k]);
+    TYPE_MODAL_CTLS.forEach((cfg) => {
+      const el = document.getElementById(cfg.id);
+      if (!el) return;
+      el.value = qtDefaults[cfg.id];
+      setCtlOutput(el, cfg.out(el.value));
+    });
+    alignBtns.forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.tAlign || 'left') === alignDefault)));
+    renderTypeSheet();
+  }
+  document.querySelectorAll('[data-type-reset]').forEach((b) => b.addEventListener('click', () => {
+    Object.keys(typeVars).forEach((k) => delete typeVars[k]);
+    TYPE_MODAL_CTLS.forEach((cfg) => {
+      const el = document.getElementById(cfg.id);
+      if (!el) return;
+      el.value = qtDefaults[cfg.id];
+      setCtlOutput(el, cfg.out(el.value));
+    });
+    alignBtns.forEach((b2) => b2.setAttribute('aria-pressed', String((b2.dataset.tAlign || 'left') === alignDefault)));
+    applyFonts();
+  }));
+  document.querySelectorAll('[data-font-reset]').forEach((b) => b.addEventListener('click', () => {
+    Object.values(sel).forEach((el) => { el.value = '0'; });
+    typePreset = 'sleek';
+    syncTypePresetButtons();
+    applyFonts();
+  }));
+
+  // ---------- edge & shape language tweaker: 8 categorized facets, presets, geometry, blur, surface & icon stroke ----------
+  const FAMS = {
+    'main-card': { label: 'Main card', r: '--r-main-card', alias: 'card', aliasR: '--r-card', k: 0, pad: 32, gap: 16, padMax: 64, edge: 0, blur: 0 },
+    'side-card': { label: 'Side card', r: '--r-side-card', alias: 'panel', aliasR: '--r-panel', k: 1, pad: 24, gap: 16, padMax: 64, edge: 0, blur: 0 },
+    'accent-card': { label: 'Accent card', r: '--r-accent-card', k: 1, pad: 24, gap: 16, padMax: 64, edge: 0, blur: 0 },
+    toast: { label: 'Toast', r: '--r-toast', k: 1, pad: 14, gap: 12, padMax: 48, edge: 0, blur: 0 },
+    field: { label: 'Field', r: '--r-input', k: 1, pad: 16, gap: 16, padMax: 64, edge: 0, blur: 0 },
+    button: { label: 'Button', r: '--r-btn', pill: true, k: 1, pad: 12, gap: 12, padMax: 64, edge: 0, blur: 0 },
+    chip: { label: 'Chip', r: '--r-chip', pill: true, k: 0, pad: 8, gap: 12, padMax: 64, edge: 0, blur: 0 },
+    slab: { label: 'Slab', r: '--r-band', k: 0, pad: 96, gap: 16, padMax: 160, edge: 0, blur: 0 },
+  };
+  const SHAPE_PRESETS = {
+    default: { label: 'Default', stroke: null, edge: null },
+    sharp: {
+      label: 'Sharp',
+      stroke: 1.5,
+      edge: {
+        'main-card': { r: 0, k: 0, blur: 0 }, 'side-card': { r: 0, k: 0, blur: 0 }, 'accent-card': { r: 0, k: 0, blur: 0 },
+        toast: { r: 0, k: 0, blur: 0 }, field: { r: 0, k: 0 }, button: { r: 0, k: 0 }, chip: { r: 0, k: 0 }, slab: { r: 0, k: 0 },
+      },
+    },
+    sleek: {
+      label: 'Sleek',
+      stroke: 1.5,
+      edge: {
+        'main-card': { r: 14, k: 0.6, blur: 20 }, 'side-card': { r: 18, k: 0.6, blur: 20 }, 'accent-card': { r: 16, k: 0.6, blur: 20 },
+        toast: { r: 14, k: 0.8, blur: 35 }, field: { r: 14, k: 0.6 }, button: { r: 14, k: 0.6 }, chip: { r: 14, k: 0.6 }, slab: { r: 18, k: 0.6 },
+      },
+    },
+    soft: {
+      label: 'Soft',
+      stroke: 2,
+      edge: {
+        'main-card': { r: 28, k: 1.4, blur: 35 }, 'side-card': { r: 34, k: 1.4, blur: 35 }, 'accent-card': { r: 30, k: 1.4, blur: 35 },
+        toast: { r: 24, k: 1.2, blur: 50 }, field: { r: 28, k: 1.4 }, button: { r: 32, k: 1.4 }, chip: { r: 32, k: 1.4 }, slab: { r: 36, k: 1.4 },
+      },
+    },
+    pill: {
+      label: 'Pill',
+      stroke: 2,
+      edge: {
+        'main-card': { r: 40, k: 1, blur: 25 }, 'side-card': { r: 44, k: 1, blur: 25 }, 'accent-card': { r: 40, k: 1, blur: 25 },
+        toast: { r: 40, k: 1, blur: 40 }, field: { r: 40, k: 1 }, button: { r: 40, k: 1 }, chip: { r: 40, k: 1 }, slab: { r: 48, k: 1 },
+      },
+    },
+  };
+  const OUT = { default: 'Default', accent: 'Accent', highlight: 'Highlight', ink: 'Ink', navy: 'Navy' };
+  const OUTTOK = { accent: '--blue-600', highlight: '--blue-300', ink: '--ink', navy: '--navy-900' };
+  const SURF = { default: 'Default', raised: 'Raised', tint: 'Subtle tint', accent: 'Accent', dark: 'Dark' };
+  const edge = {};
+  let famSel = 'main-card';
+  let shapePreset = 'default';
+  let iconStroke = null;
+  const edgeSheet = document.createElement('style');
+  edgeSheet.id = 'q-tweak-edge';
+  document.head.appendChild(edgeSheet);
+  Object.keys(FAMS).forEach((f) => {
+    const F = FAMS[f];
+    const cs = getComputedStyle(document.documentElement);
+    let v = parseFloat(cs.getPropertyValue(F.r));
+    if (Number.isNaN(v) && F.aliasR) v = parseFloat(cs.getPropertyValue(F.aliasR));
+    F.dr = F.pill ? 40 : (Number.isNaN(v) ? (F.alias === 'panel' ? 30 : 22) : v);
+  });
+  const shapePresetBtns = document.querySelectorAll('#q-shape-presets [data-shape-preset]');
+  const strokeEl = document.getElementById('qs-icon-stroke');
+  const strokeDefault = strokeEl && strokeEl.value !== '' ? strokeEl.value : '1.75';
+  if (strokeEl) {
+    setCtlOutput(strokeEl, strokeEl.value + 'px');
+    strokeEl.addEventListener('input', () => {
+      const v = Number(strokeEl.value);
+      iconStroke = String(v) === String(Number(strokeDefault)) && edgeCount() === 0 ? null : v;
+      setCtlOutput(strokeEl, v + 'px');
+      shapePreset = edgeCount() === 0 && iconStroke === null ? 'default' : 'custom';
+      syncShapePresetButtons();
+      applyEdge();
+    });
+  }
+  function syncShapePresetButtons() {
+    shapePresetBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.shapePreset === shapePreset)));
+  }
+  function surfValue(kind) {
+    if (kind === 'raised') return current('--bg-elev');
+    if (kind === 'tint') {
+      const m = extra.match(/--ds-tint:\s*([^;]+);/);
+      return m ? m[1].trim() : '#E8EEFA';
+    }
+    if (kind === 'accent') return current('--blue-600');
+    if (kind === 'dark') return current('--night');
+    return '';
+  }
+  function emitFacet(v, f, alias, prop, val) {
+    v[prop + f] = val;
+    if (alias) v[prop + alias] = val;
+  }
+  function edgeVars() {
+    const v = {};
+    Object.keys(edge).forEach((f) => {
+      const e = edge[f], F = FAMS[f];
+      if (!F) return;
+      if (e.r !== undefined) {
+        const rv = F.pill && e.r >= 40 ? '999px' : e.r + 'px';
+        v[F.r] = rv;
+        if (F.aliasR) v[F.aliasR] = rv;
+      }
+      if (e.edge !== undefined) emitFacet(v, f, F.alias, '--edge-', e.edge + 'px');
+      if (e.k !== undefined) emitFacet(v, f, F.alias, '--shk-', String(e.k));
+      if (e.bw !== undefined) emitFacet(v, f, F.alias, '--bw-', e.bw + 'px');
+      if (e.bc && e.bc !== 'default') emitFacet(v, f, F.alias, '--bc-', current(OUTTOK[e.bc]));
+      if (e.blur !== undefined) emitFacet(v, f, F.alias, '--blur-', (e.blur * 0.24).toFixed(1) + 'px');
+      if (e.surf && e.surf !== 'default') emitFacet(v, f, F.alias, '--surf-', surfValue(e.surf));
+      if (e.pad !== undefined) emitFacet(v, f, F.alias, '--pad-', e.pad + 'px');
+      if (e.gap !== undefined) emitFacet(v, f, F.alias, '--gap-', e.gap + 'px');
+    });
+    if (iconStroke !== null) v['--icon-stroke'] = String(iconStroke);
+    return v;
+  }
+  const edgeCount = () => Object.values(edge).reduce((n, e) => n + Object.keys(e).length, 0);
+  function renderEdgeSheet() {
+    const v = edgeVars();
+    edgeSheet.textContent = Object.keys(v).length ? ':root { ' + Object.entries(v).map(([k, x]) => k + ': ' + x + ';').join(' ') + ' }' : '';
+  }
+  function applyEdge() {
+    renderEdgeSheet();
+    push();
+    updateNow();
+  }
+  const famBoxes = Array.from(document.querySelectorAll('[data-q-fam], #q-fam, #q-modal-fam'));
+  function syncFamButtons() {
+    famBoxes.forEach((box) => {
+      box.querySelectorAll('.q-chip[data-fam]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.fam === famSel)));
+    });
+  }
+  function buildFamButtons(container) {
+    container.innerHTML = '';
+    Object.keys(FAMS).forEach((f) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'q-chip';
+      b.dataset.fam = f;
+      b.textContent = FAMS[f].label;
+      b.setAttribute('aria-pressed', String(f === famSel));
+      b.addEventListener('click', () => {
+        famSel = f;
+        syncFamButtons();
+        renderCtls();
+      });
+      container.appendChild(b);
+    });
+  }
+  function renderCtls() {
+    const box = document.getElementById('q-ctls');
+    if (!box) return;
+    const f = famSel, F = FAMS[f];
+    box.innerHTML = '';
+    if (!famBoxes.length) {
+      const tabs = document.createElement('div');
+      tabs.className = 'q-fam';
+      tabs.setAttribute('role', 'group');
+      tabs.setAttribute('aria-label', 'Element facet');
+      buildFamButtons(tabs);
+      box.appendChild(tabs);
+    }
+    const get = (k, d) => (edge[f] && edge[f][k] !== undefined ? edge[f][k] : d);
+    const set = (k, v) => {
+      (edge[f] = edge[f] || {})[k] = v;
+      shapePreset = 'custom';
+      syncShapePresetButtons();
+      applyEdge();
+    };
+    const clear = (k) => {
+      if (edge[f]) {
+        delete edge[f][k];
+        if (!Object.keys(edge[f]).length) delete edge[f];
+      }
+      shapePreset = edgeCount() === 0 && iconStroke === null ? 'default' : 'custom';
+      syncShapePresetButtons();
+      applyEdge();
+      renderCtls();
+    };
+    const mk = (tag, cls, text) => { const x = document.createElement(tag); if (cls) x.className = cls; if (text) x.textContent = text; return x; };
+    const resetBtn = (k) => { const b = mk('button', 'q-ctl__reset', 'Reset'); b.type = 'button'; b.addEventListener('click', () => clear(k)); return b; };
+    const range = (label, key, min, max, step, def, fmt) => {
+      const row = mk('div', 'q-ctl');
+      const r = mk('input');
+      r.type = 'range'; r.min = min; r.max = max; r.step = step; r.value = get(key, def); r.setAttribute('aria-label', F.label + ' ' + label);
+      const o = mk('output', '', fmt(Number(r.value)));
+      r.addEventListener('input', () => { o.textContent = fmt(Number(r.value)); set(key, Number(r.value)); });
+      row.append(mk('span', '', label), r, o, resetBtn(key));
+      box.appendChild(row);
+    };
+    const selectRow = (label, key, map) => {
+      const row = mk('div', 'q-ctl');
+      const sel2 = mk('select', 'q-select');
+      sel2.setAttribute('aria-label', F.label + ' ' + label.toLowerCase());
+      Object.keys(map).forEach((k) => { const op = mk('option', '', map[k]); op.value = k; sel2.appendChild(op); });
+      sel2.value = get(key, 'default');
+      sel2.addEventListener('change', () => { if (sel2.value === 'default') clear(key); else set(key, sel2.value); });
+      row.append(mk('span', '', label), sel2, resetBtn(key));
+      box.appendChild(row);
+    };
+    range('Corner radius', 'r', 0, F.pill ? 40 : 48, 1, F.dr, (v) => (F.pill && v >= 40 ? 'Pill' : v + 'px'));
+    range('Distance from edges', 'edge', 0, 48, 1, F.edge, (v) => v + 'px');
+    const sh = mk('div', 'q-ctl');
+    const pre = mk('div', 'q-ctl__presets');
+    [['None', 0], ['Soft', 0.6], ['Medium', 1.2], ['Strong', 2.2]].forEach(([n, v]) => {
+      const b = mk('button', 'q-chip', n);
+      b.type = 'button';
+      b.setAttribute('aria-pressed', String(Math.abs(get('k', F.k) - v) < 0.05));
+      b.addEventListener('click', () => { set('k', v); renderCtls(); });
+      pre.appendChild(b);
+    });
+    sh.append(mk('span', '', 'Shadow'), pre);
+    box.appendChild(sh);
+    range('Shadow strength', 'k', 0, 3, 0.1, F.k, (v) => v.toFixed(1));
+    range('Outline width', 'bw', 0, 4, 0.5, 1, (v) => v + 'px');
+    selectRow('Outline colour', 'bc', OUT);
+    range('Blur', 'blur', 0, 100, 1, F.blur, (v) => v + '%');
+    selectRow('Coloration', 'surf', SURF);
+    range('Inner padding', 'pad', 0, F.padMax, 1, F.pad, (v) => v + 'px');
+    range('Outer spacing', 'gap', 0, 64, 1, F.gap, (v) => v + 'px');
+  }
+  famBoxes.forEach((box) => buildFamButtons(box));
+  renderCtls();
+  shapePresetBtns.forEach((b) => {
+    b.addEventListener('click', () => {
+      const key = b.dataset.shapePreset;
+      const p = SHAPE_PRESETS[key];
+      if (!p) return;
+      Object.keys(edge).forEach((k) => delete edge[k]);
+      if (p.edge) {
+        Object.keys(p.edge).forEach((fam) => { edge[fam] = Object.assign({}, p.edge[fam]); });
+      }
+      iconStroke = p.stroke;
+      if (strokeEl) {
+        strokeEl.value = p.stroke !== null ? String(p.stroke) : strokeDefault;
+        setCtlOutput(strokeEl, strokeEl.value + 'px');
+      }
+      shapePreset = key;
+      syncShapePresetButtons();
+      renderCtls();
+      applyEdge();
+    });
+  });
+  function clearShapeState() {
+    Object.keys(edge).forEach((k) => delete edge[k]);
+    iconStroke = null;
+    if (strokeEl) {
+      strokeEl.value = strokeDefault;
+      setCtlOutput(strokeEl, strokeEl.value + 'px');
+    }
+    famSel = 'main-card';
+    shapePreset = 'default';
+    syncFamButtons();
+    syncShapePresetButtons();
+    renderEdgeSheet();
+    renderCtls();
+  }
+  function resetEdges() {
+    clearShapeState();
+    push();
+    updateNow();
+  }
+  document.querySelectorAll('[data-shape-reset]').forEach((b) => b.addEventListener('click', resetEdges));
+
+  // ---------- live preview bridge: send the current tweaks to the website frames ----------
+  // The site accepts only whitelisted custom properties and Google Fonts family names from this origin.
+  const SITE_ORIGIN = (location.port === '8134') ? 'http://localhost:5173' : location.origin;
+  const frames = () => Array.from(document.querySelectorAll('iframe[data-site]'));
+  frames().forEach((f) => {
+    f.dataset.origin = SITE_ORIGIN;
+    f.dataset.src = SITE_ORIGIN + '/';
+  });
+  if (location.port !== '8134') {
+    const kindEl = document.querySelector('.ds-link__kind');
+    const linkEl = document.querySelector('.ds-link__url');
+    const copyBtn = document.querySelector('.ds-link__copy');
+    const dsUrl = location.origin + '/design-system/preview/index.html';
+    if (kindEl) kindEl.textContent = 'Live';
+    if (linkEl) { linkEl.textContent = location.host; linkEl.setAttribute('href', dsUrl); }
+    if (copyBtn) copyBtn.dataset.copy = dsUrl;
+  }
+  let lastMsg = { type: 'qs-ds-reset' };
+  const parseExtra = () => {
+    const out = {};
+    for (const m of extra.matchAll(/(--[a-z0-9-]+):\s*([^;]+);/g)) out[m[1]] = m[2].trim();
+    return out;
+  };
+  function siteVars() {
+    const v = {};
+    ['--bg', '--bg-elev', '--bg-elev-2', '--ink', '--ink-dim', '--ink-mute', '--ok', '--warn'].forEach((n) => { if (state[n]) v[n] = state[n]; });
+    const map = (from, tos) => { if (state[from]) tos.forEach((t) => { v[t] = state[from]; }); };
+    map('--navy-900', ['--btn-bg', '--btn-line', '--pill-on-bg', '--p-navy-d']);
+    map('--navy-800', ['--btn-dark-bg', '--pill-dark-on-bg', '--p-navy']);
+    map('--blue-700', ['--btn-hover', '--p-blue-d']);
+    map('--blue-600', ['--pill-hover-line', '--p-blue']);
+    map('--blue-300', ['--p-sky']);
+    // Brand colour variables the site uses for fixed colours (hex plus an r g b triplet for translucent uses).
+    const trip = (hx) => { const n = parseInt(hx.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(' '); };
+    const brand = (from, c, r) => { if (state[from]) { v[c] = state[from]; if (r) v[r] = trip(state[from]); } };
+    brand('--night', '--c-night', '--rgb-night');
+    brand('--blue-300', '--c-blue-300', '--rgb-blue-300');
+    brand('--blue-400', '--c-blue-400', '--rgb-blue-400');
+    brand('--blue-600', '--c-blue-600', '--rgb-blue-600');
+    brand('--blue-700', '--c-blue-700', '--rgb-blue-700');
+    brand('--navy-900', '--c-navy-900', '--rgb-navy-900');
+    brand('--navy-800', '--c-navy-800', '--rgb-navy-800');
+    brand('--cyan-500', '--c-cyan-500', '--rgb-cyan-500');
+    brand('--cyan-500', '--c-cyan-300', '--rgb-cyan-300');
+    if (state['--bg']) v['--c-canvas'] = state['--bg'];
+    if (state['--blue-400']) v['--c-va-accent'] = state['--blue-400'];
+    if (state['--blue-600']) v['--c-va-accent-2'] = state['--blue-600'];
+    Object.assign(v, edgeVars());
+    SITE_TYPE_VARS.forEach((n) => { if (typeVars[n] !== undefined) v[n] = typeVars[n]; });
+    if (calTints) Object.assign(v, calTints);
+    if (state['--navy-800']) v['--cal-brand'] = state['--navy-800'];
+    if (state['--navy-900']) v['--cal-brand-emphasis'] = state['--navy-900'];
+    const comp = parseExtra();
+    [['--on-night', '--c-on-night'], ['--on-night-dim', '--c-slate-400'], ['--on-night-mute', '--c-slate-500'], ['--ds-tint', '--c-panel-light'], ['--panel-dark-start', '--c-panel-dark-start'], ['--panel-dark-end', '--c-panel-dark-end']].forEach(([f, t]) => { if (comp[f]) v[t] = comp[f]; });
+    ['--panel-light', '--panel-light-line', '--panel-dark', '--panel-dark-line', '--field-line', '--pill-line', '--btn-dark-line', '--accent-soft', '--line', '--line-strong'].forEach((n) => { if (comp[n]) v[n] = comp[n]; });
+    return v;
+  }
+  function siteFonts() {
+    const f = {};
+    ROLES.forEach((role) => { if (sel[role] && Number(sel[role].value) !== 0) f[role] = FONTS[role][Number(sel[role].value)][0]; });
+    return f;
+  }
+  // Tweakable copy of the flat mark (same paths as the official vector) + concept variants. Used for ribbon logo, #now-logo-preview, hub and favicon.
+  const MARK = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none"><path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L110 184.2 Q100 190 90 184.2 L32 150.8 Q22 145 22 133.5 L22 66.5 Q22 55 32 49.2 Z" fill="@A"/><path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L138 168 L32 49.2 Z" fill="@C"/><path d="M93 48 Q100 44 107 48 L143 69 Q150 73 150 81 L150 119 Q150 127 143 131 L107 152 Q100 156 93 152 L57 131 Q50 127 50 119 L50 81 Q50 73 57 69 Z" fill="@K"/><path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 Q126 113 121 115.8 L105 125.2 Q100 128 95 125.2 L79 115.8 Q74 113 74 107.5 L74 92.5 Q74 87 79 84.2 Z" fill="@A"/><path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 L79 84.2 Z" fill="@C"/><path d="M118 117 L127 111 L152 141 L141 148 Z" fill="@C"/><path d="M108 123 L120 116 L146 149 Q148 152 144 152 L127 152 Q124 152 122 149 Z" fill="@K"/></svg>';
+  const LOGO_SVGS = {
+    flat: MARK,
+    line: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><polygon points="50,6 91,27.5 91,72.5 50,94 9,72.5 9,27.5" stroke="@C" stroke-width="6" stroke-linejoin="round"/><text x="50" y="68" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="700" font-size="52" fill="@A">Q</text></svg>',
+    wordmark: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 60" fill="none"><text x="4" y="46" font-family="system-ui,sans-serif" font-weight="700" font-size="46" letter-spacing="-1.5" fill="@T"><tspan fill="@C">Q</tspan>uerent</text></svg>',
+    monogram: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none"><rect width="64" height="64" rx="16" fill="@A"/><text x="32" y="47" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="800" font-size="44" fill="#FFFFFF">Q</text></svg>',
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><polygon points="50,6 91,27.5 91,72.5 50,94 9,72.5 9,27.5" stroke="@A" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><circle cx="48" cy="47" r="17" stroke="@C" stroke-width="7"/><path d="M52 52 L69 71" stroke="@C" stroke-width="7" stroke-linecap="round"/></svg>',
+    lockup: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 64" fill="none"><polygon points="32,4 58,18 58,46 32,60 6,46 6,18" stroke="@A" stroke-width="4.5" stroke-linejoin="round"/><circle cx="31" cy="30" r="10.5" stroke="@C" stroke-width="4.5"/><path d="M33 33 L44 45" stroke="@C" stroke-width="4.5" stroke-linecap="round"/><text x="72" y="45" font-family="system-ui,sans-serif" font-weight="700" font-size="42" letter-spacing="-1.5" fill="@T">Querent</text></svg>',
+    stacked: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" fill="none"><polygon points="80,6 112,24 112,60 80,78 48,60 48,24" stroke="@A" stroke-width="5.5" stroke-linejoin="round"/><circle cx="78" cy="40" r="13" stroke="@C" stroke-width="5.5"/><path d="M81 44 L95 59" stroke="@C" stroke-width="5.5" stroke-linecap="round"/><text x="80" y="109" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="700" font-size="30" letter-spacing="-1" fill="@T">Querent</text></svg>',
+  };
+  const renderLogoSvg = (variant, a, c, k, onDark) => (LOGO_SVGS[variant] || MARK)
+    .replace(/@A/g, a)
+    .replace(/@C/g, c)
+    .replace(/@K/g, k)
+    .replace(/@T/g, onDark ? '#ECEEF2' : k);
+
+  function syncLogo() {
+    const tweaked = Boolean(state['--blue-700'] || state['--cyan-500'] || state['--night']);
+    const a = current('--blue-700'), c = current('--cyan-500'), k = current('--night');
+    const flatUri = tweaked ? 'data:image/svg+xml,' + encodeURIComponent(renderLogoSvg('flat', a, c, k, true)) : null;
+    const active = logoVariant !== 'flat' || tweaked;
+    const ribbonSvg = renderLogoSvg(logoVariant, a, c, k, true);
+    const ribbonUri = active ? 'data:image/svg+xml,' + encodeURIComponent(ribbonSvg) : null;
+    const iconUri = active ? 'data:image/svg+xml,' + encodeURIComponent(renderLogoSvg(logoVariant, a, c, k, false)) : null;
+
+    document.querySelectorAll('.ds-ribbon__logo').forEach((im) => {
+      if (ribbonUri) {
+        if (!im.hasAttribute('data-q-logo')) im.setAttribute('data-q-logo', im.getAttribute('src'));
+        im.setAttribute('src', ribbonUri);
+      } else if (im.hasAttribute('data-q-logo')) {
+        im.setAttribute('src', im.getAttribute('data-q-logo'));
+        im.removeAttribute('data-q-logo');
+      }
+    });
+    document.querySelectorAll('img[src*="querent-logo-flat.svg"], img[data-q-logo]').forEach((im) => {
+      if (im.classList.contains('ds-ribbon__logo')) return;
+      if (flatUri) {
+        if (!im.hasAttribute('data-q-logo')) im.setAttribute('data-q-logo', im.getAttribute('src'));
+        im.setAttribute('src', flatUri);
+      } else if (im.hasAttribute('data-q-logo')) {
+        im.setAttribute('src', im.getAttribute('data-q-logo'));
+        im.removeAttribute('data-q-logo');
+      }
+    });
+    document.querySelectorAll('link[rel~="icon"]').forEach((l) => {
+      if (iconUri) {
+        if (!l.hasAttribute('data-q-icon')) l.setAttribute('data-q-icon', l.getAttribute('href'));
+        l.setAttribute('href', iconUri);
+      } else if (l.hasAttribute('data-q-icon')) {
+        l.setAttribute('href', l.getAttribute('data-q-icon'));
+        l.removeAttribute('data-q-icon');
+      }
+    });
+    const nowLogoPreview = document.getElementById('now-logo-preview');
+    if (nowLogoPreview) {
+      if (nowLogoPreview.tagName === 'IMG') {
+        nowLogoPreview.setAttribute('src', 'data:image/svg+xml,' + encodeURIComponent(ribbonSvg));
+      } else {
+        nowLogoPreview.innerHTML = ribbonSvg;
+      }
+    }
+  }
+  function push() {
+    syncLogo();
+    const vars = siteVars(), fonts = siteFonts();
+    lastMsg = Object.keys(vars).length || Object.keys(fonts).length ? { type: 'qs-ds-tweak', vars, fonts } : { type: 'qs-ds-reset' };
+    frames().forEach((f) => { if (f.dataset.ready && f.contentWindow) f.contentWindow.postMessage(lastMsg, f.dataset.origin); });
+    if (embedded && parentOrigin) window.parent.postMessage(lastMsg, parentOrigin);
+  }
+  syncLogo();
+  updateNow();
+
+  // When this page is shown inside the website (slide-in), the left arrow hands control back to it.
+  const embedded = window.parent !== window;
+  const parentOrigin = (() => {
+    try { if (location.ancestorOrigins && location.ancestorOrigins[0]) return location.ancestorOrigins[0]; } catch (e) { /* ignore */ }
+    try { return new URL(document.referrer).origin; } catch (e) { return ''; }
+  })();
+  window.addEventListener('message', (e) => {
+    if (!e.data || e.data.type !== 'qs-ds-ready') return;
+    frames().forEach((f) => {
+      if (e.source === f.contentWindow && e.origin === f.dataset.origin) { f.dataset.ready = '1'; f.contentWindow.postMessage(lastMsg, f.dataset.origin); }
+    });
+  });
+
+  // ---------- modals (#q-modal-type & #q-modal-shape) ----------
+  const body = document.body;
+  let prevOverflow = '';
+  const openModals = () => Array.from(document.querySelectorAll('#q-modal-type:not([hidden]), #q-modal-shape:not([hidden]), .q-modal:not([hidden]), .ds-modal:not([hidden])'));
+  function openModal(modal, opener) {
+    if (!modal) return;
+    openModals().forEach((m) => { if (m !== modal) closeModal(m, true); });
+    modal._opener = opener || document.activeElement;
+    modal.hidden = false;
+    modal.setAttribute('aria-hidden', 'false');
+    if (!body.classList.contains('is-modal-open')) {
+      prevOverflow = body.style.overflow;
+      body.classList.add('is-modal-open');
+      body.style.overflow = 'hidden';
+    }
+    const focusTarget = modal.querySelector('[data-modal-close], input, select, button, [tabindex]:not([tabindex="-1"])') || modal;
+    if (focusTarget === modal && !modal.hasAttribute('tabindex')) modal.setAttribute('tabindex', '-1');
+    focusTarget.focus({ preventScroll: true });
+  }
+  function closeModal(modal, skipFocus) {
+    if (!modal || modal.hidden) return;
+    modal.hidden = true;
+    modal.setAttribute('aria-hidden', 'true');
+    if (!openModals().length) {
+      body.classList.remove('is-modal-open');
+      body.style.overflow = prevOverflow;
+    }
+    if (!skipFocus && modal._opener && typeof modal._opener.focus === 'function' && body.contains(modal._opener)) {
+      modal._opener.focus({ preventScroll: true });
+    }
+    modal._opener = null;
+  }
+  document.querySelectorAll('[data-modal-open]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = String(btn.dataset.modalOpen || '').replace(/^#/, '');
+      const modal = id ? document.getElementById(id) : null;
+      openModal(modal, btn);
+    });
+  });
+  document.querySelectorAll('[data-modal-close]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = String(btn.dataset.modalClose || '').replace(/^#/, '');
+      const modal = (id && document.getElementById(id)) || btn.closest('#q-modal-type, #q-modal-shape, .q-modal, .ds-modal, [role="dialog"]');
+      closeModal(modal);
+    });
+  });
+  ['q-modal-type', 'q-modal-shape'].forEach((id) => {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal || e.target.hasAttribute('data-modal-backdrop') || e.target.classList.contains('q-modal__backdrop') || e.target.classList.contains('ds-modal__backdrop')) {
+        closeModal(modal);
+      }
+    });
+  });
+
+  // ---------- edge arrows: slide to the website (left) and open the mobile preview (right) ----------
+  const site = document.getElementById('ds-site');
+  const side = document.getElementById('ds-side');
+  const loadFrame = (root) => { const f = root && root.querySelector('iframe[data-site]'); if (f && !f.getAttribute('src')) f.setAttribute('src', f.dataset.src); };
+  const setSite = (open) => {
+    if (!site) return;
+    if (open) loadFrame(site);
+    body.classList.toggle('is-site-open', open);
+    site.inert = !open;
+    site.setAttribute('aria-hidden', String(!open));
+    const target = open ? site.querySelector('[data-site-close]') : document.querySelector('[data-site-open]');
+    if (target) target.focus({ preventScroll: true });
+  };
+  const setSide = (open) => {
+    if (!side) return;
+    if (open) loadFrame(side);
+    body.classList.toggle('is-side-open', open);
+    side.inert = !open;
+    side.setAttribute('aria-hidden', String(!open));
+    const t = document.querySelector('[data-side-toggle]');
+    if (t) t.setAttribute('aria-expanded', String(open));
+  };
+  if (site) site.inert = true;
+  if (side) side.inert = true;
+  document.querySelectorAll('[data-site-open]').forEach((b) => b.addEventListener('click', () => {
+    if (embedded && parentOrigin) window.parent.postMessage({ type: 'qs-ds-close' }, parentOrigin);
+    else setSite(true);
+  }));
+  document.querySelectorAll('[data-site-close]').forEach((b) => b.addEventListener('click', () => setSite(false)));
+  document.querySelectorAll('[data-side-toggle]').forEach((b) => b.addEventListener('click', () => setSide(!body.classList.contains('is-side-open'))));
+  // Return to default: official logo, palette, typography, and shape here and in every frame.
+  function resetAll() {
+    clearColorState();
+    setLogoVariant('flat', true);
+    clearTypeState();
+    clearShapeState();
+    push();
+    updateNow();
+  }
+  document.querySelectorAll('[data-reset-all]').forEach((b) => b.addEventListener('click', () => { resetAll(); setMenu(false); }));
+  // Edge menu: opens beside the arrow, closes on selection, Esc and outside click.
+  const menuEl = document.getElementById('ds-menu-site');
+  const menuBtn = document.querySelector('[data-menu-toggle]');
+  function setMenu(open) {
+    if (!menuEl || !menuBtn) return;
+    menuEl.classList.toggle('is-open', open);
+    menuEl.inert = !open;
+    menuBtn.setAttribute('aria-expanded', String(open));
+  }
+  if (menuBtn) menuBtn.addEventListener('click', () => setMenu(!menuEl.classList.contains('is-open')));
+  document.addEventListener('click', (e) => { if (menuEl && menuEl.classList.contains('is-open') && !e.target.closest('.ds-menu, [data-menu-toggle]')) setMenu(false); });
+  // Page switcher inside each preview. The new page asks for the current tweaks when it loads.
+  document.querySelectorAll('.ds-bar, .ds-menu').forEach((bar) => {
+    const root = bar.closest('.ds-site, .ds-side');
+    bar.querySelectorAll('[data-page]').forEach((b) => b.addEventListener('click', () => {
+      const f = root.querySelector('iframe[data-site]');
+      if (!f) return;
+      bar.querySelectorAll('[data-page]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      f.dataset.ready = '';
+      f.setAttribute('src', f.dataset.origin + b.dataset.page);
+      if (bar.classList.contains('ds-menu')) setMenu(false);
+    }));
+  });
+  // Page reports (what each frame resolved after applying the tweaks), kept on the frame for checking.
+  window.addEventListener('message', (e) => {
+    if (!e.data) return;
+    if (e.data.type === 'qs-ds-default' && embedded && e.source === window.parent && e.origin === parentOrigin) { resetAll(); return; }
+    if (e.data.type !== 'qs-ds-applied') return;
+    frames().forEach((f) => { if (e.source === f.contentWindow && e.origin === f.dataset.origin) f.dataset.report = JSON.stringify(e.data); });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const modals = openModals();
+    if (modals.length) { closeModal(modals[modals.length - 1]); return; }
+    if (menuEl && menuEl.classList.contains('is-open')) { setMenu(false); return; }
+    if (body.classList.contains('is-site-open')) setSite(false);
+    else if (body.classList.contains('is-side-open')) setSide(false);
+  });
+})();

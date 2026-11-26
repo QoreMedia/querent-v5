@@ -25,10 +25,9 @@
 
   /* ---- STAGING-ONLY: DESIGN SYSTEM PANEL — REMOVE BEFORE MERGING/DEPLOYING TO MAIN ---- */
 
-  // One constant: where the Querent design system lives.
-  // NOT HOSTED YET: this default only works on a machine running the design-system
-  // server (node serve.mjs in Querent/design-system). Replace with the hosted URL later.
-  var DESIGN_SYSTEM_URL = 'http://localhost:8134/';
+  // Hosted alongside the site on staging (/design-system/preview/index.html).
+  // Removed before main (see STAGING-ONLY.md).
+  var DESIGN_SYSTEM_URL = location.origin + '/design-system/preview/index.html';
 
   // Production *.vercel.app aliases that must never show the panel. Confirm and extend
   // this list with the real production hostnames (custom domains are already off by default).
@@ -49,8 +48,17 @@
   if (!shouldShow(location.hostname, location.search)) return;
 
   /* ---------- live preview bridge (receives tweaks from the design system) ---------- */
-  var DS_ORIGIN = '';
-  try { DS_ORIGIN = new URL(DESIGN_SYSTEM_URL).origin; } catch (e) { DS_ORIGIN = ''; }
+  var DS_ORIGIN = location.origin;
+  try { DS_ORIGIN = new URL(DESIGN_SYSTEM_URL).origin; } catch (e) { DS_ORIGIN = location.origin; }
+  var ALLOWED_ORIGINS = [DS_ORIGIN, 'http://localhost:8134'];
+  function isAllowedOrigin(o) { return Boolean(o) && ALLOWED_ORIGINS.indexOf(o) !== -1; }
+  var replyOrigin = (function () {
+    try {
+      var ref = document.referrer ? new URL(document.referrer).origin : '';
+      if (isAllowedOrigin(ref)) return ref;
+    } catch (e) { /* ignore */ }
+    return DS_ORIGIN;
+  })();
 
   // Only these site custom properties can be set.
   var ALLOWED_VARS = [
@@ -213,12 +221,13 @@
   var overlay = null; // the design-system frame holder (top-level pages only)
 
   window.addEventListener('message', function (e) {
-    if (!DS_ORIGIN || e.origin !== DS_ORIGIN) return;
+    if (!isAllowedOrigin(e.origin)) return;
     var d = e.data;
     if (!d || typeof d !== 'object') return;
     var fromParent = !isTop && e.source === window.parent;
     var fromOverlay = isTop && overlay && overlay.frame && e.source === overlay.frame.contentWindow;
     if (!fromParent && !fromOverlay) return;
+    if (fromParent) replyOrigin = e.origin;
     if (d.type === 'qs-ds-reset') { clearTweaks(); syncMark(); updateCal(null); report(); }
     else if (d.type === 'qs-ds-tweak') { applyTweaks(d); syncMark(); updateCal(applied.length ? d.vars : null); report(); }
     else if (d.type === 'qs-ds-close' && fromOverlay) overlay.set(false);
@@ -226,7 +235,7 @@
 
   // Tell the design system what this page resolved after applying (lets it confirm every page follows the tweaks).
   function report() {
-    if (isTop || !DS_ORIGIN) return;
+    if (isTop || !replyOrigin) return;
     setTimeout(function () {
       try {
         var cs = getComputedStyle(document.documentElement);
@@ -237,14 +246,14 @@
           blue: cs.getPropertyValue('--c-blue-600').trim(), night: cs.getPropertyValue('--c-night').trim(), canvas: cs.getPropertyValue('--c-canvas').trim(),
           body: getComputedStyle(document.body).backgroundColor, btn: btn ? getComputedStyle(btn).backgroundColor : '',
           head: head ? getComputedStyle(head).fontFamily.slice(0, 40) : ''
-        }, DS_ORIGIN);
+        }, replyOrigin);
       } catch (e) { /* ignore */ }
     }, 700);
   }
 
   // Inside the design-system preview: tell it this page is ready so it can send the current tweaks.
-  if (!isTop && DS_ORIGIN) {
-    try { window.parent.postMessage({ type: 'qs-ds-ready' }, DS_ORIGIN); } catch (e) { /* ignore */ }
+  if (!isTop && replyOrigin) {
+    try { window.parent.postMessage({ type: 'qs-ds-ready' }, replyOrigin); } catch (e) { /* ignore */ }
   }
 
   /* ---------- edge tab and slide-in (top-level pages only) ---------- */

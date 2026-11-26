@@ -1,0 +1,314 @@
+/* Querent value layer. The only file that holds raw values (colour, type, spacing, radius, z-index, motion).
+   components.css and styles.css read these through var(); they never repeat a raw value.
+   Names follow the production build. Entries marked "derived" are aliases or step values added by this kit. */
+
+:root {
+  /* ---- Colour: light ground (default) ---- */
+  --bg: #F4F4F2;
+  --bg-elev: #FFFFFF;
+  --bg-elev-2: #EAEAE6;
+  --ink: #0A0B0E;
+  --ink-dim: #5A5F69;
+  --ink-mute: #8A8F99;
+  --line: rgba(0, 0, 0, 0.10);
+  --line-strong: rgba(0, 0, 0, 0.18);
+  --accent: #0A0B0E;
+  --accent-2: #2C303A;
+  --accent-soft: rgba(10, 11, 14, 0.08);
+  --ok: oklch(0.62 0.16 150);
+  --warn: oklch(0.68 0.16 70);
+  --danger: #B42318;                       /* proposed: no error colour exists in the build */
+
+  /* ---- Colour: brand blues and dark ground ---- */
+  --night: #0A0B0E;
+  --night-2: #13151A;
+  --on-night: #ECEEF2;
+  --on-night-dim: #94A3B8;
+  --on-night-mute: #64748B;
+  --blue-600: #2563EB;
+  --blue-700: #1D4ED8;
+  --blue-400: #60A5FA;
+  --blue-300: #93C5FD;
+  --navy-900: #0D1B38;
+  --navy-800: #152C5B;
+  --cyan-500: #06B6D4;
+  --white: #FFFFFF;
+  --hairline-on-night: rgba(147, 197, 253, 0.14);
+  --hairline-on-night-strong: rgba(147, 197, 253, 0.24);
+
+  /* ---- Panels (light family and dark family) ---- */
+  --panel-light: radial-gradient(ellipse 60% 70% at 85% 0%, rgba(37, 99, 235, 0.14), transparent 70%), #E8EEFA;
+  --panel-light-line: rgba(37, 99, 235, 0.16);
+  --panel-light-shadow: 0 30px 70px -38px rgba(13, 27, 56, 0.45);
+  --panel-dark: radial-gradient(ellipse 70% 80% at 100% 0%, rgba(37, 99, 235, 0.22), transparent 70%), linear-gradient(160deg, #111C38 0%, #0B1226 100%);
+  --panel-dark-line: rgba(147, 197, 253, 0.16);
+  --panel-dark-shadow: 0 34px 80px -40px rgba(0, 0, 0, 0.75);
+  --field-bg: #FFFFFF;
+  --field-line: rgba(37, 99, 235, 0.18);
+  --field-shadow: 0 18px 40px -30px rgba(21, 44, 91, 0.5);
+  --field-ring: 0 0 0 3px rgba(37, 99, 235, 0.18);
+
+  /* ---- Logo concept colours (derived aliases) ---- */
+  --mark-primary: var(--blue-700);
+  --mark-secondary: var(--cyan-500);
+  --mark-ring: var(--night);
+
+  /* ---- Panels: role aliases (derived). Light is default; dark re-pins them. ---- */
+  --panel-bg: var(--panel-light);
+  --panel-edge: var(--panel-light-line);
+  --panel-lift: var(--panel-light-shadow);
+  --ground-bg: var(--bg);
+  --ground-ink: var(--ink);
+  --ground-dim: var(--ink-dim);
+
+  /* ---- Buttons and pills ---- */
+  --btn-bg: var(--navy-900);
+  --btn-ink: var(--white);
+  --btn-line: var(--navy-900);
+  --btn-hover: var(--blue-700);
+  --btn-shadow: 0 10px 26px -12px rgba(13, 27, 56, 0.55);
+  --btn-shadow-hover: 0 14px 32px -12px rgba(13, 27, 56, 0.6);
+  --btn-dark-bg: var(--navy-800);
+  --btn-dark-line: rgba(147, 197, 253, 0.32);
+  --btn-dark-shadow: 0 10px 26px -12px rgba(0, 0, 0, 0.6);
+  --pill-bg: rgba(255, 255, 255, 0.7);
+  --pill-line: rgba(37, 99, 235, 0.2);
+  --pill-hover-bg: #FFFFFF;
+  --pill-hover-line: var(--blue-600);
+  --pill-on-bg: var(--navy-900);
+  --pill-on-ink: var(--white);
+  --pill-dark-bg: rgba(255, 255, 255, 0.06);
+  --pill-dark-line: rgba(147, 197, 253, 0.22);
+  --tile-dark-bg: rgba(37, 99, 235, 0.14);
+  --tile-dark-line: rgba(147, 197, 253, 0.18);
+
+  /* ---- Type ---- */
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: 'Source Sans 3', system-ui, sans-serif;
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-body);
+  --t-size-head: 1;
+  --t-size-body: 16px;
+  --t-align: left;
+  --t-pad-top: 24px;
+  --t-pad-bottom: 24px;
+  --t-pad-left: 24px;
+  --t-leading: 1.6;
+  --t-tracking: 0em;
+  --t-card-clamp: none;
+  --icon-stroke: 1.75;
+  --fs-display: clamp(64px, 11vw, 168px);
+  --fs-h1: clamp(42px, 5.6vw, 78px);
+  --fs-title: clamp(30px, 3.9vw, 52px);
+  --fs-lede: 18px;
+  --fs-side: 17px;
+  --fs-body: 16px;
+  --fs-ui: 14px;
+  --fs-small: 13px;
+  --fs-label: 11px;
+  --fs-stat: 40px;
+  --fs-card-title: 28px;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-heavy: 800;
+  --lh-display: 0.88;
+  --lh-h1: 1.02;
+  --lh-title: 1.08;
+  --lh-body: 1.6;
+  --lh-ui: 1.5;
+  --ls-display: -0.05em;
+  --ls-h1: -0.04em;
+  --ls-title: -0.03em;
+  --ls-card: -0.02em;
+  --ls-label: 0.12em;
+  --ls-mono: 0.06em;
+
+  /* ---- Spacing scale (derived: 4px base; build values off the scale round to the nearest step) ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-14: 56px;
+  --sp-16: 64px;
+  --sp-18: 72px;
+  --sp-24: 96px;
+  --sp-40: 160px;
+
+  /* ---- Layout and rhythm ---- */
+  --maxw: 1280px;
+  --pad: 64px;
+  --gap-section: 160px;
+  --band-pad-y: 96px;
+  --band-gap: 96px;
+  --tap: 44px;
+  --ribbon-h: 58px;
+
+  /* ---- Radius ladder ---- */
+  --r-band: 40px;
+  --r-panel: 30px;
+  --r-card: 22px;
+  --r-input: 24px;
+  --r-inner: 14px;
+  --r-pill: 999px;
+  --r-sm: 8px;
+  --r-bubble: 18px;
+  --r-bubble-tail: 6px;
+
+  /* ---- Sizes (derived from the build) ---- */
+  --icon-s: 16px;
+  --icon-m: 18px;
+  --icon-l: 24px;
+  --tile: 36px;
+  --tile-l: 56px;
+  --send: 44px;
+  --dot: 6px;
+
+  /* ---- Shadow bases per family: offset y, blur, spread, colour (strength scales y, blur and spread) ---- */
+  --shy-panel: 30px; --shb-panel: 70px; --shs-panel: -38px; --shc-panel: rgba(13, 27, 56, 0.45);
+  --shy-soft: 18px; --shb-soft: 40px; --shs-soft: -30px; --shc-soft: rgba(21, 44, 91, 0.5);
+  --shy-btn: 10px; --shb-btn: 26px; --shs-btn: -12px; --shc-btn: rgba(13, 27, 56, 0.55);
+  --shk-field-def: 1;
+
+  /* ---- Preview frame radii: section > card > stage > ground, each one inset step smaller (derived) ---- */
+  --ds-r-section: 40px;
+  --ds-r-card: 30px;
+  --ds-r-stage: 22px;
+  --ds-r-ground: 10px;
+
+  /* ---- Layering ---- */
+  --z-base: 1;
+  --z-ribbon: 50;
+  --z-menu: 60;
+  --z-edge: 40;
+  --z-side: 55;
+  --z-overlay: 70;
+
+  /* ---- Motion ---- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-fast: 240ms;
+  --dur-base: 560ms;
+  --dur-slow: 900ms;
+  --dur-micro: 150ms;
+  --stagger: 90ms;
+  --reveal-step: 180ms;
+  --hero-t0: 80ms;
+  --dur-typing: 800ms;
+  --dur-marquee: 32s;
+  --dur-blob-a: 38s;
+  --dur-blob-b: 47s;
+  --dur-blob-c: 55s;
+  --dur-blob-d: 33s;
+  --dur-halo: 5300ms;
+  --dur-shimmer: 1400ms;
+  --dur-demo-loop: 6s;
+  --nudge: 3px;
+  --rise: 18px;
+  --lift: -1px;
+  --lift-card: -4px;
+
+  /* ---- Backgrounds (derived from the hero background and halo) ---- */
+  --wash-top: rgba(255, 255, 255, 0.7);
+  --wash-bottom: rgba(214, 228, 252, 0.6);
+  --halo-core: rgba(37, 99, 235, 0.30);
+  --halo-mid: rgba(37, 99, 235, 0.10);
+  --mask-solid: #000;
+  --ring-w: 3px;
+
+  /* ---- Blobs (rgb triplets, used as rgb(var(--c) / alpha)) ---- */
+  --blob-blue: 37 99 235;
+  --blob-cyan: 6 182 212;
+  --blob-navy: 21 44 91;
+  --blob-ice: 147 197 253;
+
+  /* ---- Preview frame (derived; the page chrome around the specimens) ---- */
+  --ds-ink: var(--night);
+  --ds-ink-2: var(--night-2);
+  --ds-on-ink: var(--on-night);
+  --ds-accent: var(--blue-600);
+  --ds-accent-on-ink: var(--blue-400);
+  --ds-canvas: var(--bg);
+  --ds-surface: var(--bg-elev);
+  --ds-line: var(--line);
+  --ds-text: var(--ink);
+  --ds-muted: var(--ink-dim);
+  --ds-tint: #E8EEFA;
+  --ds-main-w: 1200px;
+  --ds-side-w: min(460px, 100vw);
+  --ds-device-w: 390px;
+  --ds-device-h: 800px;
+  --ds-shift: 6%;
+  --ds-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.05);
+  --ds-menu-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+  --ds-backdrop: rgba(10, 11, 14, 0.72);
+}
+
+/* ---- Breakpoint re-pins (the build's effective values). Media queries cannot read tokens: 980 / 768 / 480. ---- */
+@media (max-width: 980px) {
+  :root { --pad: 32px; --gap-section: 96px; }
+}
+@media (max-width: 640px) {
+  :root { --pad: 16px; --gap-section: 64px; }
+}
+@media (max-width: 860px) {
+  :root { --r-band: 28px; --r-panel: 26px; --band-pad-y: 72px; --band-gap: 72px; }
+}
+@media (max-width: 768px) {
+  :root {
+    --shy-panel: 10px; --shb-panel: 24px; --shs-panel: -20px;
+    --ds-r-section: 14px; --ds-r-card: 12px; --ds-r-stage: 10px; --ds-r-ground: 6px;
+    --r-band: 14px; --r-panel: 18px; --r-card: 14px; --r-input: 16px;
+    --panel-light-shadow: 0 10px 24px -20px rgba(13, 27, 56, 0.35);
+    --panel-dark-shadow: 0 10px 24px -20px rgba(0, 0, 0, 0.6);
+  }
+}
+@media (max-width: 480px) {
+  :root { --band-pad-y: 56px; --band-gap: 56px; }
+}
+
+/* ---- Dark ground: re-pins the same names (Light + Dark specimens, dark sections) ---- */
+[data-q-theme="dark"] {
+  --shy-panel: 34px; --shb-panel: 80px; --shs-panel: -40px; --shc-panel: rgba(0, 0, 0, 0.75);
+  --shc-soft: rgba(0, 0, 0, 0.4); --shc-btn: rgba(0, 0, 0, 0.6); --shk-field-def: 0;
+  --bg: var(--night);
+  --bg-elev: rgba(19, 24, 36, 0.85);
+  --bg-elev-2: #1B2234;
+  --ink: var(--on-night);
+  --ink-dim: var(--on-night-dim);
+  --ink-mute: var(--on-night-mute);
+  --line: var(--hairline-on-night);
+  --line-strong: var(--hairline-on-night-strong);
+  --accent: var(--on-night);
+  --accent-soft: rgba(236, 238, 242, 0.10);
+  --panel-bg: var(--panel-dark);
+  --panel-edge: var(--panel-dark-line);
+  --panel-lift: var(--panel-dark-shadow);
+  --ground-bg:
+    radial-gradient(ellipse 55% 60% at 86% 18%, rgba(29, 78, 216, 0.24), transparent 70%),
+    radial-gradient(ellipse 48% 55% at 14% 84%, rgba(6, 182, 212, 0.12), transparent 70%),
+    var(--night);
+  --ground-ink: var(--on-night);
+  --ground-dim: var(--on-night-dim);
+  --btn-bg: var(--btn-dark-bg);
+  --btn-line: var(--btn-dark-line);
+  --btn-shadow: var(--btn-dark-shadow);
+  --btn-shadow-hover: var(--btn-dark-shadow);
+  --pill-bg: var(--pill-dark-bg);
+  --pill-line: var(--pill-dark-line);
+  --pill-hover-bg: rgba(147, 197, 253, 0.14);
+  --pill-on-bg: var(--navy-800);
+  --mark-primary: var(--blue-400);
+  --mark-ring: var(--on-night);
+  --field-bg: rgba(255, 255, 255, 0.06);
+  --field-line: var(--pill-dark-line);
+  --field-shadow: none;
+}

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Outer rounded hexagon: flat dark-blue base + flat light-cyan top-right facet (no gradient) -->
+  <path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L110 184.2 Q100 190 90 184.2 L32 150.8 Q22 145 22 133.5 L22 66.5 Q22 55 32 49.2 Z" fill="#1D4ED8"/>
+  <path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L138 168 L32 49.2 Z" fill="#06B6D4"/>
+  <!-- Middle black hexagonal ring (#0A0B0E) -->
+  <path d="M93 48 Q100 44 107 48 L143 69 Q150 73 150 81 L150 119 Q150 127 143 131 L107 152 Q100 156 93 152 L57 131 Q50 127 50 119 L50 81 Q50 73 57 69 Z" fill="#0A0B0E"/>
+  <!-- Inner rounded hexagon core (flat light-cyan + dark-blue split, no gradient) -->
+  <path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 Q126 113 121 115.8 L105 125.2 Q100 128 95 125.2 L79 115.8 Q74 113 74 107.5 L74 92.5 Q74 87 79 84.2 Z" fill="#1D4ED8"/>
+  <path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 L79 84.2 Z" fill="#06B6D4"/>
+  <!-- Diagonal cutout channel separating the Q tail -->
+  <path d="M118 117 L127 111 L152 141 L141 148 Z" fill="#06B6D4"/>
+  <!-- Black Q tail extending down-right with flat base -->
+  <path d="M108 123 L120 116 L146 149 Q148 152 144 152 L127 152 Q124 152 122 149 Z" fill="#0A0B0E"/>
+</svg>

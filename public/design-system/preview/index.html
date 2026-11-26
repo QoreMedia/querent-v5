@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Querent Design System</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&amp;family=Source+Sans+3:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="ds-ribbon">
+    <div class="ds-ribbon__left">
+      <a class="ds-ribbon__brand" href="#top" aria-label="Querent Design System, back to top">
+        <img class="ds-ribbon__logo" src="../assets/logos/querent/querent-logo-flat.svg" alt="Querent">
+        <span class="ds-ribbon__label">Design System</span>
+      </a>
+      <span class="ds-ribbon__sep" aria-hidden="true"></span>
+      <div class="ds-link" data-ds-link="local">
+        <span class="ds-link__kind">Local</span>
+        <a class="ds-link__url" href="http://localhost:8134/">localhost:8134</a>
+        <button class="ds-link__copy" type="button" data-copy="http://localhost:8134/" aria-label="Copy local link">Copy</button>
+      </div>
+    </div>
+    <button class="ds-reset" type="button" data-reset-all><span class="ds-reset__long">Return to default</span><span class="ds-reset__short">Default</span></button>
+    <nav class="ds-dir" aria-label="Section directory">
+      <button class="ds-dir__trigger" type="button" aria-expanded="false" aria-controls="ds-dir-panel">
+        <span class="ds-dir__dot" aria-hidden="true"></span>
+        <span class="ds-dir__current">Sections</span>
+        <svg class="ds-dir__chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="ds-dir__panel" id="ds-dir-panel" hidden></div>
+    </nav>
+  </header>
+
+  <main class="ds-main" id="top">
+    <h1 class="ds-visually-hidden">Querent Design System</h1>
+    <section class="ds-now" id="ds-now" aria-label="Current selection">
+      <div class="ds-now__head"><h2 class="ds-now__title">Current selection</h2><button class="ds-now__reset" type="button" data-reset-all>Return to default</button></div>
+      <div class="ds-now__grid">
+        <button class="ds-now__item" type="button" data-jump="sec-01-identity--logo-variants">
+          <span class="ds-now__label">Logo</span>
+          <span class="ds-now__logo-row">
+            <span class="ds-now__logo-preview" id="now-logo-preview"><svg class="q-mark-svg" viewBox="0 0 200 200" fill="none" aria-hidden="true" focusable="false"><path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L110 184.2 Q100 190 90 184.2 L32 150.8 Q22 145 22 133.5 L22 66.5 Q22 55 32 49.2 Z" fill="var(--mark-primary)"/><path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L138 168 L32 49.2 Z" fill="var(--mark-secondary)"/><path d="M93 48 Q100 44 107 48 L143 69 Q150 73 150 81 L150 119 Q150 127 143 131 L107 152 Q100 156 93 152 L57 131 Q50 127 50 119 L50 81 Q50 73 57 69 Z" fill="var(--mark-ring)"/><path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 Q126 113 121 115.8 L105 125.2 Q100 128 95 125.2 L79 115.8 Q74 113 74 107.5 L74 92.5 Q74 87 79 84.2 Z" fill="var(--mark-primary)"/><path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 L79 84.2 Z" fill="var(--mark-secondary)"/><path d="M118 117 L127 111 L152 141 L141 148 Z" fill="var(--mark-secondary)"/><path d="M108 123 L120 116 L146 149 Q148 152 144 152 L127 152 Q124 152 122 149 Z" fill="var(--mark-ring)"/></svg></span>
+            <span class="ds-now__value" id="now-logo">Flat mark</span>
+          </span>
+        </button>
+        <button class="ds-now__item" type="button" data-jump="sec-02-color--premade-palettes">
+          <span class="ds-now__label">Color</span>
+          <span class="ds-now__swatches" id="now-swatches"></span>
+          <span class="ds-now__value" id="now-palette">Official Querent</span>
+        </button>
+        <button class="ds-now__item" type="button" data-jump="sec-03-typography--presets" data-focus="q-font-display">
+          <span class="ds-now__label">Typography</span>
+          <span class="ds-now__value" id="now-type-preset">Sleek</span>
+          <span class="ds-now__fonts"><span class="ds-now__font"><i>Header</i><b id="now-display">Bricolage Grotesque</b></span><span class="ds-now__font"><i>Paragraph</i><b id="now-body">Source Sans 3</b></span></span>
+        </button>
+        <button class="ds-now__item" type="button" data-jump="sec-04-shape--presets">
+          <span class="ds-now__label">Shape</span>
+          <span class="ds-now__value" id="now-shape">Default</span>
+        </button>
+      </div>
+    </section>
+
+    <div class="ds-tier" id="tier-1" data-ds-tier>
+      <p class="ds-tier__label">Tier I</p>
+      <h2 class="ds-tier__title">Foundations</h2>
+    </div>
+
+    <section class="ds-section" id="sec-01-identity" data-ds-section>
+      <header class="ds-section__bar">
+        <h3 class="ds-section__title"><span class="ds-num">01</span> Identity</h3>
+      </header>
+
+      <div class="ds-sub" id="sec-01-identity--logo-variants" data-ds-sub>
+        <h4 class="ds-sub__band">Logo variants</h4>
+        <div class="ds-sub__body">
+          <article class="ds-card">
+            <div class="ds-specimens ds-specimens--1">
+              <div class="ds-specimen">
+                <div class="q-logo-grid" role="group" aria-label="Logo variants">
+                  <button class="q-logo-opt" type="button" data-logo="flat" aria-pressed="true">
+                    <span class="q-logo-opt__head"><span class="q-logo-opt__name">Flat mark</span></span>
+                    <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span class="ds-pair">
+                      <span class="ds-stage" data-theme-label="Light">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg" viewBox="0 0 200 200" fill="none" aria-hidden="true" focusable="false"><path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L110 184.2 Q100 190 90 184.2 L32 150.8 Q22 145 22 133.5 L22 66.5 Q22 55 32 49.2 Z" fill="var(--mark-primary)"/><path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L138 168 L32 49.2 Z" fill="var(--mark-secondary)"/><path d="M93 48 Q100 44 107 48 L143 69 Q150 73 150 81 L150 119 Q150 127 143 131 L107 152 Q100 156 93 152 L57 131 Q50 127 50 119 L50 81 Q50 73 57 69 Z" fill="var(--mark-ring)"/><path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 Q126 113 121 115.8 L105 125.2 Q100 128 95 125.2 L79 115.8 Q74 113 74 107.5 L74 92.5 Q74 87 79 84.2 Z" fill="var(--mark-primary)"/><path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 L79 84.2 Z" fill="var(--mark-secondary)"/><path d="M118 117 L127 111 L152 141 L141 148 Z" fill="var(--mark-secondary)"/><path d="M108 123 L120 116 L146 149 Q148 152 144 152 L127 152 Q124 152 122 149 Z" fill="var(--mark-ring)"/></svg>
+                          <span class="q-logo-wordmark">Querent</span>
+                        </span>
+                      </span>
+                      <span class="ds-stage" data-q-theme="dark" data-theme-label="Dark">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg" viewBox="0 0 200 200" fill="none" aria-hidden="true" focusable="false"><path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L110 184.2 Q100 190 90 184.2 L32 150.8 Q22 145 22 133.5 L22 66.5 Q22 55 32 49.2 Z" fill="var(--mark-primary)"/><path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L138 168 L32 49.2 Z" fill="var(--mark-secondary)"/><path d="M93 48 Q100 44 107 48 L143 69 Q150 73 150 81 L150 119 Q150 127 143 131 L107 152 Q100 156 93 152 L57 131 Q50 127 50 119 L50 81 Q50 73 57 69 Z" fill="var(--mark-ring)"/><path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 Q126 113 121 115.8 L105 125.2 Q100 128 95 125.2 L79 115.8 Q74 113 74 107.5 L74 92.5 Q74 87 79 84.2 Z" fill="var(--mark-primary)"/><path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 L79 84.2 Z" fill="var(--mark-secondary)"/><path d="M118 117 L127 111 L152 141 L141 148 Z" fill="var(--mark-secondary)"/><path d="M108 123 L120 116 L146 149 Q148 152 144 152 L127 152 Q124 152 122 149 Z" fill="var(--mark-ring)"/></svg>
+                          <span class="q-logo-wordmark">Querent</span>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+
+                  <button class="q-logo-opt" type="button" data-logo="line" aria-pressed="false">
+                    <span class="q-logo-opt__head"><span class="q-logo-opt__name">Line mark</span></span>
+                    <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span class="ds-pair">
+                      <span class="ds-stage" data-theme-label="Light">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg" viewBox="0 0 100 100" fill="none" aria-hidden="true" focusable="false"><polygon points="50,6 91,27.5 91,72.5 50,94 9,72.5 9,27.5" stroke="var(--mark-primary)" stroke-width="6" stroke-linejoin="round"/><circle cx="48" cy="47" r="17" stroke="var(--mark-secondary)" stroke-width="6"/><path d="M52 52 L69 71" stroke="var(--mark-ring)" stroke-width="6" stroke-linecap="round"/></svg>
+                          <span class="q-logo-wordmark">Querent</span>
+                        </span>
+                      </span>
+                      <span class="ds-stage" data-q-theme="dark" data-theme-label="Dark">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg" viewBox="0 0 100 100" fill="none" aria-hidden="true" focusable="false"><polygon points="50,6 91,27.5 91,72.5 50,94 9,72.5 9,27.5" stroke="var(--mark-primary)" stroke-width="6" stroke-linejoin="round"/><circle cx="48" cy="47" r="17" stroke="var(--mark-secondary)" stroke-width="6"/><path d="M52 52 L69 71" stroke="var(--mark-ring)" stroke-width="6" stroke-linecap="round"/></svg>
+                          <span class="q-logo-wordmark">Querent</span>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+
+                  <button class="q-logo-opt" type="button" data-logo="wordmark" aria-pressed="false">
+                    <span class="q-logo-opt__head"><span class="q-logo-opt__name">Wordmark</span></span>
+                    <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span class="ds-pair">
+                      <span class="ds-stage" data-theme-label="Light">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg q-mark-svg--wide" viewBox="0 0 230 60" fill="none" aria-hidden="true" focusable="false"><text class="q-cn-text" x="4" y="46" font-size="48"><tspan fill="var(--mark-primary)">Q</tspan><tspan fill="var(--ink)">uerent</tspan></text></svg>
+                        </span>
+                      </span>
+                      <span class="ds-stage" data-q-theme="dark" data-theme-label="Dark">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg q-mark-svg--wide" viewBox="0 0 230 60" fill="none" aria-hidden="true" focusable="false"><text class="q-cn-text" x="4" y="46" font-size="48"><tspan fill="var(--mark-primary)">Q</tspan><tspan fill="var(--ink)">uerent</tspan></text></svg>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+
+                  <button class="q-logo-opt" type="button" data-logo="monogram" aria-pressed="false">
+                    <span class="q-logo-opt__head"><span class="q-logo-opt__name">Monogram</span></span>
+                    <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span class="ds-pair">
+                      <span class="ds-stage" data-theme-label="Light">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg" viewBox="0 0 64 64" fill="none" aria-hidden="true" focusable="false"><polygon points="32,4 58,18 58,46 32,60 6,46 6,18" stroke="var(--mark-primary)" stroke-width="5" stroke-linejoin="round"/><text x="32" y="43" text-anchor="middle" font-family="var(--font-display)" font-weight="800" font-size="34" fill="var(--mark-ring)">Q</text><circle cx="46" cy="46" r="4" fill="var(--mark-secondary)"/></svg>
+                        </span>
+                      </span>
+                      <span class="ds-stage" data-q-theme="dark" data-theme-label="Dark">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg" viewBox="0 0 64 64" fill="none" aria-hidden="true" focusable="false"><polygon points="32,4 58,18 58,46 32,60 6,46 6,18" stroke="var(--mark-primary)" stroke-width="5" stroke-linejoin="round"/><text x="32" y="43" text-anchor="middle" font-family="var(--font-display)" font-weight="800" font-size="34" fill="var(--mark-ring)">Q</text><circle cx="46" cy="46" r="4" fill="var(--mark-secondary)"/></svg>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+
+                  <button class="q-logo-opt" type="button" data-logo="icon" aria-pressed="false">
+                    <span class="q-logo-opt__head"><span class="q-logo-opt__name">Icon only</span></span>
+                    <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span class="ds-pair">
+                      <span class="ds-stage" data-theme-label="Light">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg" viewBox="0 0 200 200" fill="none" aria-hidden="true" focusable="false"><path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L110 184.2 Q100 190 90 184.2 L32 150.8 Q22 145 22 133.5 L22 66.5 Q22 55 32 49.2 Z" fill="var(--mark-primary)"/><path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L138 168 L32 49.2 Z" fill="var(--mark-secondary)"/><path d="M93 48 Q100 44 107 48 L143 69 Q150 73 150 81 L150 119 Q150 127 143 131 L107 152 Q100 156 93 152 L57 131 Q50 127 50 119 L50 81 Q50 73 57 69 Z" fill="var(--mark-ring)"/><path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 Q126 113 121 115.8 L105 125.2 Q100 128 95 125.2 L79 115.8 Q74 113 74 107.5 L74 92.5 Q74 87 79 84.2 Z" fill="var(--mark-primary)"/><path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 L79 84.2 Z" fill="var(--mark-secondary)"/><path d="M118 117 L127 111 L152 141 L141 148 Z" fill="var(--mark-secondary)"/><path d="M108 123 L120 116 L146 149 Q148 152 144 152 L127 152 Q124 152 122 149 Z" fill="var(--mark-ring)"/></svg>
+                        </span>
+                      </span>
+                      <span class="ds-stage" data-q-theme="dark" data-theme-label="Dark">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg" viewBox="0 0 200 200" fill="none" aria-hidden="true" focusable="false"><path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L110 184.2 Q100 190 90 184.2 L32 150.8 Q22 145 22 133.5 L22 66.5 Q22 55 32 49.2 Z" fill="var(--mark-primary)"/><path d="M90 15.8 Q100 10 110 15.8 L168 49.2 Q178 55 178 66.5 L178 133.5 Q178 145 168 150.8 L138 168 L32 49.2 Z" fill="var(--mark-secondary)"/><path d="M93 48 Q100 44 107 48 L143 69 Q150 73 150 81 L150 119 Q150 127 143 131 L107 152 Q100 156 93 152 L57 131 Q50 127 50 119 L50 81 Q50 73 57 69 Z" fill="var(--mark-ring)"/><path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 Q126 113 121 115.8 L105 125.2 Q100 128 95 125.2 L79 115.8 Q74 113 74 107.5 L74 92.5 Q74 87 79 84.2 Z" fill="var(--mark-primary)"/><path d="M95 74.8 Q100 72 105 74.8 L121 84.2 Q126 87 126 92.5 L126 107.5 L79 84.2 Z" fill="var(--mark-secondary)"/><path d="M118 117 L127 111 L152 141 L141 148 Z" fill="var(--mark-secondary)"/><path d="M108 123 L120 116 L146 149 Q148 152 144 152 L127 152 Q124 152 122 149 Z" fill="var(--mark-ring)"/></svg>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+
+                  <button class="q-logo-opt" type="button" data-logo="lockup" aria-pressed="false">
+                    <span class="q-logo-opt__head"><span class="q-logo-opt__name">Horizontal lockup</span></span>
+                    <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span class="ds-pair">
+                      <span class="ds-stage" data-theme-label="Light">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg q-mark-svg--wide" viewBox="0 0 280 64" fill="none" aria-hidden="true" focusable="false"><svg x="0" y="2" width="60" height="60" viewBox="0 0 100 100"><polygon points="50,6 91,27.5 91,72.5 50,94 9,72.5 9,27.5" stroke="var(--mark-primary)" stroke-width="7" stroke-linejoin="round"/><circle cx="48" cy="47" r="17" stroke="var(--mark-secondary)" stroke-width="7"/><path d="M52 52 L69 71" stroke="var(--mark-ring)" stroke-width="7" stroke-linecap="round"/></svg><text class="q-cn-text" x="74" y="46" font-size="44" fill="var(--ink)">Querent</text></svg>
+                        </span>
+                      </span>
+                      <span class="ds-stage" data-q-theme="dark" data-theme-label="Dark">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg q-mark-svg--wide" viewBox="0 0 280 64" fill="none" aria-hidden="true" focusable="false"><svg x="0" y="2" width="60" height="60" viewBox="0 0 100 100"><polygon points="50,6 91,27.5 91,72.5 50,94 9,72.5 9,27.5" stroke="var(--mark-primary)" stroke-width="7" stroke-linejoin="round"/><circle cx="48" cy="47" r="17" stroke="var(--mark-secondary)" stroke-width="7"/><path d="M52 52 L69 71" stroke="var(--mark-ring)" stroke-width="7" stroke-linecap="round"/></svg><text class="q-cn-text" x="74" y="46" font-size="44" fill="var(--ink)">Querent</text></svg>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+
+                  <button class="q-logo-opt" type="button" data-logo="stacked" aria-pressed="false">
+                    <span class="q-logo-opt__head"><span class="q-logo-opt__name">Stacked lockup</span></span>
+                    <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span class="ds-pair">
+                      <span class="ds-stage" data-theme-label="Light">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg q-mark-svg--stack" viewBox="0 0 200 140" fill="none" aria-hidden="true" focusable="false"><svg x="64" y="0" width="72" height="72" viewBox="0 0 100 100"><polygon points="50,6 91,27.5 91,72.5 50,94 9,72.5 9,27.5" stroke="var(--mark-primary)" stroke-width="7" stroke-linejoin="round"/><circle cx="48" cy="47" r="17" stroke="var(--mark-secondary)" stroke-width="7"/><path d="M52 52 L69 71" stroke="var(--mark-ring)" stroke-width="7" stroke-linecap="round"/></svg><text class="q-cn-text" x="100" y="122" text-anchor="middle" font-size="38" fill="var(--ink)">Querent</text></svg>
+                        </span>
+                      </span>
+                      <span class="ds-stage" data-q-theme="dark" data-theme-label="Dark">
+                        <span class="q-logo-stage">
+                          <svg class="q-mark-svg q-mark-svg--stack" viewBox="0 0 200 140" fill="none" aria-hidden="true" focusable="false"><svg x="64" y="0" width="72" height="72" viewBox="0 0 100 100"><polygon points="50,6 91,27.5 91,72.5 50,94 9,72.5 9,27.5" stroke="var(--mark-primary)" stroke-width="7" stroke-linejoin="round"/><circle cx="48" cy="47" r="17" stroke="var(--mark-secondary)" stroke-width="7"/><path d="M52 52 L69 71" stroke="var(--mark-ring)" stroke-width="7" stroke-linecap="round"/></svg><text class="q-cn-text" x="100" y="122" text-anchor="middle" font-size="38" fill="var(--ink)">Querent</text></svg>
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sec-02-color" data-ds-section>
+      <header class="ds-section__bar">
+        <h3 class="ds-section__title"><span class="ds-num">02</span> Color</h3>
+      </header>
+
+      <div class="ds-sub" id="sec-02-color--premade-palettes" data-ds-sub>
+        <h4 class="ds-sub__band">Premade palettes</h4>
+        <div class="ds-sub__body">
+          <article class="ds-card">
+            <div class="ds-specimens ds-specimens--1">
+              <div class="ds-specimen">
+                <div class="ds-stage">
+                  <div class="q-tweak">
+                    <div class="q-presets" role="group" aria-label="Palette presets">
+                      <button class="q-preset" type="button" data-preset="official" aria-pressed="true"><span class="q-preset__sw" data-sw="official"></span><span class="q-preset__name">Official</span><svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>
+                      <button class="q-preset" type="button" data-anchor-h="27" data-name="Red" aria-pressed="false"><span class="q-preset__sw" data-sw="27"></span><span class="q-preset__name">Red</span><svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>
+                      <button class="q-preset" type="button" data-anchor-h="55" data-name="Orange" aria-pressed="false"><span class="q-preset__sw" data-sw="55"></span><span class="q-preset__name">Orange</span><svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>
+                      <button class="q-preset" type="button" data-anchor-h="150" data-name="Green" aria-pressed="false"><span class="q-preset__sw" data-sw="150"></span><span class="q-preset__name">Green</span><svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>
+                      <button class="q-preset" type="button" data-anchor-h="195" data-name="Teal" aria-pressed="false"><span class="q-preset__sw" data-sw="195"></span><span class="q-preset__name">Teal</span><svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>
+                      <button class="q-preset" type="button" data-anchor-h="262" data-name="Blue" aria-pressed="false"><span class="q-preset__sw" data-sw="262"></span><span class="q-preset__name">Blue</span><svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="ds-sub" id="sec-02-color--fine-tune" data-ds-sub>
+        <h4 class="ds-sub__band">Fine tune</h4>
+        <div class="ds-sub__body">
+          <article class="ds-card">
+            <div class="ds-specimens ds-specimens--1">
+              <div class="ds-specimen">
+                <div class="ds-stage">
+                  <div class="q-tweak"><div class="q-pick-grid" id="q-picks"></div></div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sec-03-typography" data-ds-section>
+      <header class="ds-section__bar">
+        <h3 class="ds-section__title"><span class="ds-num">03</span> Typography</h3>
+      </header>
+
+      <div class="ds-sub" id="sec-03-typography--presets" data-ds-sub>
+        <h4 class="ds-sub__band">Typography presets</h4>
+        <div class="ds-sub__body">
+          <article class="ds-card">
+            <div class="ds-specimens ds-specimens--1">
+              <div class="ds-specimen">
+                <div class="ds-stage">
+                  <div class="q-presets" id="q-type-presets" role="group" aria-label="Typography presets">
+                    <button class="q-preset" type="button" data-type-preset="sleek" aria-pressed="true">
+                      <span class="q-type-spec"><b class="q-type-spec__head">Aa</b><span class="q-type-spec__body">Aa</span></span>
+                      <span class="q-preset__name">Sleek</span>
+                      <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    </button>
+                    <button class="q-preset" type="button" data-type-preset="editorial" aria-pressed="false">
+                      <span class="q-type-spec"><b class="q-type-spec__head" style="font-family:Georgia,serif">Aa</b><span class="q-type-spec__body">Aa</span></span>
+                      <span class="q-preset__name">Editorial</span>
+                      <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    </button>
+                    <button class="q-preset" type="button" data-type-preset="stylized" aria-pressed="false">
+                      <span class="q-type-spec"><b class="q-type-spec__head" style="letter-spacing:-0.04em">Aa</b><span class="q-type-spec__body">Aa</span></span>
+                      <span class="q-preset__name">Stylized</span>
+                      <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    </button>
+                    <button class="q-preset" type="button" data-type-preset="classic" aria-pressed="false">
+                      <span class="q-type-spec"><b class="q-type-spec__head" style="font-family:Georgia,serif;font-weight:600">Aa</b><span class="q-type-spec__body" style="font-family:Georgia,serif">Aa</span></span>
+                      <span class="q-preset__name">Classic</span>
+                      <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    </button>
+                    <button class="q-preset" type="button" data-type-preset="technical" aria-pressed="false">
+                      <span class="q-type-spec"><b class="q-type-spec__head" style="font-family:ui-monospace,monospace">Aa</b><span class="q-type-spec__body">Aa</span></span>
+                      <span class="q-preset__name">Technical</span>
+                      <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    </button>
+                    <button class="q-preset" type="button" data-type-preset="studio" aria-pressed="false">
+                      <span class="q-type-spec"><b class="q-type-spec__head" style="letter-spacing:0.01em">Aa</b><span class="q-type-spec__body">Aa</span></span>
+                      <span class="q-preset__name">Studio</span>
+                      <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="ds-sub" id="sec-03-typography--composition" data-ds-sub>
+        <h4 class="ds-sub__band">Composition and preview</h4>
+        <div class="ds-sub__body">
+          <article class="ds-card">
+            <div class="ds-specimens ds-specimens--1">
+              <div class="ds-specimen">
+                <div class="q-tweak">
+                  <div class="q-type-bar">
+                    <label class="q-type-bar__field">
+                      <span class="q-tweak__label">Header</span>
+                      <select class="q-select" id="q-font-display"></select>
+                    </label>
+                    <label class="q-type-bar__field">
+                      <span class="q-tweak__label">Paragraph</span>
+                      <select class="q-select" id="q-font-body"></select>
+                    </label>
+                    <button class="q-btn q-btn--ghost q-btn--sm q-settings-btn" id="q-type-settings-btn" type="button" data-modal-open="q-modal-type" aria-label="Typography settings">
+                      <svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="2" x2="6" y1="14" y2="14"/><line x1="10" x2="14" y1="8" y2="8"/><line x1="18" x2="22" y1="16" y2="16"/></svg>
+                    </button>
+                  </div>
+
+                  <div class="q-type-grid">
+                    <div class="q-type-card">
+                      <span class="q-tweak__label">Header</span>
+                      <div class="q-type-card__slot"><p class="q-title q-type-sample-head">Claim headline</p></div>
+                    </div>
+                    <div class="q-type-card">
+                      <span class="q-tweak__label">Paragraph</span>
+                      <div class="q-type-card__slot"><p class="q-body q-type-sample-body">Running explanatory text at reading measure.</p></div>
+                    </div>
+                    <div class="q-type-card">
+                      <span class="q-tweak__label">CTA</span>
+                      <div class="q-type-card__slot"><span class="q-btn q-btn--primary">Primary action</span></div>
+                    </div>
+                    <div class="q-type-card">
+                      <span class="q-tweak__label">Icon</span>
+                      <div class="q-type-card__slot"><span class="q-icon-tile"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></span></div>
+                    </div>
+                    <div class="q-type-card">
+                      <span class="q-tweak__label">Numeric value</span>
+                      <div class="q-type-card__slot"><p class="q-stat" id="q-type-num">[metric.value]</p></div>
+                    </div>
+                    <div class="q-type-card">
+                      <span class="q-tweak__label">Currency</span>
+                      <div class="q-type-card__slot"><p class="q-stat" id="q-type-cur">[currency.amount]</p></div>
+                    </div>
+                  </div>
+
+                  <div class="ds-pair">
+                    <div class="ds-stage" data-theme-label="Light">
+                      <div class="q-ground q-stack">
+                        <div class="q-toast-list">
+                          <div class="q-toast q-toast--info"><span class="q-dot q-dot--live"></span><span>Sync queued for background run.</span></div>
+                          <div class="q-toast q-toast--ok"><span class="q-dot q-dot--ok"></span><span>Schedule updated and verified.</span></div>
+                          <div class="q-toast q-toast--warn"><span class="q-dot q-dot--warn"></span><span>Pending approval on next step.</span></div>
+                        </div>
+                        <div class="q-sample-cards">
+                          <div class="q-card q-sample-card">
+                            <p class="q-sample-card__head">Operations summary</p>
+                            <p class="q-sample-card__body">Automated routing keeps requests organized across calendars, chat threads, and team logs.</p>
+                          </div>
+                          <div class="q-card q-sample-card">
+                            <p class="q-sample-card__head">Response speed</p>
+                            <p class="q-stat">[metric.value]</p>
+                            <p class="q-stat-label">[metric.unit]</p>
+                          </div>
+                          <div class="q-card q-sample-card">
+                            <p class="q-sample-card__head">Next workflow</p>
+                            <p class="q-sample-card__body">Review active routing rules before publishing changes.</p>
+                            <div class="q-sample-card__act"><span class="q-btn q-btn--primary q-btn--sm">Review rules</span></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ds-stage" data-q-theme="dark" data-theme-label="Dark">
+                      <div class="q-ground q-stack">
+                        <div class="q-toast-list">
+                          <div class="q-toast q-toast--info"><span class="q-dot q-dot--live"></span><span>Sync queued for background run.</span></div>
+                          <div class="q-toast q-toast--ok"><span class="q-dot q-dot--ok"></span><span>Schedule updated and verified.</span></div>
+                          <div class="q-toast q-toast--warn"><span class="q-dot q-dot--warn"></span><span>Pending approval on next step.</span></div>
+                        </div>
+                        <div class="q-sample-cards">
+                          <div class="q-card q-sample-card">
+                            <p class="q-sample-card__head">Operations summary</p>
+                            <p class="q-sample-card__body">Automated routing keeps requests organized across calendars, chat threads, and team logs.</p>
+                          </div>
+                          <div class="q-card q-sample-card">
+                            <p class="q-sample-card__head">Response speed</p>
+                            <p class="q-stat">[metric.value]</p>
+                            <p class="q-stat-label">[metric.unit]</p>
+                          </div>
+                          <div class="q-card q-sample-card">
+                            <p class="q-sample-card__head">Next workflow</p>
+                            <p class="q-sample-card__body">Review active routing rules before publishing changes.</p>
+                            <div class="q-sample-card__act"><span class="q-btn q-btn--primary q-btn--sm">Review rules</span></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+    <section class="ds-section" id="sec-04-shape" data-ds-section>
+      <header class="ds-section__bar">
+        <h3 class="ds-section__title"><span class="ds-num">04</span> Shape language</h3>
+      </header>
+
+      <div class="ds-sub" id="sec-04-shape--presets" data-ds-sub>
+        <h4 class="ds-sub__band">Shape presets</h4>
+        <div class="ds-sub__body">
+          <article class="ds-card">
+            <div class="ds-specimens ds-specimens--1">
+              <div class="ds-specimen">
+                <div class="ds-stage">
+                  <div class="q-presets" id="q-shape-presets" role="group" aria-label="Shape presets">
+                    <button class="q-preset" type="button" data-shape-preset="default" aria-pressed="true">
+                      <span class="q-shape-badge q-shape-badge--default"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="14" height="14" x="5" y="5" rx="3"/></svg></span>
+                      <span class="q-preset__name">Default</span>
+                      <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    </button>
+                    <button class="q-preset" type="button" data-shape-preset="sharp" aria-pressed="false">
+                      <span class="q-shape-badge q-shape-badge--sharp"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="14" height="14" x="5" y="5" rx="0"/></svg></span>
+                      <span class="q-preset__name">Sharp</span>
+                      <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    </button>
+                    <button class="q-preset" type="button" data-shape-preset="sleek" aria-pressed="false">
+                      <span class="q-shape-badge q-shape-badge--sleek"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="14" height="14" x="5" y="5" rx="2"/></svg></span>
+                      <span class="q-preset__name">Sleek</span>
+                      <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    </button>
+                    <button class="q-preset" type="button" data-shape-preset="soft" aria-pressed="false">
+                      <span class="q-shape-badge q-shape-badge--soft"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="14" height="14" x="5" y="5" rx="5"/></svg></span>
+                      <span class="q-preset__name">Soft</span>
+                      <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    </button>
+                    <button class="q-preset" type="button" data-shape-preset="pill" aria-pressed="false">
+                      <span class="q-shape-badge q-shape-badge--pill"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="7"/></svg></span>
+                      <span class="q-preset__name">Pill</span>
+                      <svg class="q-preset__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="ds-sub" id="sec-04-shape--customize" data-ds-sub>
+        <h4 class="ds-sub__band">Customize shape</h4>
+        <div class="ds-sub__body">
+          <article class="ds-card">
+            <div class="ds-specimens ds-specimens--1">
+              <div class="ds-specimen">
+                <div class="q-tweak">
+                  <div class="q-shape-bar">
+                    <div class="q-fam" id="q-fam" data-q-fam role="group" aria-label="Element family"></div>
+                    <button class="q-btn q-btn--ghost q-btn--sm q-settings-btn" id="q-shape-settings-btn" type="button" data-modal-open="q-modal-shape" aria-label="Shape settings">
+                      <svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="2" x2="6" y1="14" y2="14"/><line x1="10" x2="14" y1="8" y2="8"/><line x1="18" x2="22" y1="16" y2="16"/></svg>
+                    </button>
+                  </div>
+
+                  <div class="q-ground">
+                    <div class="q-edge-demo">
+                      <div class="q-gap-main-card">
+                        <div class="q-card q-card--main"><p class="q-ui">Main card</p></div>
+                      </div>
+                      <div class="q-gap-side-card">
+                        <div class="q-card q-card--side"><p class="q-ui">Side card</p></div>
+                      </div>
+                      <div class="q-gap-accent-card">
+                        <div class="q-card q-card--accent"><p class="q-ui">Accent card</p></div>
+                      </div>
+                      <div class="q-gap-toast">
+                        <div class="q-toast q-toast--demo"><span class="q-dot q-dot--live"></span><span>Toast</span></div>
+                      </div>
+                      <div class="q-gap-field">
+                        <div class="q-field"><span class="q-field__input" style="color:var(--ink-mute)">Field</span><span class="q-send"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></span></div>
+                      </div>
+                      <div class="q-row q-gap-btn">
+                        <span class="q-btn q-btn--primary">Button</span>
+                        <span class="q-btn q-btn--ghost">Button</span>
+                      </div>
+                      <div class="q-row q-gap-chip">
+                        <span class="q-chip">Chip</span>
+                        <span class="q-chip" aria-pressed="true">Chip</span>
+                      </div>
+                      <div class="q-gap-slab">
+                        <div class="q-slab">Slab</div>
+                      </div>
+                      <div class="q-ico-row" aria-label="Stroke icons">
+                        <span class="q-icon-tile"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></span>
+                        <span class="q-icon-tile"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+                        <span class="q-icon-tile"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>
+                        <span class="q-icon-tile"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                        <span class="q-icon-tile"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg></span>
+                        <span class="q-icon-tile"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sec-05-states" data-ds-section>
+      <header class="ds-section__bar">
+        <h3 class="ds-section__title"><span class="ds-num">05</span> States</h3>
+      </header>
+
+      <div class="ds-sub" id="sec-05-states--loading-error" data-ds-sub>
+        <h4 class="ds-sub__band">Loading and error</h4>
+        <div class="ds-sub__body">
+          <article class="ds-card">
+            <div class="ds-specimens ds-specimens--1">
+              <figure class="ds-specimen">
+                <figcaption class="ds-specimen__name"><code>aria-busy</code> <code>.q-typing</code></figcaption>
+                <div class="ds-pair">
+                  <div class="ds-stage" data-theme-label="Light">
+                    <div class="q-ground">
+                      <div class="q-panel q-state q-stack" aria-busy="true">
+                        <div class="q-skel"><i></i><i></i><i></i></div>
+                        <span class="q-typing" aria-label="Generating"><i></i><i></i><i></i></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ds-stage" data-q-theme="dark" data-theme-label="Dark">
+                    <div class="q-ground">
+                      <div class="q-panel q-state q-stack" aria-busy="true">
+                        <div class="q-skel"><i></i><i></i><i></i></div>
+                        <span class="q-typing" aria-label="Generating"><i></i><i></i><i></i></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </figure>
+              <figure class="ds-specimen">
+                <figcaption class="ds-specimen__name"><code>role="alert"</code></figcaption>
+                <div class="ds-pair">
+                  <div class="ds-stage" data-theme-label="Light">
+                    <div class="q-ground">
+                      <div class="q-panel q-state q-error">
+                        <div class="q-error__stale" aria-hidden="true"><div class="q-skel"><i></i><i></i><i></i></div></div>
+                        <div class="q-error__msg" role="alert"><span>Content failed to load.</span><button class="q-btn q-btn--ghost q-btn--sm" type="button">Retry</button></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ds-stage" data-q-theme="dark" data-theme-label="Dark">
+                    <div class="q-ground">
+                      <div class="q-panel q-state q-error">
+                        <div class="q-error__stale" aria-hidden="true"><div class="q-skel"><i></i><i></i><i></i></div></div>
+                        <div class="q-error__msg" role="alert"><span>Content failed to load.</span><button class="q-btn q-btn--ghost q-btn--sm" type="button">Retry</button></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </figure>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ds-footer">
+    <span class="ds-footer__company">Querent</span>
+    <span class="ds-footer__dev">Developed by Venus Lim · limvenus167@gmail.com</span>
+  </footer>
+
+  <button class="ds-edge ds-edge--left" type="button" data-site-open aria-label="Show the website"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+  <button class="ds-edge ds-edge--right" type="button" data-side-toggle aria-expanded="false" aria-controls="ds-side" aria-label="Toggle mobile preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+  <div class="ds-site" id="ds-site" aria-hidden="true">
+    <iframe title="Querent website" data-site data-origin="http://localhost:5173" data-src="http://localhost:5173/"></iframe>
+    <button class="ds-edge ds-edge--menu" type="button" data-menu-toggle aria-expanded="false" aria-controls="ds-menu-site" aria-label="Pages and defaults"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg></button>
+    <div class="ds-menu" id="ds-menu-site" role="menu" aria-label="Pages and defaults" inert><button class="ds-bar__btn" type="button" role="menuitem" data-page="/" aria-pressed="true">Home</button><button class="ds-bar__btn" type="button" role="menuitem" data-page="/menu.html" aria-pressed="false">Menu</button><button class="ds-bar__btn" type="button" role="menuitem" data-page="/booking.html" aria-pressed="false">Booking</button><button class="ds-bar__btn" type="button" role="menuitem" data-page="/va.html" aria-pressed="false">VA</button><span class="ds-bar__sep" aria-hidden="true"></span><button class="ds-bar__btn ds-bar__btn--reset" type="button" role="menuitem" data-reset-all>Return to default</button></div>
+    <button class="ds-edge ds-edge--back" type="button" data-site-close aria-label="Back to the design system"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+  </div>
+  <aside class="ds-side" id="ds-side" aria-hidden="true" aria-label="Mobile preview">
+    <div class="ds-bar ds-bar--side" role="toolbar" aria-label="Website page and defaults"><button class="ds-bar__btn" type="button" data-page="/" aria-pressed="true">Home</button><button class="ds-bar__btn" type="button" data-page="/menu.html" aria-pressed="false">Menu</button><button class="ds-bar__btn" type="button" data-page="/booking.html" aria-pressed="false">Booking</button><button class="ds-bar__btn" type="button" data-page="/va.html" aria-pressed="false">VA</button><span class="ds-bar__sep" aria-hidden="true"></span><button class="ds-bar__btn ds-bar__btn--reset" type="button" data-reset-all>Return to default</button></div>
+    <div class="ds-device"><div class="ds-device__screen"><iframe title="Querent website, mobile width" data-site data-origin="http://localhost:5173" data-src="http://localhost:5173/"></iframe></div></div>
+  </aside>
+
+  <div class="ds-modal" id="q-modal-type" hidden role="dialog" aria-modal="true" aria-labelledby="q-modal-type-title">
+    <div class="ds-modal__dialog">
+      <div class="ds-modal__head">
+        <h2 class="ds-modal__title" id="q-modal-type-title">Typography settings</h2>
+        <div class="ds-modal__actions">
+          <button class="q-btn q-btn--ghost q-btn--sm" type="button" data-type-reset>Reset</button>
+          <button class="q-menu-btn" type="button" data-modal-close aria-label="Close typography settings"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+        </div>
+      </div>
+      <div class="ds-modal__body">
+        <div class="ds-modal__group">
+          <p class="ds-modal__group-title">Scale and alignment</p>
+          <div class="q-ctls">
+            <div class="q-ctl">
+              <label for="qt-head-scale">Heading scale</label>
+              <input id="qt-head-scale" type="range" min="0.75" max="1.4" step="0.05" value="1">
+              <output for="qt-head-scale">1.00</output>
+            </div>
+            <div class="q-ctl">
+              <label for="qt-body-size">Paragraph size</label>
+              <input id="qt-body-size" type="range" min="13" max="22" step="1" value="16">
+              <output for="qt-body-size">16px</output>
+            </div>
+            <div class="q-ctl">
+              <span>Alignment</span>
+              <div class="q-ctl__presets" role="group" aria-label="Card alignment">
+                <button class="q-chip" type="button" data-t-align="left" aria-pressed="true">Left</button>
+                <button class="q-chip" type="button" data-t-align="center" aria-pressed="false">Center</button>
+                <button class="q-chip" type="button" data-t-align="right" aria-pressed="false">Right</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-modal__group">
+          <p class="ds-modal__group-title">Edge distances</p>
+          <div class="q-ctls">
+            <div class="q-ctl">
+              <label for="qt-pad-top">Top inset</label>
+              <input id="qt-pad-top" type="range" min="0" max="64" step="1" value="24">
+              <output for="qt-pad-top">24px</output>
+            </div>
+            <div class="q-ctl">
+              <label for="qt-pad-bottom">Bottom inset</label>
+              <input id="qt-pad-bottom" type="range" min="0" max="64" step="1" value="24">
+              <output for="qt-pad-bottom">24px</output>
+            </div>
+            <div class="q-ctl">
+              <label for="qt-pad-left">Left inset</label>
+              <input id="qt-pad-left" type="range" min="0" max="64" step="1" value="24">
+              <output for="qt-pad-left">24px</output>
+            </div>
+          </div>
+        </div>
+        <div class="ds-modal__group">
+          <p class="ds-modal__group-title">Card behavior</p>
+          <div class="q-ctls">
+            <div class="q-ctl">
+              <label for="qt-leading">Line height</label>
+              <input id="qt-leading" type="range" min="1.1" max="2.0" step="0.05" value="1.6">
+              <output for="qt-leading">1.60</output>
+            </div>
+            <div class="q-ctl">
+              <label for="qt-tracking">Letter spacing</label>
+              <input id="qt-tracking" type="range" min="-0.04" max="0.08" step="0.005" value="0">
+              <output for="qt-tracking">0em</output>
+            </div>
+            <div class="q-ctl">
+              <label for="qt-clamp">Line clamp</label>
+              <select class="q-select" id="qt-clamp">
+                <option value="none">None</option>
+                <option value="2">2 lines</option>
+                <option value="3">3 lines</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="ds-modal__group">
+          <p class="ds-modal__group-title">Live preview</p>
+          <div class="ds-modal__preview">
+            <div class="q-ground q-stack">
+              <div class="q-toast q-toast--info"><span class="q-dot q-dot--live"></span><span>Live typography update applied to cards and notifications.</span></div>
+              <div class="q-card q-sample-card">
+                <p class="q-sample-card__head">Workflow automation summary</p>
+                <p class="q-sample-card__body">Readable body copy responds directly to scale, line height, tracking, alignment, inset padding, and clamp controls.</p>
+                <div class="q-sample-card__act"><span class="q-btn q-btn--primary q-btn--sm">Continue</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-modal" id="q-modal-shape" hidden role="dialog" aria-modal="true" aria-labelledby="q-modal-shape-title">
+    <div class="ds-modal__dialog">
+      <div class="ds-modal__head">
+        <h2 class="ds-modal__title" id="q-modal-shape-title">Shape settings</h2>
+        <div class="ds-modal__actions">
+          <button class="q-btn q-btn--ghost q-btn--sm" type="button" data-shape-reset>Reset</button>
+          <button class="q-menu-btn" type="button" data-modal-close aria-label="Close shape settings"><svg class="q-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+        </div>
+      </div>
+      <div class="ds-modal__body">
+        <div class="ds-modal__group">
+          <p class="ds-modal__group-title">Element family</p>
+          <div class="q-fam" id="q-modal-fam" data-q-fam role="group" aria-label="Element family"></div>
+        </div>
+        <div class="ds-modal__group">
+          <p class="ds-modal__group-title">Family geometry</p>
+          <div class="q-ctls" id="q-ctls"></div>
+        </div>
+        <div class="ds-modal__group">
+          <p class="ds-modal__group-title">Iconography</p>
+          <div class="q-ctls">
+            <div class="q-ctl">
+              <label for="qs-icon-stroke">Icon stroke weight</label>
+              <input id="qs-icon-stroke" type="range" min="1" max="2.75" step="0.25" value="1.75">
+              <output for="qs-icon-stroke">1.75px</output>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="tweakers.js"></script>
+</body>
+</html>
