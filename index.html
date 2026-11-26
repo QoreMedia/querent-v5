@@ -505,12 +505,16 @@ body::before {
   50%      { opacity: 0.12; }
 }
 .hero-bottom-band {
+  position: relative;
+  z-index: 2;
+  margin-top: calc(-1 * var(--r-band));
   width: 100%;
   background: linear-gradient(90deg, var(--c-night) 0%, var(--c-night) 50%, var(--c-navy-900) 50%, var(--c-navy-800) 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .hero-main-row {
+  position: relative; z-index: 2;
   display: flex; gap: 40px; align-items: center; justify-content: space-between; margin-bottom: 0;
 }
 .hero-bottom {
@@ -640,6 +644,7 @@ body::before {
 }
 .app-card {
   position: absolute;
+  z-index: 2;
   width: 11.2%;
   aspect-ratio: 1 / 1;
   height: auto;
@@ -781,15 +786,15 @@ html.rv [data-reveal].is-revealed [data-rv] {
   animation: mRise var(--dur-slow) var(--ease-out) both;
   animation-delay: calc(var(--hero-t0) + var(--i, 0) * var(--stagger));
 }
-.hero { position: relative; isolation: isolate; padding-top: 64px; padding-bottom: 64px; margin-top: 0; }
+.hero { position: relative; z-index: 1; isolation: isolate; padding-top: 64px; padding-bottom: calc(64px + var(--r-band)); margin-top: 0; }
 main#top { overflow-x: clip; }
 
 /* Layered mesh background: eased radial blobs drifting slowly on the compositor, plus film grain
-   to dissolve banding. Full-bleed behind the hero; text sits above at z-index auto. */
+   to dissolve banding. Full-bleed behind the hero; text sits above at z-index 2. */
 .hero-bg {
   position: absolute; top: 0; bottom: 0; left: 50%;
   width: 100vw; transform: translateX(-50%);
-  z-index: -1; overflow: hidden; pointer-events: none;
+  z-index: 0; overflow: hidden; pointer-events: none;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(244, 244, 242, 0) 38%, rgba(214, 228, 252, 0.6) 100%);
   animation: mFade 1.6s var(--ease-soft) both;
@@ -882,14 +887,16 @@ main#top { overflow-x: clip; }
 }
 /* trust section is fully light and flows into .why-now-band (one continuous light area; crisp edge under the dark hero) */
 .band-invert.trust-band {
+  position: relative; z-index: 1;
   background: var(--c-canvas); color: var(--ink);
   --bg: var(--c-canvas); --bg-elev: #FFFFFF; --bg-elev-2: #EAEAE6;
   --ink: var(--c-night); --ink-dim: #5A5F69; --ink-mute: #8A8F99;
   --line: rgba(0,0,0,0.10); --line-strong: rgba(0,0,0,0.18);
   --accent: var(--c-night); --accent-soft: rgb(var(--rgb-night) / 0.08);
-  padding: 72px 0 0;
+  margin-top: calc(-1 * var(--r-band));
+  padding: calc(72px + var(--r-band)) 0 0;
 }
-.trust-band .trust { padding-top: 0; }
+.trust-band .trust { position: relative; z-index: 2; padding-top: 0; }
 .trust-band .trust-label { color: var(--ink); border-top: 0; padding-top: 0; margin-bottom: 8px; }
 .trust-band .trust-row { border-bottom: 0; }
 /* trust logo marquee (right-to-left, seamless, edge-faded) */
@@ -987,15 +994,15 @@ main#top { overflow-x: clip; }
    Tokens come from :root (light); cards re-pin the former dark-band tokens so card colors are unchanged.
    Opaque card bg #121721 == previous rgba(19,24,36,.85) over var(--c-night). */
 .why-now-band {
-  position: relative; isolation: isolate;
-  padding: 72px 0 112px;
+  position: relative; z-index: 1; isolation: isolate;
+  padding: 72px 0 calc(112px + var(--r-band));
   background: var(--c-canvas); /* same as trust band above: seamless join */
   color: var(--ink);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 0;
 }
 /* Drifting soft light-blue mesh (transform-only) + grain, faded in from the top so it joins the trust band invisibly */
 .why-now-bg {
-  position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
+  position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
   -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 220px);
           mask-image: linear-gradient(180deg, transparent 0, #000 220px);
 }
@@ -1025,7 +1032,7 @@ main#top { overflow-x: clip; }
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   background-size: 180px 180px;
 }
-.why-now-band .why-now-section { margin-top: 0; }
+.why-now-band .why-now-section { position: relative; z-index: 2; margin-top: 0; }
 .why-now-band .why-now-banner {
   gap: 72px; padding: 0 0 56px; margin-bottom: 56px;
   border-bottom: 1px solid var(--line-strong);
@@ -1093,6 +1100,7 @@ main#top { overflow-x: clip; }
 .why-now-band .value-card .value-desc { margin-top: 0; }
 @media (max-width: 1279px) and (min-width: 641px) { .why-now-band .value-card .value-key { min-height: 2.6em; } }
 .why-now-band .value-card {
+  position: relative; z-index: 2;
   --bg-elev: #121721;
   --ink: var(--c-on-night); --ink-dim: var(--c-slate-400); --ink-mute: var(--c-slate-500);
   --line: rgb(var(--rgb-blue-300) / 0.14); --line-strong: rgb(var(--rgb-blue-300) / 0.24);
@@ -1153,17 +1161,17 @@ html.rv .why-now-reveal {
 
 /* ---------- Solutions selector (black + deep navy band, tablist + device mockup scenes) ---------- */
 .sol-band {
-  position: relative; isolation: isolate; overflow: hidden;
-  margin-top: -1px; padding: var(--band-pad-y) 0;
+  position: relative; z-index: 2; isolation: isolate; overflow: hidden;
+  margin-top: calc(-1 * var(--r-band)); padding: var(--band-pad-y) 0;
   border-radius: var(--r-band);
   background:
     radial-gradient(ellipse 55% 60% at 88% 10%, rgb(var(--rgb-blue-600) / 0.30), transparent 70%),
     radial-gradient(ellipse 50% 60% at 6% 96%, rgb(var(--rgb-navy-800) / 0.75), transparent 72%),
     linear-gradient(180deg, var(--c-night) 0%, #0B1328 58%, var(--c-navy-900) 100%);
 }
-.sol-band + .section { margin-top: calc(var(--gap-section) * 0.6); }
-.sol-band .section { margin-top: 0; }
-.sol-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.sol-band + .section { margin-top: calc(-1 * var(--r-band)); }
+.sol-band .section { position: relative; z-index: 2; margin-top: 0; }
+.sol-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 .sol-blob { position: absolute; border-radius: 50%; aspect-ratio: 1 / 1; will-change: transform; }
 .sol-blob--a { width: max(44vw, 420px); right: -10%; top: 28%; background: radial-gradient(closest-side, rgb(var(--rgb-blue-600) / 0.22), rgb(var(--rgb-blue-600) / 0.08) 55%, transparent); animation: wnA 40s var(--ease-in-out) infinite alternate; }
 .sol-blob--b { width: max(36vw, 360px); left: -8%; top: 8%; background: radial-gradient(closest-side, rgb(var(--rgb-navy-800) / 0.55), rgb(var(--rgb-navy-800) / 0.18) 60%, transparent); animation: wnB 46s var(--ease-in-out) infinite alternate; }
@@ -1213,6 +1221,7 @@ html.rv .why-now-reveal {
 .sol-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr); gap: 48px; align-items: center; min-width: 0; }
 .sol-info { display: grid; min-width: 0; }
 .sol-panel {
+  position: relative; z-index: 2;
   grid-area: 1 / 1; min-width: 0; outline: none;
   opacity: 0; visibility: hidden; transform: translate3d(-36px, 0, 0);
   transition: opacity 700ms var(--ease-soft), transform 900ms var(--ease-out), visibility 0s 700ms;
@@ -1507,10 +1516,15 @@ html.rv .why-now-reveal {
   .sol-band .why-now-headline { flex: none; }
   .sol-grid { grid-template-columns: 1fr; gap: 36px; }
   .sol-stage { order: -1; justify-self: center; max-width: 560px; }
-  .sol-band + .section { margin-top: 64px; }
+  .sol-band + .section { margin-top: calc(-1 * var(--r-band)); }
 }
 @media (max-width: 768px) {
-  .sol-band { width: 100%; max-width: 100%; min-width: 0; min-height: calc(100svh - 57px); display: flex; flex-direction: column; justify-content: center; padding: 16px 0 18px; }
+  .sol-band {
+    width: 100%; max-width: 100%; min-width: 0; min-height: 0;
+    display: flex; flex-direction: column; justify-content: flex-start;
+    margin-top: calc(-1 * var(--r-band));
+    padding: var(--m-pad-y) 0;
+  }
   .sol-band > *,
   .sol-band .section,
   .sol-band .wrap,
@@ -1522,8 +1536,9 @@ html.rv .why-now-reveal {
   .sol-band .sol-panel,
   .sol-band .sol-slides,
   .sol-band .sol-slide { width: 100%; max-width: 100%; min-width: 0; }
-  .sol-band .why-now-banner { width: 100%; max-width: 100%; min-width: 0; gap: 6px; padding: 0 0 10px; margin-bottom: 10px; }
-  .sol-band .why-now-headline { max-width: 100%; min-width: 0; font-size: clamp(21px, 5.8vw, 27px); line-height: 1.12; }
+  .sol-band .section { display: flex; flex-direction: column; gap: var(--m-gap); padding: 0 var(--m-pad-x); }
+  .sol-band .why-now-banner { width: 100%; max-width: 100%; min-width: 0; gap: 6px; padding: 0 0 12px; margin-bottom: 0; }
+  .sol-band .why-now-headline { max-width: 100%; min-width: 0; font-size: var(--m-h2); line-height: var(--m-lh-head); }
   .sol-band .why-now-body { display: none; }
   .sol-band .sol-tabs {
     flex-wrap: nowrap; justify-content: flex-start; justify-content: safe center; gap: 20px;
@@ -1532,15 +1547,15 @@ html.rv .why-now-reveal {
   }
   .sol-band .sol-tab { min-height: 44px; padding: 0 2px; align-items: center; font-size: 14px; scroll-snap-align: center; }
   .sol-band .sol-tab::before, .sol-band .sol-tab i { bottom: 7px; }
-  .sol-band .sol-grid { gap: 10px; padding: 14px 14px 16px; }
-  .sol-band .sol-stage { max-width: 310px; }
-  .sol-band .sol-dots { margin: -6px 0 2px; }
-  .sol-band .sol-title { font-size: clamp(20px, 5.6vw, 24px); margin: 0 0 6px; }
-  .sol-band .sol-lead { font-size: 14px; line-height: 1.42; margin: 0; }
+  .sol-band .sol-grid { gap: var(--m-gap); padding: 16px 14px 18px; }
+  .sol-band .sol-stage { max-width: 320px; }
+  .sol-band .sol-dots { margin: -4px 0 4px; }
+  .sol-band .sol-title { font-size: clamp(1.2rem, 4.5vw + 0.3rem, 1.55rem); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; margin: 0 0 6px; }
+  .sol-band .sol-lead { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; margin: 0; }
   .sol-band .sol-more-btn {
     display: inline-flex; align-items: center; gap: 6px;
     min-height: 44px; padding: 0; margin-top: 2px; border: 0; background: none;
-    font: inherit; font-size: 13px; font-weight: 600; color: var(--c-blue-300); cursor: pointer;
+    font: inherit; font-size: clamp(0.82rem, 0.78rem + 0.25vw, 0.92rem); font-weight: 600; color: var(--c-blue-300); cursor: pointer;
   }
   .sol-band .sol-more-btn svg { width: 14px; height: 14px; transition: transform 260ms var(--ease-out); }
   .sol-band .sol-more-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
@@ -1550,28 +1565,28 @@ html.rv .why-now-reveal {
     transition: grid-template-rows 320ms var(--ease-out), opacity 260ms var(--ease-soft), transform 320ms var(--ease-out);
   }
   .sol-band .sol-build-wrap .sol-build {
-    overflow: hidden; min-height: 0; margin: 0; font-size: 13px; line-height: 1.5;
+    overflow: hidden; min-height: 0; margin: 0; font-size: clamp(0.84rem, 0.8rem + 0.25vw, 0.95rem); line-height: var(--m-lh-body); overflow-wrap: anywhere;
     visibility: hidden; transition: visibility 0s 320ms;
   }
   .sol-band .sol-panel.is-more-open .sol-build-wrap { grid-template-rows: 1fr; opacity: 1; transform: none; }
   .sol-band .sol-panel.is-more-open .sol-build-wrap .sol-build { margin-top: 6px; visibility: visible; transition-delay: 0s; }
   .sol-band .sol-slide .sol-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; }
-  .sol-band .sol-slide .sol-list li { font-size: 12.5px; line-height: 1.32; padding-left: 16px; }
+  .sol-band .sol-slide .sol-list li { font-size: clamp(0.8rem, 0.76rem + 0.25vw, 0.92rem); line-height: 1.35; padding-left: 16px; overflow-wrap: anywhere; }
   .sol-band .sol-slide .sol-list li::before { top: 0.22em; width: 11px; height: 11px; background-size: 11px; }
   .sol-band .sol-slide .sol-metric { grid-template-columns: 1fr; gap: 6px; padding: 12px 14px; }
-  .sol-band .sol-slide .sol-val { font-size: 13px; line-height: 1.32; }
-  .sol-band .sol-slide .sol-lbl { font-size: 10px; margin-bottom: 2px; }
+  .sol-band .sol-slide .sol-val { font-size: clamp(0.84rem, 0.8rem + 0.25vw, 0.95rem); line-height: 1.35; overflow-wrap: anywhere; }
+  .sol-band .sol-slide .sol-lbl { font-size: 0.68rem; margin-bottom: 2px; }
   .sol-band .sol-arrow { transform: rotate(90deg); justify-self: start; }
   .sol-band .sol-after { text-align: left; }
 }
 @media (max-width: 640px) {
-  .sol-band .sol-stage { aspect-ratio: 44 / 36.3; max-width: 268px; }
+  .sol-band .sol-stage { aspect-ratio: 44 / 36.3; max-width: 300px; }
   .sol-scene { font-size: calc(100cqi / 44); }
   .lt { left: 0.5em; right: 0.5em; }
   .lt-base { margin: 0 -0.5em; }
 }
 @media (max-width: 640px) and (max-height: 740px) {
-  .sol-band .sol-stage { max-width: 226px; }
+  .sol-band .sol-stage { max-width: 260px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .sol-blob, .a, .dots span, .sol-dot i, .sol-tab i, .cam { animation: none !important; }
@@ -1692,7 +1707,7 @@ html.rv .why-now-reveal {
 }
 
 /* detail area */
-.proc2-cards { position: relative; z-index: 1; order: -1; display: grid; min-width: 0; }
+.proc2-cards { position: relative; z-index: 2; order: -1; display: grid; min-width: 0; }
 .js-anim .proc2-cards { opacity: 0; }
 .js-anim.is-live .proc2-cards { opacity: 1; transition: opacity 380ms var(--ease-out); }
 .proc2-card {
@@ -1713,6 +1728,22 @@ html.rv .why-now-reveal {
 .proc2-card-head .mono { color: var(--p-blue); }
 .proc2-card-head::before { content: ''; width: 28px; height: 3px; border-radius: 3px; background: var(--p-sky); margin-bottom: 6px; }
 .proc2-card-title { color: var(--p-navy-d); }
+#process {
+  position: relative; z-index: 1; isolation: isolate;
+  margin-top: calc(-1 * var(--r-band));
+  padding: calc(var(--band-gap) * 0.9 + var(--r-band)) var(--pad) calc(var(--band-gap) + var(--r-band));
+}
+#process::before {
+  content: "";
+  position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 100vw; transform: translateX(-50%);
+  z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 58% 60% at 86% 18%, rgb(var(--rgb-blue-600) / 0.08), transparent 70%),
+    radial-gradient(ellipse 52% 58% at 12% 88%, rgb(var(--rgb-cyan-500) / 0.09), transparent 72%),
+    linear-gradient(180deg, var(--c-canvas) 0%, color-mix(in srgb, var(--c-panel-light) 45%, var(--c-canvas)) 100%);
+}
+#process > * { position: relative; z-index: 2; }
 #process .section-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 420px); gap: 24px 64px; align-items: end; max-width: none; }
 #process .section-head .lede { margin: 0; max-width: 420px; }
 .proc2-card-title { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin: 0; }
@@ -1743,14 +1774,17 @@ html.rv .why-now-reveal {
 }
 
 @media (max-width: 768px) {
-  #process {
-    display: flex; flex-direction: column; justify-content: center;
-    padding-top: 24px; padding-bottom: 28px;
+  #process,
+  .sol-band + #process {
+    display: flex; flex-direction: column; justify-content: flex-start; gap: var(--m-gap);
+    min-height: 0;
+    margin-top: calc(-1 * var(--r-band));
+    padding: calc(var(--m-pad-y) + var(--r-band)) var(--m-pad-x) calc(var(--m-pad-y) + var(--r-band));
   }
-  #process .section-head { grid-template-columns: 1fr; gap: 8px; margin-bottom: 18px; }
-  #process .section-head .h2 { font-size: clamp(25px, 6.8vw, 34px); line-height: 1.08; }
-  #process .section-head .lede { font-size: 14.5px; line-height: 1.48; }
-  .proc2 { gap: 14px; }
+  #process .section-head { grid-template-columns: 1fr; gap: 10px; margin-bottom: 0; }
+  #process .section-head .h2 { font-size: var(--m-h2); line-height: var(--m-lh-head); }
+  #process .section-head .lede { font-size: var(--m-body); line-height: var(--m-lh-body); }
+  .proc2 { gap: var(--m-gap); }
   .proc2-cal { display: none !important; }
   .proc2-rail {
     display: flex; flex-wrap: nowrap; align-items: stretch; gap: 10px;
@@ -1792,8 +1826,8 @@ html.rv .why-now-reveal {
     box-shadow: 0 0 0 3px rgb(var(--rgb-blue-300) / 0.48), 0 6px 14px -8px rgb(var(--rgb-navy-900) / 0.5);
   }
   .proc2-rail .proc2-txt { align-items: flex-start; gap: 2px; width: 100%; }
-  .proc2-rail .proc2-key { font-size: 15px; line-height: 1.2; }
-  .proc2-rail .proc2-time { font-size: 10.5px; line-height: 1.25; min-height: 13px; }
+  .proc2-rail .proc2-key { font-size: clamp(0.92rem, 0.88rem + 0.25vw, 1rem); line-height: 1.2; overflow-wrap: anywhere; }
+  .proc2-rail .proc2-time { font-size: 0.7rem; line-height: 1.25; min-height: 13px; }
   .js-anim .proc2-rail .proc2-node { translate: none; transform: translate3d(0, 10px, 0); }
   .js-anim.is-cal:not(.is-live) .proc2-rail .proc2-node,
   .js-anim.is-fall:not(.is-live) .proc2-rail .proc2-node {
@@ -1809,8 +1843,8 @@ html.rv .why-now-reveal {
   }
   .proc2-card-head { gap: 4px; }
   .proc2-card-head::before { width: 24px; height: 2.5px; margin-bottom: 4px; }
-  .proc2-card-title { font-size: 20px; line-height: 1.15; }
-  .proc2-card-desc { font-size: 14.5px; line-height: 1.5; }
+  .proc2-card-title { font-size: clamp(1.15rem, 4vw + 0.3rem, 1.4rem); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; }
+  .proc2-card-desc { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
   .proc2.is-static .proc2-cards { grid-template-columns: 1fr; gap: 12px; }
 }
 
@@ -1885,10 +1919,10 @@ html.rv .why-now-reveal {
 .faq-row:not(.is-open) .faq-a { display: none; }
 
 /* ---------- FAQ unified chat box on a black band (LM-0002) ---------- */
-.faq-band { position: relative; margin-top: var(--band-gap); padding: var(--band-pad-y) 0; border-radius: var(--r-band);
+.faq-band { position: relative; z-index: 2; isolation: isolate; overflow: hidden; margin-top: calc(-1 * var(--r-band)); padding: var(--band-pad-y) 0; border-radius: var(--r-band);
   background: radial-gradient(ellipse 55% 60% at 90% 8%, rgb(var(--rgb-blue-600) / 0.26), transparent 70%), radial-gradient(ellipse 50% 55% at 4% 100%, rgb(var(--rgb-navy-800) / 0.6), transparent 72%), var(--c-night); }
-.faq-band .section { margin-top: 0; }
-.faq-band + .cta-wrap { margin-top: var(--band-gap); }
+.faq-band .section { position: relative; z-index: 2; margin-top: 0; }
+.faq-band + .cta-wrap { margin-top: calc(-1 * var(--r-band)); }
 .faq-title { color: #fff; }
 .faq-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 460px); gap: 24px 56px; align-items: end; margin-bottom: 36px; }
 .faq-title { margin: 0; font-size: clamp(72px, 11vw, 168px); line-height: 0.88; letter-spacing: -0.05em; font-weight: 800; }
@@ -1901,7 +1935,7 @@ html.rv .why-now-reveal {
 }
 .faq-js #faq-list { display: none; }
 .faq-box {
-  position: relative; padding: var(--pad-panel, 22px); border-radius: var(--r-panel);
+  position: relative; z-index: 2; padding: var(--pad-panel, 22px); border-radius: var(--r-panel);
   background: var(--panel-light);
   border: var(--bw-panel, 1px) solid var(--bc-panel, var(--panel-light-line)); color: var(--c-night);
   box-shadow: var(--panel-light-shadow-on-dark);
@@ -1976,7 +2010,22 @@ html.rv .why-now-reveal {
 }
 
 /* ---------- CTA ---------- */
-.cta-wrap { margin-top: var(--gap-section); padding-bottom: 80px; }
+.cta-wrap,
+.faq-band + .cta-wrap {
+  position: relative; z-index: 1; isolation: isolate;
+  margin-top: calc(-1 * var(--r-band));
+  padding: calc(var(--band-gap) + var(--r-band)) var(--pad) calc(var(--band-gap) + var(--r-band));
+}
+.cta-wrap::before {
+  content: "";
+  position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 100vw; transform: translateX(-50%);
+  z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 65% at 14% 24%, rgb(var(--rgb-blue-600) / 0.08), transparent 70%),
+    radial-gradient(ellipse 58% 68% at 86% 88%, rgb(var(--rgb-cyan-500) / 0.10), transparent 72%),
+    linear-gradient(180deg, var(--c-canvas) 0%, color-mix(in srgb, var(--c-panel-light) 55%, var(--c-canvas)) 100%);
+}
 .cta {
   display: grid; grid-template-columns: 1fr 1fr;
   gap: 56px;
@@ -1984,7 +2033,7 @@ html.rv .why-now-reveal {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: var(--pad-panel, 64px);
-  position: relative; overflow: hidden;
+  position: relative; z-index: 2; overflow: hidden;
 }
 .cta-action-panel {
   background: var(--bg-elev-2);
@@ -2170,7 +2219,7 @@ html.rv .why-now-reveal {
 .cta-action-panel { background: var(--field-bg); border: var(--bw-card, 1px) solid var(--bc-card, var(--field-line)); border-radius: var(--r-card); box-shadow: var(--field-shadow); }
 
 /* footer: dark slab, top corners on the band radius, navy pill CTA, pill icon tiles */
-.footer { margin-top: var(--band-gap); border-radius: var(--r-band) var(--r-band) 0 0; }
+.footer { position: relative; z-index: 2; margin-top: calc(-1 * var(--r-band)); border-top: 0; border-radius: var(--r-band) var(--r-band) 0 0; }
 .footer-cta { background: var(--btn-bg); color: var(--btn-ink); border: 1px solid var(--btn-line); box-shadow: var(--btn-shadow); }
 .footer-cta:hover { background: var(--btn-hover); border-color: var(--btn-hover); }
 .footer-ico { border-radius: var(--r-pill); background: var(--pill-dark-bg); border-color: var(--pill-dark-line); }
@@ -2224,14 +2273,17 @@ html.rv .why-now-reveal {
 }
 
 @media (max-width: 768px) {
-  .why-now-band { padding: 56px 0 64px; }
-  .why-now-band .why-now-banner { margin-bottom: 32px; padding-bottom: 32px; }
+  .why-now-band { padding: var(--m-pad-y) 0 calc(var(--m-pad-y) + var(--r-band)); }
+  .why-now-band .why-now-banner { margin-bottom: var(--m-gap); padding-bottom: 20px; gap: 12px; }
+  .why-now-band .why-now-headline { font-size: var(--m-h2); line-height: var(--m-lh-head); max-width: 100%; text-wrap: balance; }
+  .why-now-band .wn-line { white-space: normal; overflow-wrap: anywhere; }
+  .why-now-band .why-now-body { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
   .why-now-band .value-grid {
     display: flex; flex-wrap: nowrap; gap: 12px; align-items: stretch;
     overflow-x: auto; overflow-y: hidden;
     scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
     scrollbar-width: none; overscroll-behavior-x: contain;
-    max-width: 100%; padding: 2px 0 16px;
+    max-width: 100%; padding: 2px 0 8px;
   }
   .why-now-band .value-grid::-webkit-scrollbar { display: none; }
   .why-now-band .value-card {
@@ -2244,8 +2296,8 @@ html.rv .why-now-reveal {
   .why-now-band .value-card:hover { translate: none; }
   .why-now-band .value-grid.is-peeking .value-card { transform: translate3d(-44px, 0, 0); }
   .why-now-band .value-grid.is-peek-abort .value-card { transition: none; transform: none; }
-  .why-now-band .value-num { font-size: 46px; margin-bottom: 12px; }
-  .why-now-band .value-key { margin-bottom: 0; }
+  .why-now-band .value-num { font-size: clamp(2.1rem, 8vw + 0.4rem, 2.9rem); margin-bottom: 12px; }
+  .why-now-band .value-key { font-size: clamp(1rem, 0.95rem + 0.5vw, 1.15rem); overflow-wrap: anywhere; text-wrap: balance; margin-bottom: 0; }
   .why-now-band .value-card .value-more,
   .why-now-band .value-card:hover .value-more,
   .why-now-band .value-card:focus-visible .value-more,
@@ -2255,7 +2307,7 @@ html.rv .why-now-reveal {
   .why-now-band .value-card .value-more-inner {
     flex: 1; display: flex; flex-direction: column; padding-top: 12px;
   }
-  .why-now-band .value-card .value-desc { margin-bottom: 18px; }
+  .why-now-band .value-card .value-desc { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; margin-bottom: 18px; }
   .why-now-band .value-card .value-src { margin-top: auto; }
   .why-now-band .value-card .value-num,
   .why-now-band .value-card:hover .value-num,
@@ -2267,7 +2319,7 @@ html.rv .why-now-reveal {
   .why-now-band .value-card.is-open .value-key { transform: none; }
   .why-now-dots {
     display: flex; align-items: center; justify-content: center;
-    gap: 0; margin-top: 2px;
+    gap: 0; margin-top: 0;
   }
   .why-now-dot {
     position: relative; width: 44px; height: 44px; padding: 0;
@@ -2309,22 +2361,48 @@ html.rv .why-now-reveal {
   .m-nav a:hover, .m-nav a:focus-visible { color: #FFFFFF; }
 }
 @media (max-width: 768px) {
-  /* flatter, flush slabs: smaller radii, hairline-free bottom edges, softer shadows (client: less bevel on the bottom pop-up) */
-  :root { --r-band: 14px; --r-panel: 18px; --r-card: 14px; --r-input: 16px;
-    --panel-light-shadow: 0 calc(10px * var(--shk-panel, 1)) calc(24px * var(--shk-panel, 1)) calc(-20px * var(--shk-panel, 1)) rgb(var(--rgb-navy-900) / 0.35); --panel-dark-shadow: 0 calc(10px * var(--shk-panel, 1)) calc(24px * var(--shk-panel, 1)) calc(-20px * var(--shk-panel, 1)) rgba(0,0,0,0.6); }
-  .hero-bottom-band { border-radius: var(--r-band) var(--r-band) 0 0; border-top: 0; border-bottom: 0; }
-  .footer { border-top: 0; border-radius: var(--r-band) var(--r-band) 0 0; }
-  .faq-band { padding: 16px 0 20px; }
-  .faq-head { gap: 6px; margin-bottom: 12px; }
-  .faq-title { font-size: clamp(40px, 12vw, 60px); line-height: 0.92; }
-  .faq-intro { font-size: 14px; line-height: 1.4; }
-  .faq-box {
-    width: 100%; max-width: 100%; min-width: 0; overflow: hidden;
-    padding: 12px; border-radius: var(--r-panel); box-shadow: none;
+  /* Unified fluid mobile rhythm & typography scale + flush gradient-over-slab layering */
+  :root {
+    --m-pad-x: clamp(12px, 4vw, 20px);
+    --m-pad-y: clamp(20px, 3.4svh, 36px);
+    --m-gap: clamp(12px, 2.2svh, 22px);
+    --m-h1: clamp(1.75rem, 6.2vw + 0.5rem, 2.6rem);
+    --m-h2: clamp(1.4rem, 5vw + 0.4rem, 2.15rem);
+    --m-body: clamp(0.92rem, 0.85rem + 0.35vw, 1.05rem);
+    --m-lh-head: 1.08;
+    --m-lh-body: 1.5;
+    --pad: var(--m-pad-x);
+    --gap-section: 0px;
+    --band-gap: 0px;
+    --r-band: 14px; --r-panel: 18px; --r-card: 14px; --r-input: 16px;
+    --panel-light-shadow: 0 calc(10px * var(--shk-panel, 1)) calc(24px * var(--shk-panel, 1)) calc(-20px * var(--shk-panel, 1)) rgb(var(--rgb-navy-900) / 0.35); --panel-dark-shadow: 0 calc(10px * var(--shk-panel, 1)) calc(24px * var(--shk-panel, 1)) calc(-20px * var(--shk-panel, 1)) rgba(0,0,0,0.6);
   }
-  .faq-box .faq-screen { height: clamp(160px, 27svh, 240px); }
+  html, body { overflow-x: clip; }
+  body { font-size: var(--m-body); line-height: var(--m-lh-body); }
+  .btn:not(.btn-ico-m), .footer-cta, .faq-book {
+    white-space: normal; overflow-wrap: anywhere; text-wrap: balance; text-align: center;
+  }
+  .hero-headline, .hero-typed-line, .hero-headline em {
+    white-space: normal; overflow-wrap: anywhere; text-wrap: balance;
+  }
+  .hero-bottom-band { border-radius: var(--r-band) var(--r-band) 0 0; border-top: 0; border-bottom: 0; }
+  .band-invert.trust-band { margin-top: 0; padding: var(--m-pad-y) 0 0; }
+  .footer { position: relative; z-index: 2; margin-top: calc(-1 * var(--r-band)); border-top: 0; border-radius: var(--r-band) var(--r-band) 0 0; }
+  .footer-inner { padding: var(--m-pad-y) var(--m-pad-x) 0; }
+  .footer-rule { margin-top: 32px; }
+  .faq-band { margin-top: calc(-1 * var(--r-band)); padding: var(--m-pad-y) 0; display: flex; flex-direction: column; }
+  #faq { display: flex; flex-direction: column; gap: var(--m-gap); padding: 0 var(--m-pad-x); width: 100%; }
+  .faq-head { gap: 8px; margin-bottom: 0; }
+  .faq-title { font-size: clamp(2.1rem, 9vw + 0.4rem, 3.2rem); line-height: 0.96; }
+  .faq-intro { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
+  .faq-box {
+    display: flex; flex-direction: column;
+    width: 100%; max-width: 100%; min-width: 0; overflow: hidden;
+    padding: 14px; border-radius: var(--r-panel); box-shadow: none;
+  }
+  .faq-box .faq-screen { flex: 1 1 auto; height: clamp(200px, 34svh, 320px); min-height: 200px; }
   .faq-msg { max-width: 92%; }
-  .faq-bubble { padding: 9px 13px; font-size: 14px; line-height: 1.45; }
+  .faq-bubble { padding: 9px 13px; font-size: var(--m-body); line-height: var(--m-lh-body); }
   .faq-input-box {
     width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box;
     margin-top: 10px; min-height: 60px; padding: 10px 58px 10px 12px;
@@ -2360,8 +2438,8 @@ html.rv .why-now-reveal {
     min-height: 76px; padding: 12px 14px; border-radius: var(--r-card);
     background: var(--field-bg); border: 1px solid var(--pill-line);
     box-shadow: 0 1px 2px rgb(var(--rgb-navy-900) / 0.06);
-    font-size: 13.5px; line-height: 1.4; font-weight: 500;
-    white-space: normal; text-align: left;
+    font-size: clamp(0.84rem, 0.8rem + 0.25vw, 0.94rem); line-height: 1.4; font-weight: 500;
+    white-space: normal; overflow-wrap: anywhere; text-align: left;
   }
   .faq-chip:hover { transform: none; }
   .footer-col ul { gap: 0; }
@@ -2373,7 +2451,7 @@ html.rv .why-now-reveal {
 }
 @media (max-width: 480px) {
   .hero-stats { gap: 20px 28px; }
-  .section-head .lede, .why-now-body { font-size: 16px; }
+  .section-head .lede, .why-now-body { font-size: var(--m-body); line-height: var(--m-lh-body); }
 }
 
 @keyframes mMobileCardIn {
@@ -2397,9 +2475,9 @@ html.rv .why-now-reveal {
   .hero, .trust-band, #why-now, .sol-band, #process, #faq, #cta, .footer { scroll-snap-align: start; }
 
   /* hero: headline + compact motif */
-  .hero { padding-top: 18px; padding-bottom: 6px; }
+  .hero { padding: 18px var(--m-pad-x) calc(14px + var(--r-band)); }
   .hero-main-row { gap: 4px; }
-  .hero-headline { flex: none; min-height: 0; font-size: clamp(30px, 9.4vw, 40px); }
+  .hero-headline { flex: none; min-height: 0; font-size: var(--m-h1); line-height: var(--m-lh-head); }
   .hero-visual { width: 100%; max-width: 420px; aspect-ratio: 540 / 310; margin: 0 auto; }
   .viz-stage { aspect-ratio: 540 / 310; }
   .app-card { width: 15%; will-change: transform, opacity; }
@@ -2448,11 +2526,11 @@ html.rv .why-now-reveal {
   }
 
   /* hero action card: lede + full-width CTA + sleek dark stat cards */
-  .hero-bottom-band { margin-top: 4px; background: var(--c-night); }
+  .hero-bottom-band { margin-top: calc(-1 * var(--r-band)); background: var(--c-night); }
   .hero-copy { padding: 22px var(--pad) 14px; }
-  .hero-copy .lede { font-size: 15.5px; line-height: 1.5; margin-bottom: 0; }
+  .hero-copy .lede { font-size: var(--m-body); line-height: var(--m-lh-body); margin-bottom: 0; }
   .hero-cta { margin-top: 16px; }
-  .hero-cta .btn { width: 100%; min-height: 48px; font-size: 15px; }
+  .hero-cta .btn { width: 100%; min-height: 48px; font-size: var(--m-body); }
   .hero-stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2519,29 +2597,66 @@ html.rv .why-now-reveal {
   }
   .hero-stats .stat {
     display: grid;
-    grid-template-columns: 80px minmax(0, 1fr);
+    grid-template-columns: minmax(72px, auto) minmax(0, 1fr);
     align-items: center;
     gap: 12px;
     padding: 13px 16px;
   }
-  .hero-stats .stat-num { font-size: 25px; }
-  .hero-stats .stat-lbl { font-size: 12px; letter-spacing: 0.035em; }
+  .hero-stats .stat-num { font-size: clamp(1.3rem, 5.2vw, 1.7rem); }
+  .hero-stats .stat-lbl { font-size: clamp(0.75rem, 0.7rem + 0.2vw, 0.85rem); letter-spacing: 0.035em; overflow-wrap: anywhere; }
 }
-/* per-section phone fit: svh sizing + safe-area insets (<=768 only) */
+/* per-section phone fit: height-adaptive & narrow-phone guards + safe-area insets (<=768 only) */
 @media (max-width: 768px) {
-  .hero { min-height: calc(100svh - 57px - 355px); display: flex; flex-direction: column; justify-content: center; }
-  #process, #cta { min-height: calc(100svh - 57px); }
+  .hero { min-height: 0; display: flex; flex-direction: column; justify-content: flex-start; }
+  .cta-wrap,
+  .faq-band + .cta-wrap,
+  #cta {
+    min-height: 0;
+    margin-top: calc(-1 * var(--r-band));
+    padding: calc(var(--m-pad-y) + var(--r-band)) var(--m-pad-x) calc(var(--m-pad-y) + var(--r-band));
+  }
   .hdr-inner { padding-left: max(var(--pad), env(safe-area-inset-left)); padding-right: max(var(--pad), env(safe-area-inset-right)); }
   .footer-bottom { padding-bottom: calc(32px + env(safe-area-inset-bottom)); }
-  .faq-screen { height: clamp(260px, 42svh, 340px); }
   .sol-tabs { max-width: 100%; }
-  .cta { padding: 24px 18px; }
+  .cta { padding: clamp(18px, 4vw, 24px) clamp(14px, 4vw, 18px); gap: var(--m-gap); border-radius: var(--r-panel); }
+  .cta .cta-h2 { font-size: var(--m-h2); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; }
+  .cta .lede, .cta-action-panel .lede { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
+  .cta-list li { font-size: clamp(0.86rem, 0.82rem + 0.25vw, 0.95rem); overflow-wrap: anywhere; }
+  .cta-action-panel { padding: clamp(18px, 4vw, 22px) clamp(14px, 4vw, 18px); }
+  .cta-action-panel .btn { font-size: var(--m-body); }
 }
-@media (max-width: 380px) {
-  .hero-headline { font-size: 29px; }
-  .hero-stats .stat { grid-template-columns: 74px minmax(0, 1fr); gap: 10px; padding: 12px 14px; }
-  .hero-stats .stat-num { font-size: 23px; }
+@media (max-width: 768px) and (max-height: 700px) {
+  .hero { padding: 12px var(--m-pad-x) calc(12px + var(--r-band)); }
+  .hero-visual { max-height: 220px; max-width: min(100%, 383px); }
+  .hero-copy { padding: 16px var(--m-pad-x) 10px; }
+  .hero-stats { padding: 6px var(--m-pad-x) 16px; gap: 8px; }
+  .hero-stats .stat { padding: 10px 12px; }
+  .sol-band .sol-stage { max-width: 215px; }
+  .faq-box .faq-screen { height: clamp(150px, 28svh, 220px); min-height: 150px; }
 }
+@media (max-width: 768px) and (min-height: 860px) {
+  .hero { min-height: 0; padding: var(--m-pad-y) var(--m-pad-x) calc(var(--m-pad-y) + var(--r-band)); }
+  .sol-band, #process, .faq-band, #cta { min-height: 0; }
+}
+@media (max-width: 360px) {
+  .hero-stats { grid-template-columns: 1fr; gap: 8px; }
+  .hero-stats .stat { grid-template-columns: minmax(64px, auto) minmax(0, 1fr); gap: 10px; padding: 11px 12px; }
+  .hero-stats .stat-num { font-size: 1.35rem; }
+  .hero-stats .stat-lbl { font-size: 0.74rem; }
+  .proc2-rail .proc2-node { flex: 0 0 clamp(92px, 30vw, 118px); min-width: 92px; padding: 10px; }
+  .sol-band .sol-slide .sol-list { grid-template-columns: 1fr; }
+  .why-now-band .value-card { padding: 20px 16px; }
+}
+/* LOCAL-MOD LM-0002: footer adapts to the available width at every scale */
+.footer-inner { padding-inline: clamp(16px, 5vw, var(--pad)); container-type: inline-size; }
+.footer-grid { grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr)) minmax(0, 1.3fr); gap: clamp(24px, 3.5cqi, 48px); }
+.footer-col a, .footer-txt { overflow-wrap: anywhere; }
+@container (max-width: 960px) { .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .footer-brand { grid-column: 1 / -1; } }
+@container (max-width: 620px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .footer-grid > :last-child { grid-column: 1 / -1; } }
+@container (max-width: 360px) { .footer-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* LOCAL-MOD LM-0002: plain sentence-case labels, no tracked capitals */
+.mono, .m-nav-grp { text-transform: none; letter-spacing: 0; font-size: 13px; }
 </style>
 </head>
 <body>
@@ -2557,19 +2672,6 @@ html.rv .why-now-reveal {
       <nav class="nav" aria-label="Primary">
         <a href="#top" class="is-active">Home</a>
         <div class="nav-item">
-          <a href="menu.html" class="nav-trigger" aria-haspopup="true">Services<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
-          <div class="nav-dd" role="menu" aria-label="Services">
-            <a href="menu.html" role="menuitem">All Services</a>
-            <a href="menu.html#concierge" role="menuitem">AI Concierge</a>
-            <a href="menu.html#workflow" role="menuitem">Workflow Automation</a>
-            <a href="menu.html#leadgen" role="menuitem">Outbound &amp; Lead Gen</a>
-            <a href="menu.html#internal" role="menuitem">Internal Ops Agents</a>
-            <a href="menu.html#consult" role="menuitem">Strategy &amp; Advisory</a>
-            <span class="nav-dd-sep" aria-hidden="true"></span>
-            <a href="va.html" role="menuitem">AI Virtual Assistants</a>
-          </div>
-        </div>
-        <div class="nav-item">
           <button type="button" class="nav-trigger" aria-haspopup="true">Company<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           <div class="nav-dd" role="menu" aria-label="Company">
             <a href="#why-now" role="menuitem">Why Now</a>
@@ -2580,6 +2682,26 @@ html.rv .why-now-reveal {
             <a href="booking.html" role="menuitem">Book a Call</a>
           </div>
         </div>
+        <div class="nav-item">
+          <a href="menu.html" class="nav-trigger" aria-haspopup="true">Services<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
+          <div class="nav-dd" role="menu" aria-label="Services">
+            <a href="menu.html" role="menuitem">All Services</a>
+            <a href="menu.html#concierge" role="menuitem">AI Concierge</a>
+            <a href="menu.html#workflow" role="menuitem">Workflow Automation</a>
+            <a href="menu.html#leadgen" role="menuitem">Outbound &amp; Lead Gen</a>
+            <a href="menu.html#internal" role="menuitem">Internal Ops Agents</a>
+            <a href="menu.html#consult" role="menuitem">Strategy &amp; Advisory</a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <a href="va.html" class="nav-trigger" aria-haspopup="true">AI Virtual Assistants<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
+          <div class="nav-dd" role="menu" aria-label="AI Virtual Assistants">
+            <a href="va.html#how-it-works" role="menuitem">How it works</a>
+            <a href="va.html#offer" role="menuitem">What you get</a>
+            <a href="va.html#use-cases" role="menuitem">Use cases</a>
+            <a href="va.html#compare" role="menuitem">Compare</a>
+          </div>
+        </div>
       </nav>
       <div class="hdr-actions">
         <a href="booking.html" class="btn btn-primary btn-sm btn-ico-m" aria-label="Book a call"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Call</a>
@@ -2588,14 +2710,15 @@ html.rv .why-now-reveal {
     </div>
     <nav class="m-nav" id="m-nav" aria-label="Mobile" hidden>
       <a href="#top">Home</a>
-      <span class="m-nav-grp mono">Services</span>
-      <a href="menu.html">Services</a>
-      <a href="va.html">AI VAs</a>
       <span class="m-nav-grp mono">Company</span>
       <a href="#why-now">Why Now</a>
       <a href="#process">Process</a>
       <a href="#faq">FAQ</a>
       <a href="booking.html">Book a Call</a>
+      <span class="m-nav-grp mono">Services</span>
+      <a href="menu.html">Services</a>
+      <span class="m-nav-grp mono">AI Virtual Assistants</span>
+      <a href="va.html">AI Virtual Assistants</a>
     </nav>
   </header>
 
@@ -2684,7 +2807,7 @@ html.rv .why-now-reveal {
           <div class="value-key">AI's economic upside</div>
           <div class="value-more"><div class="value-more-inner">
           <p class="value-desc">PwC projects AI will add up to $15.7 trillion to global GDP by 2030 most of it from operational productivity gains.</p>
-          <div class="value-src mono">SOURCE · PwC, Sizing the Prize</div>
+          <div class="value-src mono">Source: PwC, Sizing the Prize</div>
           </div></div>
         </div>
         <div class="value-card why-now-reveal" style="--i:1" tabindex="0">
@@ -2692,7 +2815,7 @@ html.rv .why-now-reveal {
           <div class="value-key">Of work hours automatable</div>
           <div class="value-more"><div class="value-more-inner">
           <p class="value-desc">McKinsey estimates 30% of hours worked across the U.S. economy could be automated by 2030 with current AI capabilities.</p>
-          <div class="value-src mono">SOURCE · McKinsey Global Institute</div>
+          <div class="value-src mono">Source: McKinsey Global Institute</div>
           </div></div>
         </div>
         <div class="value-card why-now-reveal" style="--i:2" tabindex="0">
@@ -2700,7 +2823,7 @@ html.rv .why-now-reveal {
           <div class="value-key">ROI on AI initiatives</div>
           <div class="value-more"><div class="value-more-inner">
           <p class="value-desc">IDC reports the average enterprise sees $3.50 returned for every $1 invested in AI leaders see up to 8×.</p>
-          <div class="value-src mono">SOURCE · IDC · Microsoft, 2024</div>
+          <div class="value-src mono">Source: IDC · Microsoft, 2024</div>
           </div></div>
         </div>
       </div>
@@ -2912,7 +3035,7 @@ html.rv .why-now-reveal {
                 <div class="sol-slide is-on">
                   <h3 class="sol-title">Outbound, Research &amp; Lead Gen</h3>
                   <p class="sol-lead">Researched, personalized outbound at a volume humans can't touch.</p>
-                  <div class="sol-build-wrap"><p class="sol-build" id="sol-build-2">Agentic prospecting: ICP discovery → deep account research (10‑K filings, news, hiring signals) → personalized first‑touch → reply triage straight into your rep's calendar.</p></div>
+                  <div class="sol-build-wrap"><p class="sol-build" id="sol-build-2">Agents run prospecting from start to finish. They find accounts that match your ideal customer, research each one (10‑K filings, news, hiring signals, tech stack), write a personalized first message, and sort replies into your rep's calendar.</p></div>
                   <button type="button" class="sol-more-btn" aria-expanded="false" aria-controls="sol-build-2"><span>More details</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6l4 4 4-4"/></svg></button>
                 </div>
                 <div class="sol-slide" aria-hidden="true" inert>
@@ -3016,7 +3139,7 @@ html.rv .why-now-reveal {
                   <div class="os-dock"><span class="ico t-googlesheets"><i></i></span><span class="ico t-slack"><i></i></span><span class="ico t-n8n tgt a pulse"><i></i></span><span class="ico t-hubspot"><i></i></span><span class="ico t-gmail"><i></i></span><span class="cursor a curA"><svg viewBox="0 0 16 22"><path d="M1.5 1.2v16l4.2-3.9 2.8 6.3 2.8-1.2-2.8-6.2h5.8z" fill="#111" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg></span><span class="ripple a rippleA"></span></div>
                 </div>
                 <div class="win a winA"><div class="win-bar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>n8n · Lead intake</span></div>
-                  <div class="n8-head"><span class="ico t-n8n ico--s"><i></i></span><b>Lead intake → CRM</b><span class="n8-tag">Active</span><span class="n8-btn">Execute workflow</span><span class="n8-state"><span class="st st-run a runA">Running</span><span class="st st-ok a okA">Succeeded</span></span></div>
+                  <div class="n8-head"><span class="ico t-n8n ico--s"><i></i></span><b>Lead intake to CRM</b><span class="n8-tag">Active</span><span class="n8-btn">Execute workflow</span><span class="n8-state"><span class="st st-run a runA">Running</span><span class="st st-ok a okA">Succeeded</span></span></div>
                   <div class="n8-canvas"><div class="n8-node"><span class="n8-ico"><span class="ico t-bolt"><svg viewBox="0 0 12 12"><path d="M7 1L2 7h3l-1 4 5-6H6z" fill="#fff"/></svg></span><b class="n8-ok a j1"><svg class="ck"><use href="#sol-ck"/></svg></b></span><span class="n8-name">Webhook</span><span class="n8-sub">New form submission</span></div><span class="n8-link"><span class="n8-fill a fillA"></span></span><div class="n8-node"><span class="n8-ico"><span class="ico t-googlesheets"><i></i></span><b class="n8-ok a j3"><svg class="ck"><use href="#sol-ck"/></svg></b></span><span class="n8-name">Google Sheets</span><span class="n8-sub">Append row</span></div><span class="n8-link"><span class="n8-fill a fillB"></span></span><div class="n8-node"><span class="n8-ico"><span class="ico t-slack"><i></i></span><b class="n8-ok a j5"><svg class="ck"><use href="#sol-ck"/></svg></b></span><span class="n8-name">Slack</span><span class="n8-sub">Post to #sales</span></div><span class="n8-link"><span class="n8-fill a fillC"></span></span><div class="n8-node"><span class="n8-ico"><span class="ico t-hubspot"><i></i></span><b class="n8-ok a j6"><svg class="ck"><use href="#sol-ck"/></svg></b></span><span class="n8-name">HubSpot</span><span class="n8-sub">Create contact</span></div></div>
                   <div class="n8-log"><div class="log-h">Executions</div>
                     <div class="log a j1"><time>09:41:02</time><span class="lg-ok"></span>Webhook · form received from Priya Raman, Linden Logistics</div>
@@ -3242,19 +3365,19 @@ html.rv .why-now-reveal {
         </div>
         <div class="proc2-cards">
           <div class="proc2-card is-active" role="tabpanel" id="proc2-panel-0" aria-labelledby="proc2-tab-0" data-step="0">
-            <div class="proc2-card-head"><span class="mono dim">STEP 01 · Week 1</span><h3 class="proc2-card-title">Audit</h3></div>
+            <div class="proc2-card-head"><span class="mono dim">Week 1</span><h3 class="proc2-card-title">Audit</h3></div>
             <p class="proc2-card-desc">We inventory every repetitive workflow, score it for AI fit, and surface the top 3 ROI opportunities. You leave the audit with a written brief whether you hire us or not.</p>
           </div>
           <div class="proc2-card" role="tabpanel" id="proc2-panel-1" aria-labelledby="proc2-tab-1" data-step="1">
-            <div class="proc2-card-head"><span class="mono dim">STEP 02 · Week 2</span><h3 class="proc2-card-title">Strategy</h3></div>
+            <div class="proc2-card-head"><span class="mono dim">Week 2</span><h3 class="proc2-card-title">Strategy</h3></div>
             <p class="proc2-card-desc">Scoped build plan, success metrics, vendor decisions, and a fixed‑price proposal. No hourly billing, ever. You sign off on the before/after metric we'll be measured on.</p>
           </div>
           <div class="proc2-card" role="tabpanel" id="proc2-panel-2" aria-labelledby="proc2-tab-2" data-step="2">
-            <div class="proc2-card-head"><span class="mono dim">STEP 03 · Weeks 3–6</span><h3 class="proc2-card-title">Build</h3></div>
+            <div class="proc2-card-head"><span class="mono dim">Weeks 3–6</span><h3 class="proc2-card-title">Build</h3></div>
             <p class="proc2-card-desc">We build, test, and stage the system in your stack. Daily Loom updates. Weekly working demos. You see exactly what's being shipped, in the tools you already use.</p>
           </div>
           <div class="proc2-card" role="tabpanel" id="proc2-panel-3" aria-labelledby="proc2-tab-3" data-step="3">
-            <div class="proc2-card-head"><span class="mono dim">STEP 04 · Week 7+</span><h3 class="proc2-card-title">Deploy</h3></div>
+            <div class="proc2-card-head"><span class="mono dim">Week 7+</span><h3 class="proc2-card-title">Deploy</h3></div>
             <p class="proc2-card-desc">Production launch with monitoring, retraining, and a 21‑day SLA. Hand off to your team or stay on retainer for ongoing tuning, new flows, and strategy hours.</p>
           </div>
         </div>
@@ -3287,34 +3410,34 @@ html.rv .why-now-reveal {
           <div class="faq" id="faq-list">
             <div class="faq-row is-open" data-rv>
               <div class="faq-q"><span class="mono dim">01</span><span>How is pricing structured?</span><span class="faq-toggle">−</span></div>
-              <div class="faq-a">We quote fixed‑price per build, scoped to an outcome metric — no hourly billing. Most builds land between $8k–$45k; retainers and strategy hours start at $4.5k/mo. Final pricing depends on complexity, integrations, custom development, documentation, and ongoing support needs.</div>
+              <div class="faq-a">We quote fixed‑price per build, scoped to an outcome metric. No hourly billing. Most builds land between $8k–$45k; retainers and strategy hours start at $4.5k/mo. Final pricing depends on complexity, integrations, custom development, documentation, and ongoing support needs.</div>
             </div>
             <div class="faq-row" data-rv>
               <div class="faq-q"><span class="mono dim">02</span><span>Do you replace our staff with AI?</span><span class="faq-toggle">+</span></div>
               <div class="faq-a">No. We replace the worst parts of their week. Every deployment includes approval layers so humans stay in the loop on judgement calls. The goal is to remove low-value manual work so your team can focus on higher-value tasks, customers, and growth.</div>
             </div>
             <div class="faq-row" data-rv>
-              <div class="faq-q"><span class="mono dim">03</span><span>What tools and stacks do you work with — and can you use ours?</span><span class="faq-toggle">+</span></div>
-              <div class="faq-a">We work with n8n, Voiceflow, Vapi, Zapier, Make, OpenAI, Anthropic, HubSpot, Salesforce, Google Workspace, Slack, Airtable, Notion, Shopify, Twilio, and more. If it has an API, we can wire it. We use existing tools where possible and build custom workflows or integrations when something more specific is needed — so if you already have a stack, we'll work with it rather than around it.</div>
+              <div class="faq-q"><span class="mono dim">03</span><span>What tools and stacks do you work with, and can you use ours?</span><span class="faq-toggle">+</span></div>
+              <div class="faq-a">We work with n8n, Voiceflow, Vapi, Zapier, Make, OpenAI, Anthropic, HubSpot, Salesforce, Google Workspace, Slack, Airtable, Notion, Shopify, Twilio, and more. If it has an API, we can wire it. We use existing tools where possible and build custom workflows or integrations when something more specific is needed, so if you already have a stack, we'll work with it rather than around it.</div>
             </div>
             <div class="faq-row" data-rv>
               <div class="faq-q"><span class="mono dim">04</span><span>What results can we expect, and how long until we see ROI?</span><span class="faq-toggle">+</span></div>
-              <div class="faq-a">Most clients see time saved, faster response times, fewer manual errors, cleaner handoffs, and more consistent operations. Workflow automations typically pay back within 30–60 days — concierge agents within 90. We model this in the strategy phase before you commit, measuring ROI through hours saved, speed improvements, reduced errors, improved follow-up, lower admin load, and revenue-impacting workflow gains.</div>
+              <div class="faq-a">Most clients see time saved, faster response times, fewer manual errors, cleaner handoffs, and more consistent operations. Workflow automations typically pay back within 30–60 days. Concierge agents within 90. We model this in the strategy phase before you commit, measuring ROI through hours saved, speed improvements, reduced errors, improved follow-up, lower admin load, and revenue-impacting workflow gains.</div>
             </div>
             <div class="faq-row" data-rv>
               <div class="faq-q"><span class="mono dim">05</span><span>Who owns the system, and is our data safe?</span><span class="faq-toggle">+</span></div>
-              <div class="faq-a">You do. Every build is delivered with full source, credentials, and SOPs in your accounts — we can stay on retainer or hand off entirely. All workflows are designed with privacy, permissions, and access control in mind. For sensitive processes, we add human approval layers and stricter safeguards.</div>
+              <div class="faq-a">You do. Every build is delivered with full source, credentials, and SOPs in your accounts. We can stay on retainer or hand off entirely. All workflows are designed with privacy, permissions, and access control in mind. For sensitive processes, we add human approval layers and stricter safeguards.</div>
             </div>
             <div class="faq-row" data-rv>
-              <div class="faq-q"><span class="mono dim">06</span><span>What do you automate — and how do you decide where to start?</span><span class="faq-toggle">+</span></div>
-              <div class="faq-a">We automate repetitive workflows across sales, operations, admin, support, marketing, reporting, and internal team processes. To find the right starting point, we look for tasks that are time-consuming, error-prone, or directly tied to revenue — then prioritize the easiest high-impact wins first.</div>
+              <div class="faq-q"><span class="mono dim">06</span><span>What do you automate, and how do you decide where to start?</span><span class="faq-toggle">+</span></div>
+              <div class="faq-a">We automate repetitive workflows across sales, operations, admin, support, marketing, reporting, and internal team processes. To find the right starting point, we look for tasks that are time-consuming, error-prone, or directly tied to revenue, then prioritize the easiest high-impact wins first.</div>
             </div>
             <div class="faq-row" data-rv>
               <div class="faq-q"><span class="mono dim">07</span><span>How long does setup take, and what happens after launch?</span><span class="faq-toggle">+</span></div>
-              <div class="faq-a">Simple automations can launch quickly — more complex systems depend on integrations, workflow complexity, data quality, and approvals. Once live, we test the system, train your team, provide documentation, and can support ongoing maintenance or improvements.</div>
+              <div class="faq-a">Simple automations can launch quickly, more complex systems depend on integrations, workflow complexity, data quality, and approvals. Once live, we test the system, train your team, provide documentation, and can support ongoing maintenance or improvements.</div>
             </div>
             <div class="faq-row" data-rv>
-              <div class="faq-q"><span class="mono dim">08</span><span>Do we need to understand AI — and what do you need from us to start?</span><span class="faq-toggle">+</span></div>
+              <div class="faq-q"><span class="mono dim">08</span><span>Do we need to understand AI, and what do you need from us to start?</span><span class="faq-toggle">+</span></div>
               <div class="faq-a">No technical knowledge required. We handle strategy, setup, implementation, testing, and training so your team can use the system confidently from day one. To get started, we just need your current workflow, tool access, examples of manual work, key pain points, and one point of contact for feedback.</div>
             </div>
           </div>

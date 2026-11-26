@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-accent="teal">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>AI-Powered Virtual Assistants — Querent</title>
+<title>AI-Powered Virtual Assistants | Querent</title>
 <meta name="description" content="Place an AI-supercharged VA in your business. Querent combines trained virtual assistants with custom automations so your team runs faster from day one." />
 <link rel="icon" type="image/svg+xml" href="/assets/querent-logo-flat.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -485,11 +485,39 @@ footer a:hover { color: var(--ink); }
   .cta-banner { padding: 48px 32px; }
   .nav { gap: 20px; }
 }
-@media (max-width: 600px) {
-  .steps-grid { grid-template-columns: 1fr; }
-  .usecase-grid { grid-template-columns: 1fr; }
-  .hero-wrap { padding-top: 64px; }
-  .h1 { font-size: clamp(36px, 9vw, 52px); }
+@media (max-width: 768px) {
+  :root {
+    --m-pad-x: clamp(12px, 4vw, 20px);
+    --m-pad-y: clamp(20px, 3.4svh, 36px);
+    --m-gap: clamp(12px, 2.2svh, 22px);
+    --m-h1: clamp(1.75rem, 6.2vw + 0.5rem, 2.6rem);
+    --m-h2: clamp(1.4rem, 5vw + 0.4rem, 2.15rem);
+    --m-body: clamp(0.92rem, 0.85rem + 0.35vw, 1.05rem);
+    --m-lh-head: 1.08;
+    --m-lh-body: 1.5;
+    --pad: var(--m-pad-x);
+    --gap-section: clamp(32px, 5.5svh, 52px);
+  }
+  html, body { overflow-x: clip; }
+  body { font-size: var(--m-body); line-height: var(--m-lh-body); }
+  .btn:not(.btn-ico-m), .footer-cta {
+    white-space: normal; overflow-wrap: anywhere; text-wrap: balance; text-align: center;
+  }
+  .hdr-inner { padding-left: max(var(--m-pad-x), env(safe-area-inset-left)); padding-right: max(var(--m-pad-x), env(safe-area-inset-right)); gap: 12px; }
+  .hero-wrap { padding: var(--m-pad-y) var(--m-pad-x) 24px; }
+  .h1 { font-size: var(--m-h1); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; margin-bottom: 14px; }
+  .h2 { font-size: var(--m-h2); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; margin-bottom: 12px; }
+  .h3 { font-size: clamp(1.05rem, 3.6vw + 0.25rem, 1.25rem); overflow-wrap: anywhere; text-wrap: balance; }
+  .lede, .lede-sm { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; margin-bottom: 20px; }
+  .stats-strip { margin-top: 28px; }
+  .stat-item { padding: clamp(16px, 4vw, 22px); }
+  .stat-num { font-size: clamp(1.75rem, 6vw + 0.3rem, 2.4rem); }
+  .stat-label, .offer-list li, .diff-row > div { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
+  .steps-grid, .offer-grid, .usecase-grid, .diff-grid { margin-top: 24px; gap: var(--m-gap); }
+  .step-card, .offer-card, .usecase-card { padding: clamp(16px, 4vw, 22px) clamp(14px, 4vw, 18px); }
+  .cta-banner { padding: clamp(24px, 5vw, 32px) clamp(14px, 4vw, 18px); margin-top: var(--gap-section); }
+  .cta-banner-ctas { margin-top: 22px; }
+  footer { margin-top: var(--gap-section); padding: 24px var(--m-pad-x) calc(24px + env(safe-area-inset-bottom)); flex-wrap: wrap; gap: 12px; }
   .nav { display: none; }
   /* LM-0002 mobile: tap targets >= 44px */
   .hdr .btn-ico-m { font-size: 0; gap: 0; width: 44px; height: 44px; min-height: 44px; padding: 0; flex: none; }
@@ -497,6 +525,105 @@ footer a:hover { color: var(--ink); }
   .logo, .hdr .btn, .theme-toggle { min-height: 44px; }
   .theme-toggle { min-width: 44px; }
 }
+@media (max-width: 768px) and (max-height: 700px) {
+  .hero-wrap { padding: 16px var(--m-pad-x) 18px; }
+  .stats-strip { margin-top: 18px; }
+}
+@media (max-width: 768px) and (min-height: 860px) {
+  .hero-wrap, .section, .cta-banner { min-height: 0; }
+}
+@media (max-width: 600px) {
+  .steps-grid { grid-template-columns: 1fr; }
+  .usecase-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 360px) {
+  .hero-ctas .btn, .cta-banner-ctas .btn { width: 100%; }
+  .diff-row > div, .diff-header > div { padding: 16px 14px; }
+}
+
+/* LOCAL-MOD LM-0002: AI Virtual Assistants follows the site design language and the design-system variables */
+:root {
+  --bg: var(--c-canvas); --bg-elev: #FFFFFF; --bg-elev-2: #EAEAE6; --ink: var(--c-night); --ink-dim: #5A5F69; --ink-mute: #8A8F99;
+  --line: rgb(var(--rgb-night) / .10); --line-strong: rgb(var(--rgb-night) / .18);
+  --accent: var(--c-blue-600); --accent-2: var(--c-navy-800); --accent-soft: rgb(var(--rgb-blue-600) / .10);
+  --btn-bg: var(--c-navy-900); --btn-line: var(--c-navy-900); --btn-hover: var(--c-blue-700);
+  --panel-light: var(--c-panel-light); --panel-light-line: rgb(var(--rgb-blue-600) / .16);
+  --panel-dark: linear-gradient(160deg, var(--c-panel-dark-start), var(--c-panel-dark-end)); --panel-dark-line: rgb(var(--rgb-blue-300) / .16);
+  --r-band: 40px; --r-panel: 30px; --r-card: 22px; --r-btn: 999px;
+  --maxw: 1280px; --pad: clamp(16px, 5vw, 64px); --gap-section: clamp(56px, 8vw, 112px);
+}
+body { background: var(--bg); color: var(--ink); }
+.hdr { background: var(--c-night); color: var(--c-on-night); border-bottom: 0; --ink: var(--c-on-night); --ink-dim: var(--c-slate-400); --line: rgb(var(--rgb-blue-300) / .14); }
+.hdr .nav-dd { background: var(--c-night); }
+.wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: var(--pad); }
+.btn { border-radius: var(--r-btn); border-width: var(--bw-button, 1px); }
+.btn-primary { background: var(--surf-button, var(--btn-bg)); border-color: var(--bc-button, var(--btn-line)); color: #fff; }
+.btn-primary:hover { background: var(--btn-hover); }
+.btn-ghost { background: transparent; color: inherit; border-color: var(--bc-button, var(--line-strong)); }
+.h1 { font-size: clamp(2.2rem, 6vw, 4.4rem); line-height: 1.02; font-weight: 800; letter-spacing: -.03em; max-width: 16ch; margin: 0 0 20px; }
+.h2 { font-size: clamp(1.6rem, 3.6vw, 2.8rem); line-height: 1.08; font-weight: 700; letter-spacing: -.025em; margin: 0 0 16px; }
+.h3 { font-size: 1.2rem; font-weight: 700; margin: 0 0 8px; }
+.lede, .lede-sm { color: var(--ink-dim); max-width: 60ch; margin: 0; }
+.lede { font-size: clamp(1.05rem, 1.6vw, 1.25rem); }
+.hero-wrap { padding-block: clamp(40px, 7vw, 96px) 0; }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin: 32px 0; }
+.stats-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--gap-card, 16px); background: var(--surf-slab, var(--panel-dark)); border: 0; border-radius: var(--r-band); padding: clamp(20px, 3vw, 40px); margin: 0; color: var(--c-on-night); }
+.stat-item { border: 0; padding: 0; background: transparent; }
+.stat-num { font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 800; color: var(--c-on-night); }
+.stat-num span { color: var(--c-blue-300); }
+.stat-label { color: var(--c-slate-400); }
+.section { padding-block: var(--gap-section) 0; }
+.steps-grid, .usecase-grid, .offer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: var(--gap-card, 16px); margin-top: 32px; border: 0; background: none; }
+.offer-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); }
+.step-card, .usecase-card, .offer-card { background: var(--surf-main-card, var(--panel-light)); border: var(--bw-card, 1px) solid var(--bc-card, var(--panel-light-line)); border-radius: var(--r-card); padding: var(--pad-card, 28px); box-shadow: 0 calc(24px * var(--shk-card, 0)) calc(60px * var(--shk-card, 0)) calc(-36px * var(--shk-card, 0)) rgb(var(--rgb-navy-900) / .45); }
+.offer-card.highlight { background: var(--panel-dark); border-color: var(--panel-dark-line); color: var(--c-on-night); }
+.offer-card.highlight .lede-sm { color: var(--c-slate-400); }
+.offer-list { list-style: disc; padding-left: 18px; margin: 20px 0 0; display: grid; gap: 8px; }
+.offer-list li { border: 0; padding: 0; }
+.offer-list li::before { content: none; }
+.usecase-role { color: var(--accent); font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.diff-grid { display: block; margin-top: 32px; border: var(--bw-panel, 1px) solid var(--bc-panel, var(--panel-light-line)); border-radius: var(--r-panel); overflow: hidden; background: var(--bg-elev); }
+.diff-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+.diff-row:last-child { border-bottom: 0; }
+.diff-row > div { padding: clamp(12px, 2vw, 20px); color: var(--ink-dim); }
+.diff-row > div + div { color: var(--ink); background: var(--accent-soft); font-weight: 600; }
+.diff-header > div { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; color: var(--ink); }
+.cta-banner { margin-block: var(--gap-section); background: var(--panel-light); border: var(--bw-panel, 1px) solid var(--bc-panel, var(--panel-light-line)); border-radius: var(--r-panel); padding: clamp(28px, 5vw, 64px); text-align: center; }
+.cta-banner::before, .cta-banner::after { content: none; }
+.cta-banner .lede-sm { margin: 0 auto; }
+.cta-banner-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 28px; }
+.footer { display: block; max-width: none; margin: 0; padding: 0; border: 0; background: var(--c-night); color: var(--c-on-night); border-radius: var(--r-band) var(--r-band) 0 0; font-size: 14px; }
+.footer-inner { max-width: var(--maxw); margin: 0 auto; padding: 56px var(--pad) 0; container-type: inline-size; }
+.footer-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr)) minmax(0, 1.3fr); gap: clamp(24px, 3.5cqi, 48px); }
+.footer-tag, .footer-col a, .footer-contact li, .footer-legal span, .footer-bottom { color: var(--c-slate-400); }
+.footer-col ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.footer-col a { overflow-wrap: anywhere; }
+.footer-contact a { color: var(--c-on-night); }
+.footer .logo, .footer a.footer-cta { color: var(--c-on-night); }
+.footer-contact li { display: flex; gap: 12px; align-items: flex-start; }
+.footer-txt { display: flex; flex-direction: column; min-width: 0; overflow-wrap: anywhere; }
+.footer-lbl { font-size: 11px; color: var(--c-slate-500); }
+.footer-ico svg { width: 18px; height: 18px; }
+.footer-h { font-size: 13px; margin: 0 0 16px; }
+.footer-cta { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: var(--r-btn); background: var(--c-navy-800); border: 1px solid rgb(var(--rgb-blue-300) / .32); }
+.footer-cta .cta-ico { width: 16px; height: 16px; }
+.footer-rule { height: 1px; background: rgb(var(--rgb-blue-300) / .14); margin-top: 48px; }
+.footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 24px 0 32px; }
+.footer-legal { display: flex; gap: 24px; }
+@container (max-width: 960px) { .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .footer-brand { grid-column: 1 / -1; } }
+@container (max-width: 620px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .footer-grid > :last-child { grid-column: 1 / -1; } }
+@media (max-width: 600px) { .diff-row { grid-template-columns: minmax(0, 1fr); } }
+/* LOCAL-MOD LM-0002: two-column hero so the first screen has no empty half */
+.va-hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: stretch; }
+.va-hero .hero-ctas { margin-bottom: 0; }
+.va-path { background: var(--surf-main-card, var(--panel-light)); border: var(--bw-card, 1px) solid var(--bc-card, var(--panel-light-line)); border-radius: var(--r-panel); padding: clamp(20px, 2.5vw, 32px); }
+.va-path h2 { font-size: 1.25rem; margin: 0 0 8px; }
+.va-path ol { list-style: none; margin: 0; padding: 0; }
+.va-path li { display: grid; gap: 2px; padding: 14px 0; border-top: 1px solid var(--line); }
+.va-path li span { color: var(--ink-dim); }
+.hero-wrap { padding-top: clamp(32px, 4vw, 56px); }
+.va-hero + .stats-strip { margin-top: clamp(20px, 3vw, 32px); }
+@media (max-width: 860px) { .va-hero { grid-template-columns: minmax(0, 1fr); } }
 </style>
 </head>
 <body>
@@ -506,24 +633,11 @@ footer a:hover { color: var(--ink); }
 <header class="hdr">
   <div class="hdr-inner">
     <a href="/index.html" class="logo">
-      <div class="logo-mark"></div>
+      <img src="/assets/querent-logo-flat.svg" alt="" width="28" height="28">
       <span class="logo-word">Querent</span>
     </a>
     <nav class="nav" aria-label="Primary">
       <a href="index.html">Home</a>
-      <div class="nav-item">
-        <a href="menu.html" class="nav-trigger is-active" aria-haspopup="true">Services<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
-        <div class="nav-dd" role="menu" aria-label="Services">
-          <a href="menu.html" role="menuitem">All Services</a>
-          <a href="menu.html#concierge" role="menuitem">AI Concierge</a>
-          <a href="menu.html#workflow" role="menuitem">Workflow Automation</a>
-          <a href="menu.html#leadgen" role="menuitem">Outbound &amp; Lead Gen</a>
-          <a href="menu.html#internal" role="menuitem">Internal Ops Agents</a>
-          <a href="menu.html#consult" role="menuitem">Strategy &amp; Advisory</a>
-          <span class="nav-dd-sep" aria-hidden="true"></span>
-          <a href="va.html" class="is-active" role="menuitem">AI Virtual Assistants</a>
-        </div>
-      </div>
       <div class="nav-item">
         <button type="button" class="nav-trigger" aria-haspopup="true">Company<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
         <div class="nav-dd" role="menu" aria-label="Company">
@@ -535,12 +649,28 @@ footer a:hover { color: var(--ink); }
           <a href="booking.html" role="menuitem">Book a Call</a>
         </div>
       </div>
+      <div class="nav-item">
+        <a href="menu.html" class="nav-trigger" aria-haspopup="true">Services<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
+        <div class="nav-dd" role="menu" aria-label="Services">
+          <a href="menu.html" role="menuitem">All Services</a>
+          <a href="menu.html#concierge" role="menuitem">AI Concierge</a>
+          <a href="menu.html#workflow" role="menuitem">Workflow Automation</a>
+          <a href="menu.html#leadgen" role="menuitem">Outbound &amp; Lead Gen</a>
+          <a href="menu.html#internal" role="menuitem">Internal Ops Agents</a>
+          <a href="menu.html#consult" role="menuitem">Strategy &amp; Advisory</a>
+        </div>
+      </div>
+        <div class="nav-item">
+          <a href="va.html" class="nav-trigger is-active" aria-haspopup="true">AI Virtual Assistants<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
+          <div class="nav-dd" role="menu" aria-label="AI Virtual Assistants">
+            <a href="#how-it-works" role="menuitem">How it works</a>
+            <a href="#offer" role="menuitem">What you get</a>
+            <a href="#use-cases" role="menuitem">Use cases</a>
+            <a href="#compare" role="menuitem">Compare</a>
+          </div>
+        </div>
     </nav>
     <div class="hdr-actions">
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-        <svg class="theme-toggle-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        <svg class="theme-toggle-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
       <a href="/booking.html?service=va"
          class="btn btn-primary btn-ico-m" aria-label="Book a call">
         <svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
@@ -552,11 +682,13 @@ footer a:hover { color: var(--ink); }
 
 <!-- ── Hero ── -->
 <section class="hero-wrap wrap">
-  <h1 class="h1" style="max-width:900px">
-    Your next hire is<br><em>AI-supercharged</em>
+  <div class="va-hero">
+  <div class="va-hero-copy">
+  <h1 class="h1">
+    Your next hire is<br>AI-supercharged
   </h1>
   <p class="lede">
-    Querent places trained virtual assistants in your business — and wires them with custom automations from day one. Less hand-holding. More output.
+    Querent places trained virtual assistants in your business, and wires them with custom automations from day one. Less hand-holding. More output.
   </p>
   <div class="hero-ctas">
     <a href="/booking.html?service=va"
@@ -565,6 +697,17 @@ footer a:hover { color: var(--ink); }
       <svg class="cta-ico cta-ico--right" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </a>
     <a href="#how-it-works" class="btn btn-ghost btn-lg">See how it works<svg class="cta-ico cta-ico--down" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></a>
+  </div>
+  </div>
+  <aside class="va-path" aria-labelledby="va-path-h">
+    <h2 id="va-path-h">How placement works</h2>
+    <ol>
+      <li><strong>Discovery</strong><span>We map the tasks, tools and friction points.</span></li>
+      <li><strong>Automation build</strong><span>Workflows are built before your VA starts.</span></li>
+      <li><strong>VA placement</strong><span>A trained VA joins your tools and your Slack.</span></li>
+      <li><strong>Ongoing support</strong><span>We add automations as you scale.</span></li>
+    </ol>
+  </aside>
   </div>
 
   <!-- Stats -->
@@ -586,31 +729,23 @@ footer a:hover { color: var(--ink); }
 
 <!-- ── How it works ── -->
 <section class="section wrap" id="how-it-works">
-  <h2 class="h2">From intake to <em>in your Slack</em> in days</h2>
+  <h2 class="h2">From intake to in your Slack in days</h2>
   <p class="lede lede-sm">No long recruiting cycles. We match, train, and wire up your VA with the tools your business already runs on.</p>
 
   <div class="steps-grid">
     <div class="step-card">
-      <div class="step-num">Step 01</div>
-      <div class="step-icon">🗺️</div>
       <h3 class="h3">Discovery</h3>
-      <p class="lede-sm">We map your ops — the tasks, tools, and friction points that eat your team's time every week.</p>
+      <p class="lede-sm">We map your ops: the tasks, tools, and friction points that eat your team's time every week.</p>
     </div>
     <div class="step-card">
-      <div class="step-num">Step 02</div>
-      <div class="step-icon">🤖</div>
       <h3 class="h3">Automation build</h3>
-      <p class="lede-sm">Before your VA starts, we build the automations they'll work alongside — CRM updates, inbox routing, scheduling, reporting.</p>
+      <p class="lede-sm">Before your VA starts, we build the automations they'll work alongside: CRM updates, inbox routing, scheduling, reporting.</p>
     </div>
     <div class="step-card">
-      <div class="step-num">Step 03</div>
-      <div class="step-icon">🎯</div>
       <h3 class="h3">VA placement</h3>
-      <p class="lede-sm">We match and place a trained VA — already fluent in AI tools — into your workflows with minimal onboarding from your side.</p>
+      <p class="lede-sm">We match and place a trained VA, already fluent in AI tools, into your workflows with minimal onboarding from your side.</p>
     </div>
     <div class="step-card">
-      <div class="step-num">Step 04</div>
-      <div class="step-icon">📈</div>
       <h3 class="h3">Ongoing support</h3>
       <p class="lede-sm">We stay in the loop. As your business scales, we add automations and upskill your VA to match.</p>
     </div>
@@ -619,18 +754,17 @@ footer a:hover { color: var(--ink); }
 
 <!-- ── What's included ── -->
 <section class="section wrap" id="offer">
-  <h2 class="h2">The full bundle — <em>VA + automations</em></h2>
+  <h2 class="h2">The full bundle: VA and automations</h2>
 
   <div class="offer-grid">
     <!-- VA side -->
     <div class="offer-card highlight">
-      <div class="offer-tag offer-tag-va">Virtual Assistant</div>
       <h3 class="h3">An AI-trained human in your corner</h3>
-      <p class="lede-sm">Every VA we place is trained on AI tools before they land in your business. They don't just execute tasks — they leverage automation to do more of them.</p>
+      <p class="lede-sm">Every VA we place is trained on AI tools before they land in your business. They don't just execute tasks, they leverage automation to do more of them.</p>
       <ul class="offer-list">
         <li>Pre-screened, AI-tool fluent candidates</li>
         <li>Trained on your specific stack before day one</li>
-        <li>Ongoing AI learning — your VA levels up as the tools do</li>
+        <li>Ongoing AI learning. Your VA levels up as the tools do</li>
         <li>Dedicated point of contact at Querent</li>
         <li>Replacement guarantee if it's not the right fit</li>
       </ul>
@@ -638,16 +772,15 @@ footer a:hover { color: var(--ink); }
 
     <!-- Automation side -->
     <div class="offer-card">
-      <div class="offer-tag offer-tag-auto">Automations</div>
       <h3 class="h3">Custom workflows, built for your ops</h3>
-      <p class="lede-sm">We identify the repetitive work and build automations that run quietly in the background — so your VA focuses on the things only humans can do.</p>
+      <p class="lede-sm">We identify the repetitive work and build automations that run quietly in the background, so your VA focuses on the things only humans can do.</p>
       <ul class="offer-list">
         <li>CRM data entry and lead routing</li>
         <li>Email + calendar management workflows</li>
         <li>Intake forms to project management tools</li>
         <li>Reporting dashboards and weekly digests</li>
         <li>Slack/Teams notification pipelines</li>
-        <li>Custom request — if it's repetitive, we'll automate it</li>
+        <li>Custom requests: if it's repetitive, we'll automate it</li>
       </ul>
     </div>
   </div>
@@ -655,51 +788,45 @@ footer a:hover { color: var(--ink); }
 
 <!-- ── Use cases ── -->
 <section class="section wrap" id="use-cases">
-  <h2 class="h2">Works across every <em>type of business</em></h2>
+  <h2 class="h2">Works across every type of business</h2>
 
   <div class="usecase-grid">
     <div class="usecase-card">
-      <div class="usecase-icon">🏗️</div>
       <div class="usecase-role">Real estate / construction</div>
       <h3 class="h3">Deal tracking + comms</h3>
-      <p class="lede-sm">VA manages your pipeline, follows up with leads, and logs activity — while automations sync your CRM and calendar automatically.</p>
+      <p class="lede-sm">VA manages your pipeline, follows up with leads, and logs activity, while automations sync your CRM and calendar automatically.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-icon">🏥</div>
       <div class="usecase-role">Healthcare / med-spa</div>
       <h3 class="h3">Patient intake + scheduling</h3>
       <p class="lede-sm">Automate appointment confirmations, reminders, and intake forms. Your VA handles the exceptions and relationship work.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-icon">📊</div>
       <div class="usecase-role">Agencies / consulting</div>
       <h3 class="h3">Client ops + reporting</h3>
-      <p class="lede-sm">Your VA owns client communication and status updates. Automations pull data into reports — no manual pulling.</p>
+      <p class="lede-sm">Your VA owns client communication and status updates. Automations pull data into reports. No manual pulling.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-icon">🛒</div>
       <div class="usecase-role">E-commerce</div>
       <h3 class="h3">Order ops + customer support</h3>
       <p class="lede-sm">Automate order status, refund logic, and FAQ responses. VA steps in for escalations and reviews.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-icon">💼</div>
       <div class="usecase-role">Professional services</div>
       <h3 class="h3">Admin + business development</h3>
-      <p class="lede-sm">Research, outreach, scheduling, proposal follow-up — all handled by a VA running on automated workflows.</p>
+      <p class="lede-sm">Research, outreach, scheduling, proposal follow-up. All handled by a VA running on automated workflows.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-icon">🚀</div>
       <div class="usecase-role">Startups / founders</div>
       <h3 class="h3">Everything you don't have time for</h3>
-      <p class="lede-sm">From inbox zero to launch coordination — a Querent VA is your first ops hire, without the overhead.</p>
+      <p class="lede-sm">From inbox zero to launch coordination, a Querent VA is your first ops hire, without the overhead.</p>
     </div>
   </div>
 </section>
 
 <!-- ── Why different ── -->
 <section class="section wrap" id="compare">
-  <h2 class="h2">Not just a hire. A <em>system</em>.</h2>
+  <h2 class="h2">Not just a hire. A system.</h2>
   <p class="lede lede-sm">Most VA agencies drop someone in your Slack and call it done. We build the infrastructure around them first.</p>
 
   <div class="diff-grid">
@@ -708,24 +835,24 @@ footer a:hover { color: var(--ink); }
       <div>Querent VA + Automations</div>
     </div>
     <div class="diff-row">
-      <div><span class="cross">✗</span>VA placed, then you figure out onboarding</div>
-      <div><span class="check">✓</span>Workflows built before your VA starts</div>
+      <div>VA placed, then you figure out onboarding</div>
+      <div>Workflows built before your VA starts</div>
     </div>
     <div class="diff-row">
-      <div><span class="cross">✗</span>Generic training, no AI tool fluency</div>
-      <div><span class="check">✓</span>VA trained on AI tools specific to your stack</div>
+      <div>Generic training, no AI tool fluency</div>
+      <div>VA trained on AI tools specific to your stack</div>
     </div>
     <div class="diff-row">
-      <div><span class="cross">✗</span>Manual tasks eat the VA's hours</div>
-      <div><span class="check">✓</span>Automations handle the repetitive work</div>
+      <div>Manual tasks eat the VA's hours</div>
+      <div>Automations handle the repetitive work</div>
     </div>
     <div class="diff-row">
-      <div><span class="cross">✗</span>No ongoing support after placement</div>
-      <div><span class="check">✓</span>Querent stays in the loop — add automations as you scale</div>
+      <div>No ongoing support after placement</div>
+      <div>Querent stays in the loop. Add automations as you scale</div>
     </div>
     <div class="diff-row">
-      <div><span class="cross">✗</span>You manage performance and upskilling</div>
-      <div><span class="check">✓</span>Continuous AI learning — your VA levels up automatically</div>
+      <div>You manage performance and upskilling</div>
+      <div>Continuous AI learning. Your VA levels up automatically</div>
     </div>
   </div>
 </section>
@@ -734,8 +861,8 @@ footer a:hover { color: var(--ink); }
 <div class="wrap">
   <div class="cta-banner">
     <div class="cta-banner-inner">
-      <h2 class="h2">Ready to place your<br><em>AI-supercharged VA?</em></h2>
-      <p class="lede-sm" style="text-align:center;max-width:440px;margin:12px auto 0">Book a 30-minute call. We'll map your ops, identify automation wins, and match you with the right person.</p>
+      <h2 class="h2">Ready to place your<br>AI-supercharged VA?</h2>
+      <p class="lede-sm">Book a 30-minute call. We'll map your ops, identify automation wins, and match you with the right person.</p>
       <div class="cta-banner-ctas">
         <a href="/booking.html?service=va"
            class="btn btn-primary btn-lg">
@@ -749,25 +876,55 @@ footer a:hover { color: var(--ink); }
 </div>
 
 <!-- ── Footer ── -->
-<footer class="wrap">
-  <span>© 2026 Querent AI. All rights reserved.</span>
-  <nav style="display:flex;gap:24px">
-    <a href="/index.html">Home</a>
-    <a href="/menu.html">Solutions</a>
-    <a href="/va.html">AI VAs</a>
-    <a href="/booking.html">Book a Call</a>
-  </nav>
-</footer>
+<footer class="footer" id="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo" href="index.html#top"><img src="/assets/querent-logo-flat.svg" alt="" style="width:28px;height:28px;display:block;"><span class="logo-word">Querent</span></a>
+          <p class="footer-tag">AI automation, productized. Workflows, agents and ops that give your team its time back.</p>
+          <a class="footer-cta" href="booking.html"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+        </div>
+        <nav class="footer-col" aria-label="Services">
+          <h3 class="footer-h">Services</h3>
+          <ul>
+            <li><a href="menu.html">Full menu of services</a></li>
+            <li><a href="menu.html#concierge">AI Concierge</a></li>
+            <li><a href="menu.html#workflow">n8n Workflow Automation</a></li>
+            <li><a href="menu.html#leadgen">Outbound &amp; Research</a></li>
+            <li><a href="menu.html#internal">Internal Ops Agents</a></li>
+            <li><a href="menu.html#consult">Strategy &amp; Advisory</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Explore">
+          <h3 class="footer-h">Explore</h3>
+          <ul>
+            <li><a href="index.html#top">Home</a></li>
+            <li><a href="index.html#why-now">Why now</a></li>
+            <li><a href="index.html#services">Solutions</a></li>
+            <li><a href="index.html#process">Process</a></li>
+            <li><a href="index.html#faq">FAQ</a></li>
+            <li><a href="index.html#cta">Free audit</a></li>
+          </ul>
+        </nav>
+        <div class="footer-col">
+          <h3 class="footer-h">Contact</h3>
+          <ul class="footer-contact">
+            <li><span class="footer-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span><span class="footer-txt"><span class="footer-lbl">Email</span><a href="mailto:hello@querent.ai">hello@querent.ai</a></span></li>
+            <li><span class="footer-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg></span><span class="footer-txt"><span class="footer-lbl">Schedule</span><a href="booking.html">Book a 30-minute call</a></span></li>
+            <li><span class="footer-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><span class="footer-txt"><span class="footer-lbl">Coverage</span><span>Americas · APAC · Global Remote</span></span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-rule"></div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Querent Labs, Inc. All rights reserved.</span>
+        <span class="footer-legal"><span>Privacy</span><span>Terms</span></span>
+      </div>
+    </div>
+  </footer>
 
 </div><!-- .app -->
 
-<script>
-// Theme toggle
-const html = document.documentElement;
-document.getElementById('themeToggle').addEventListener('click', () => {
-  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
-});
-</script>
 <!-- STAGING-ONLY: DESIGN SYSTEM PANEL — REMOVE BEFORE MERGING/DEPLOYING TO MAIN -->
 <script src="/staging-ds-panel.js"></script>
 <!-- /STAGING-ONLY -->

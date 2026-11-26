@@ -169,9 +169,9 @@
       });
     });
   }
-  const presets = document.querySelectorAll('.q-preset');
+  const presets = document.querySelectorAll('.q-preset:not([data-type-preset]):not([data-shape-preset])');
   const official = document.querySelector('[data-preset="official"]');
-  const unpress = (except) => presets.forEach((b) => b.setAttribute('aria-pressed', String(b === except)));
+  const unpress = (except) => document.querySelectorAll('.q-preset:not([data-type-preset]):not([data-shape-preset])').forEach((b) => b.setAttribute('aria-pressed', String(b === except)));
   function applyAnchor(hx, name) { Object.keys(state).forEach((k) => delete state[k]); manual.clear(); source = name; Object.assign(state, derive(hx)); render(); }
   function clearColorState() {
     Object.keys(state).forEach((k) => delete state[k]);
@@ -208,6 +208,63 @@
   if (anchor) anchor.addEventListener('input', () => { unpress(null); applyAnchor(anchor.value, 'Custom anchor'); });
   document.querySelectorAll('[data-color-reset]').forEach((b) => b.addEventListener('click', reset));
   updateReport();
+
+  // ---------- custom palettes: one primary colour in, full set out, then fine tune ----------
+  const presetRow = official && official.parentElement;
+  const STORE_KEY = 'q-custom-palettes';
+  const readSaved = () => {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]').filter((p) => p && typeof p.name === 'string' && /^#[0-9a-f]{6}$/i.test(p.hex)); } catch (e) { return []; }
+  };
+  function addSaved(p) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'q-preset';
+    b.dataset.custom = p.name;
+    b.setAttribute('aria-pressed', 'false');
+    const sw = document.createElement('span');
+    sw.className = 'q-preset__sw';
+    sw.innerHTML = strip(preview(p.hex));
+    const label = document.createElement('span');
+    label.className = 'q-preset__name';
+    label.textContent = p.name;
+    b.append(sw, label);
+    b.addEventListener('click', () => { unpress(b); if (anchor) anchor.value = p.hex; applyAnchor(p.hex, p.name); });
+    presetRow.insertBefore(b, presetRow.querySelector('[data-custom-new]'));
+    return b;
+  }
+  if (presetRow) {
+    const make = document.createElement('button');
+    make.type = 'button';
+    make.className = 'q-preset';
+    make.dataset.customNew = '';
+    make.innerHTML = '<span class="q-preset__name">Customize</span>';
+    presetRow.appendChild(make);
+    readSaved().forEach(addSaved);
+
+    const dlg = document.createElement('dialog');
+    dlg.setAttribute('aria-labelledby', 'q-custom-title');
+    dlg.style.cssText = 'width:min(360px,calc(100vw - 32px));padding:24px;border:1px solid var(--line-strong,#ccc);border-radius:var(--r-card,16px);background:var(--bg-elev,#fff);color:var(--ink,#111)';
+    dlg.innerHTML = '<form method="dialog" style="display:grid;gap:16px">' +
+      '<h3 id="q-custom-title" style="margin:0">Custom palette</h3>' +
+      '<label style="display:grid;gap:6px">Primary colour<input type="color" name="hex" value="#2563eb" style="width:100%;height:44px"></label>' +
+      '<label style="display:grid;gap:6px">Palette name<input type="text" name="title" required maxlength="24" style="min-height:44px;padding:0 12px"></label>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end"><button type="button" class="q-btn q-btn--ghost q-btn--sm" data-cancel>Cancel</button><button type="submit" class="q-btn q-btn--primary q-btn--sm">Generate</button></div></form>';
+    document.body.appendChild(dlg);
+    const form = dlg.querySelector('form');
+    make.addEventListener('click', () => { form.reset(); dlg.showModal(); });
+    dlg.querySelector('[data-cancel]').addEventListener('click', () => dlg.close());
+    dlg.addEventListener('keydown', (e) => { if (e.key === 'Escape') e.stopPropagation(); });
+    form.addEventListener('submit', () => {
+      const p = { name: form.elements.title.value.trim() || 'Custom', hex: form.elements.hex.value };
+      const saved = readSaved().filter((x) => x.name !== p.name).concat(p);
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(saved)); } catch (e) { /* ignore */ }
+      presetRow.querySelectorAll('[data-custom]').forEach((x) => { if (x.dataset.custom === p.name) x.remove(); });
+      const b = addSaved(p);
+      unpress(b);
+      if (anchor) anchor.value = p.hex;
+      applyAnchor(p.hex, p.name);
+    });
+  }
 
   // ---------- logo variant switcher ----------
   const LOGO_LABELS = {

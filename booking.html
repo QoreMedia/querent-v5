@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Book a Free Audit — Querent</title>
+<title>Book a Free Audit | Querent</title>
 <link rel="icon" type="image/svg+xml" href="/assets/querent-logo-flat.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -69,7 +69,7 @@ button { font: inherit; cursor: pointer; }
 
 /* ---------- Header (dark ribbon, as index.html) ---------- */
 .hdr {
-  position: sticky; top: 0; z-index: 50; overflow: visible;
+  position: sticky; top: 0; z-index: 60; overflow: visible;
   background: rgb(var(--rgb-night) / 0.92); color: var(--c-on-night);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255,255,255,0.10);
@@ -332,16 +332,49 @@ button { font: inherit; cursor: pointer; }
   .page { padding-top: 48px; }
 }
 @media (max-width: 768px) {
-  :root { --pad: 24px; }
+  :root {
+    --m-pad-x: clamp(12px, 4vw, 20px);
+    --m-pad-y: clamp(20px, 3.4svh, 36px);
+    --m-gap: clamp(12px, 2.2svh, 22px);
+    --m-h1: clamp(1.75rem, 6.2vw + 0.5rem, 2.6rem);
+    --m-h2: clamp(1.4rem, 5vw + 0.4rem, 2.15rem);
+    --m-body: clamp(0.92rem, 0.85rem + 0.35vw, 1.05rem);
+    --m-lh-head: 1.08;
+    --m-lh-body: 1.5;
+    --pad: var(--m-pad-x);
+  }
+  html, body { overflow-x: clip; }
+  body { font-size: var(--m-body); line-height: var(--m-lh-body); }
+  .btn:not(.btn-ico-m), .footer-cta, .slot-btn, .cal-back-btn {
+    white-space: normal; overflow-wrap: anywhere; text-wrap: balance; text-align: center;
+  }
+  .hdr-inner { padding-left: max(var(--m-pad-x), env(safe-area-inset-left)); padding-right: max(var(--m-pad-x), env(safe-area-inset-right)); gap: 12px; }
   .nav { display: none; }
-  .page { padding-bottom: 64px; }
-  .lede { font-size: 16px; }
-  .grid { row-gap: 32px; }
+  .page { padding: var(--m-pad-y) var(--m-pad-x); }
+  .h1 { font-size: var(--m-h1); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; margin-bottom: 14px; }
+  .lede { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; margin-bottom: 20px; }
+  .detail-item { padding: 14px 0; }
+  .detail-text h4 { font-size: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem); overflow-wrap: anywhere; }
+  .detail-text p, .book-service, .cal-prompt { font-size: clamp(0.86rem, 0.82rem + 0.25vw, 0.95rem); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
+  .book-tab-name { font-size: clamp(0.85rem, 0.82rem + 0.2vw, 0.94rem); overflow-wrap: anywhere; }
+  .cal-month-title { font-size: clamp(0.95rem, 0.9rem + 0.3vw, 1.08rem); }
+  .grid { row-gap: var(--m-gap); }
+  .book-card { max-width: 100%; }
+  .footer-inner { padding: 24px var(--m-pad-x); gap: 16px; }
+  .footer-links { gap: 4px 20px; }
+  .footer-copy { padding: 0 var(--m-pad-x) calc(24px + env(safe-area-inset-bottom)); }
   /* LM-0002 mobile: tap targets >= 44px */
   .hdr .btn-ico-m { font-size: 0; gap: 0; width: 44px; height: 44px; min-height: 44px; padding: 0; flex: none; }
   .hdr .btn-ico-m .cta-ico { width: 20px; height: 20px; }
   .logo, .hdr .btn, .footer-cta { min-height: 44px; }
   .footer-links a { display: inline-flex; align-items: center; min-height: 44px; }
+}
+@media (max-width: 768px) and (max-height: 700px) {
+  .page { padding: 14px var(--m-pad-x) 20px; }
+  .cal-wrap, #cal-booking { min-height: 420px; }
+}
+@media (max-width: 768px) and (min-height: 860px) {
+  .page { min-height: 0; }
 }
 @media (max-width: 520px) {
   .book-top { padding: 18px 16px 14px; }
@@ -352,10 +385,23 @@ button { font: inherit; cursor: pointer; }
   .book-tab { min-width: 0; }
   .book-tab-role { display: none; }
 }
+@media (max-width: 360px) {
+  .book-selector { grid-template-columns: 1fr; gap: 6px; }
+  .book-top { padding: 14px 12px 12px; }
+  .cal-picker-stage { padding: 12px 10px 14px; }
+  .cal-day { min-width: 0; min-height: 40px; font-size: 0.85rem; }
+  .cal-pad { min-height: 40px; }
+  .cal-weekdays span { font-size: 0.65rem; }
+  .slot-grid { grid-template-columns: 1fr; }
+}
 @media (prefers-reduced-motion: reduce) {
   .rise, .cal-embed-stage { animation: none; }
   .book-tab, .book-tab *, .nav-dd, .nav-caret, .slot-drawer, .cal-day, .slot-btn, .cal-back-btn > .cta-ico { transition: none !important; transform: none !important; }
 }
+/* LOCAL-MOD LM-0002: footer adapts at every width */
+.footer-inner, .footer-copy { padding-inline: clamp(16px, 5vw, var(--pad)); }
+.footer-links { gap: 8px clamp(16px, 3vw, 28px); min-width: 0; }
+.footer-links a { overflow-wrap: anywhere; }
 </style>
 </head>
 <body>
@@ -370,6 +416,18 @@ button { font: inherit; cursor: pointer; }
       <nav class="nav" aria-label="Primary">
         <a href="index.html">Home</a>
         <div class="nav-item">
+          <button type="button" class="nav-trigger" aria-expanded="false" aria-haspopup="true">Company<svg class="nav-caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="nav-dd">
+            <div class="nav-dd-panel">
+              <a href="index.html#why-now">Why Now</a>
+              <a href="index.html#case">Case Studies</a>
+              <a href="index.html#process">Process</a>
+              <a href="index.html#faq">FAQ</a>
+              <a href="booking.html">Book a Call</a>
+            </div>
+          </div>
+        </div>
+        <div class="nav-item">
           <button type="button" class="nav-trigger" aria-expanded="false" aria-haspopup="true">Services<svg class="nav-caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           <div class="nav-dd">
             <div class="nav-dd-panel">
@@ -379,19 +437,17 @@ button { font: inherit; cursor: pointer; }
               <a href="menu.html#leadgen">Outbound &amp; Lead Gen</a>
               <a href="menu.html#internal">Internal Ops Agents</a>
               <a href="menu.html#consult">Strategy &amp; Advisory</a>
-              <a href="va.html">AI Virtual Assistants</a>
             </div>
           </div>
         </div>
         <div class="nav-item">
-          <button type="button" class="nav-trigger" aria-expanded="false" aria-haspopup="true">Company<svg class="nav-caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <button type="button" class="nav-trigger" aria-expanded="false" aria-haspopup="true">AI Virtual Assistants<svg class="nav-caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           <div class="nav-dd">
             <div class="nav-dd-panel">
-              <a href="index.html#why-now">Why Now</a>
-              <a href="index.html#case">Case Studies</a>
-              <a href="index.html#process">Process</a>
-              <a href="index.html#faq">FAQ</a>
-              <a href="booking.html">Book a Call</a>
+              <a href="va.html#how-it-works">How it works</a>
+              <a href="va.html#offer">What you get</a>
+              <a href="va.html#use-cases">Use cases</a>
+              <a href="va.html#compare">Compare</a>
             </div>
           </div>
         </div>
@@ -434,7 +490,7 @@ button { font: inherit; cursor: pointer; }
               </div>
               <div class="detail-text">
                 <h4>Written brief included</h4>
-                <p>You leave with a short written brief — yours to keep regardless.</p>
+                <p>You leave with a short written brief. Yours to keep regardless.</p>
               </div>
             </li>
           </ul>

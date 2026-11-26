@@ -54,6 +54,9 @@
   function isAllowedOrigin(o) { return Boolean(o) && ALLOWED_ORIGINS.indexOf(o) !== -1; }
   var replyOrigin = (function () {
     try {
+      // The real embedder first: after navigating inside the preview the referrer is the site itself.
+      var up = location.ancestorOrigins && location.ancestorOrigins[0];
+      if (isAllowedOrigin(up)) return up;
       var ref = document.referrer ? new URL(document.referrer).origin : '';
       if (isAllowedOrigin(ref)) return ref;
     } catch (e) { /* ignore */ }
@@ -165,7 +168,7 @@
   }
   function syncMark() {
     var cs = getComputedStyle(document.documentElement), cols = { a: cs.getPropertyValue('--c-blue-700').trim(), c: cs.getPropertyValue('--c-cyan-500').trim(), k: cs.getPropertyValue('--c-night').trim() };
-    var ok = applied.length && /^#[0-9a-fA-F]{6}$/.test(cols.a) && /^#[0-9a-fA-F]{6}$/.test(cols.c) && /^#[0-9a-fA-F]{6}$/.test(cols.k);
+    var ok = applied.some(function (n) { return ['--c-blue-700', '--c-cyan-500', '--c-night'].indexOf(n) !== -1; }) && /^#[0-9a-fA-F]{6}$/.test(cols.a) && /^#[0-9a-fA-F]{6}$/.test(cols.c) && /^#[0-9a-fA-F]{6}$/.test(cols.k);
     swapLogos(ok ? cols : null);
   }
 
@@ -217,6 +220,23 @@
     }
   }
 
+  // Keep the current tweaks for this browser session so every page shows them. Values are re-validated on load.
+  var STORE = 'qs-ds-tweaks';
+  function remember(d) {
+    try {
+      if (d) window.sessionStorage.setItem(STORE, JSON.stringify({ vars: d.vars, fonts: d.fonts }));
+      else window.sessionStorage.removeItem(STORE);
+    } catch (e) { /* ignore */ }
+  }
+  function restore() {
+    try {
+      var d = JSON.parse(window.sessionStorage.getItem(STORE) || 'null');
+      if (d) { applyTweaks(d); syncMark(); }
+    } catch (e) { /* ignore */ }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', restore);
+  else restore();
+
   var isTop = window.top === window;
   var overlay = null; // the design-system frame holder (top-level pages only)
 
@@ -228,8 +248,8 @@
     var fromOverlay = isTop && overlay && overlay.frame && e.source === overlay.frame.contentWindow;
     if (!fromParent && !fromOverlay) return;
     if (fromParent) replyOrigin = e.origin;
-    if (d.type === 'qs-ds-reset') { clearTweaks(); syncMark(); updateCal(null); report(); }
-    else if (d.type === 'qs-ds-tweak') { applyTweaks(d); syncMark(); updateCal(applied.length ? d.vars : null); report(); }
+    if (d.type === 'qs-ds-reset') { clearTweaks(); remember(null); syncMark(); updateCal(null); report(); }
+    else if (d.type === 'qs-ds-tweak') { applyTweaks(d); syncMark(); updateCal(applied.indexOf('--cal-brand') !== -1 ? d.vars : null); remember(d); report(); }
     else if (d.type === 'qs-ds-close' && fromOverlay) overlay.set(false);
   });
 
@@ -365,7 +385,7 @@
     if (visited()) root.classList.add('has-visited');
     // Return to default: clear this page and tell the design system (if loaded) to reset everywhere.
     root.querySelector('.qs-default').addEventListener('click', function () {
-      clearTweaks(); syncMark(); updateCal(null);
+      clearTweaks(); remember(null); syncMark(); updateCal(null);
       if (frame && frame.contentWindow && DS_ORIGIN) frame.contentWindow.postMessage({ type: 'qs-ds-default' }, DS_ORIGIN);
     });
     document.addEventListener('keydown', function (e) {
