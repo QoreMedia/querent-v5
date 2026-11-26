@@ -65,7 +65,9 @@ h1, h2, h3, .h1, .h2, .h3, .title, .why-now-headline, .faq-title, .cta-h2, .proc
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; }
 :focus-visible { outline: 2px solid var(--navy-700); outline-offset: 3px; border-radius: 6px; }
-.app { position: relative; z-index: 1; }
+/* LOCAL-MOD LM-0002: on short screens the footer stays at the bottom, with no strip under it */
+.app { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.app > main { flex: 1 0 auto; }
 
 /* ---------- Header (dark ribbon, as index.html) ---------- */
 .hdr {
@@ -184,39 +186,72 @@ button { font: inherit; cursor: pointer; }
   overflow: hidden; width: 100%; position: relative;
   box-shadow: 0 calc(28px * var(--shk-card, 1)) calc(56px * var(--shk-card, 1)) calc(-36px * var(--shk-card, 1)) rgb(var(--rgb-navy-900) / 0.35);
 }
-.book-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--navy-900), var(--navy-700) 55%, var(--blue-600)); z-index: 2; }
-.book-top { padding: var(--pad-card, 22px 24px 18px); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: var(--gap-card, 14px); }
+/* LOCAL-MOD LM-0002: quiet header. The host is chosen on the calendar step; later steps show the choices as a plain trail. */
+.book-top { padding: var(--pad-card, 14px 20px); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: var(--gap-card, 10px); }
 .book-service { margin: 0; font-size: 14px; color: var(--ink-dim); }
 .book-service strong { color: var(--ink); font-weight: 600; letter-spacing: -0.01em; }
-.book-selector { display: flex; flex-wrap: wrap; gap: var(--gap-chip, 10px); }
-.book-tab {
-  position: relative; display: flex; align-items: center; gap: 10px; text-align: left;
-  min-height: 44px; padding: var(--pad-chip, 6px 16px 6px 8px); border-radius: var(--r-chip, 14px);
-  background: var(--bg-elev); border: var(--bw-chip, 1px) solid var(--bc-chip, var(--line-strong)); color: var(--ink);
-  transition: background var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft), transform var(--dur-fast) var(--ease-soft);
+.book-head { position: relative; height: 50px; }
+.book-selector, .book-trail {
+  position: absolute; left: 0; top: 0; height: 50px; display: flex; align-items: center; white-space: nowrap;
+  transition: opacity 240ms var(--ease-soft) 60ms, transform 360ms var(--ease-out), visibility 0s;
 }
-.book-tab:hover { border-color: var(--navy-700); transform: translateY(-1px); }
-.book-tab:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 3px; }
-.book-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: var(--tint-100); color: var(--navy-700); transition: background var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft); }
-.book-tab-name { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
-.book-tab-role { font-size: 12.5px; color: var(--ink-dim); transition: color var(--dur-fast) var(--ease-soft); }
-.book-tab.active { background: var(--navy-700); border-color: var(--navy-700); color: #FFFFFF; }
-.book-tab.active .book-tab-role { color: #BFD0F2; }
-.book-tab.active .book-avatar { background: #E6EDF9; color: var(--navy-700); }
-.book-body { position: relative; min-width: 0; }
-.cal-picker-stage { padding: 18px 24px 20px; }
+.book-selector { gap: 2px; padding: 3px; border-radius: 13px; background: rgb(var(--rgb-night) / 0.05); }
+.book-trail { right: 0; gap: 10px; }
+.book-head[data-view="date"] .book-trail,
+.book-head:not([data-view="date"]) .book-selector {
+  opacity: 0; visibility: hidden; transform: translate3d(0, 8px, 0);
+  transition: opacity 160ms var(--ease-soft), transform 360ms var(--ease-out), visibility 0s linear 240ms;
+}
+.book-head:not([data-view="date"]) .book-selector { transform: translate3d(0, -8px, 0); }
+.book-tab {
+  min-height: 44px; padding: var(--pad-chip, 0 18px); border-radius: var(--r-chip, 10px);
+  border: var(--bw-chip, 0) solid var(--bc-chip, transparent); background: transparent; color: var(--ink-dim);
+  font-size: 14px; font-weight: 600;
+  transition: background var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft), box-shadow var(--dur-fast) var(--ease-soft);
+}
+.book-tab:hover { color: var(--ink); }
+.book-tab:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 2px; }
+.book-tab.active { background: var(--bg-elev); color: var(--ink); box-shadow: 0 1px 3px rgb(var(--rgb-night) / 0.14); }
+.trail-btn {
+  min-height: 44px; padding: 0 2px; border: 0; background: none; color: var(--ink);
+  font-size: 16px; font-weight: 700; letter-spacing: -0.01em;
+  text-decoration: underline; text-decoration-color: rgb(var(--rgb-night) / 0.35); text-decoration-thickness: 1px; text-underline-offset: 5px;
+  transition: text-decoration-color 160ms var(--ease-soft), transform 140ms var(--ease-soft);
+}
+.trail-btn:hover { text-decoration-color: currentColor; }
+.trail-btn:active { transform: scale(0.97); }
+.trail-btn[hidden], .trail-sep[hidden] { display: none; }
+.trail-sep { color: var(--ink-mute); font-size: 15px; }
+/* LOCAL-MOD LM-0002: one fixed-height card. Date, time and details are steps that push across it. */
+.book-body { position: relative; min-width: 0; height: var(--bk-body-h, clamp(468px, calc(100svh - 270px), 540px)); overflow: hidden; }
+.bk-view {
+  position: absolute; inset: 0; display: flex; flex-direction: column; min-width: 0; min-height: 0;
+  padding: 18px 24px 20px;
+  opacity: 0; visibility: hidden; transform: translate3d(56px, 0, 0);
+  transition: opacity 200ms var(--ease-soft), transform 420ms var(--ease-out), visibility 0s linear 420ms;
+}
+.bk-view.is-past { transform: translate3d(-56px, 0, 0); }
+.bk-view.is-on {
+  opacity: 1; visibility: visible; transform: none;
+  transition: opacity 320ms var(--ease-soft) 80ms, transform 480ms var(--ease-out), visibility 0s;
+}
+.bk-view--form { padding: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.is-hidden { opacity: 0 !important; } /* opacity, not visibility, so the target can take focus mid-flight */
+
+/* step 1: date */
 .cal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .cal-month-title { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.015em; color: var(--ink); }
 .cal-month-nav { display: flex; align-items: center; gap: 6px; }
 .cal-nav-btn {
   width: 44px; height: 44px; min-width: 44px; min-height: 44px;
-  border-radius: 11px; border: 1px solid var(--line-strong);
-  background: var(--bg-elev); color: var(--ink);
+  border-radius: 10px; border: 0; background: transparent; color: var(--ink);
   display: inline-flex; align-items: center; justify-content: center;
-  transition: background var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft);
+  transition: background var(--dur-fast) var(--ease-soft), transform 140ms var(--ease-soft);
 }
-.cal-nav-btn:hover:not(:disabled) { background: var(--tint-50); border-color: var(--navy-700); color: var(--navy-700); }
-.cal-nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.cal-nav-btn:hover:not(:disabled) { background: rgb(var(--rgb-night) / 0.06); }
+.cal-nav-btn:active:not(:disabled) { transform: scale(0.94); }
+.cal-nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
 .cal-nav-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .cal-weekdays { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-bottom: 6px; text-align: center; }
 .cal-weekdays span { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--ink-mute); padding: 4px 0; }
@@ -224,93 +259,81 @@ button { font: inherit; cursor: pointer; }
 .cal-pad { min-height: 44px; }
 .cal-day {
   position: relative; width: 100%; min-height: 44px; padding: 0;
-  border-radius: 11px; border: 1px solid transparent;
-  background: var(--tint-50); color: var(--navy-900);
+  border-radius: 10px; border: 0;
+  background: rgb(var(--rgb-night) / 0.045); color: var(--ink);
   font-size: 14px; font-weight: 600;
   display: inline-flex; align-items: center; justify-content: center;
-  transition: background 160ms var(--ease-soft), border-color 160ms var(--ease-soft), color 160ms var(--ease-soft), transform 160ms var(--ease-soft);
+  transition: background 160ms var(--ease-soft), color 160ms var(--ease-soft), transform 140ms var(--ease-soft);
 }
-.cal-day:hover:not(:disabled) { border-color: var(--navy-700); background: var(--tint-100); transform: translateY(-1px); }
+.cal-day:hover:not(:disabled) { background: rgb(var(--rgb-night) / 0.1); }
+.cal-day:active:not(:disabled) { transform: scale(0.92); }
 .cal-day:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 2px; }
 .cal-day.is-today::after {
   content: ""; position: absolute; bottom: 6px; left: 50%; width: 4px; height: 4px;
-  border-radius: 50%; transform: translateX(-50%); background: var(--blue-600);
+  border-radius: 50%; transform: translateX(-50%); background: currentColor;
 }
-.cal-day.is-selected {
-  background: var(--navy-700); border-color: var(--navy-700);
-  color: #FFFFFF; font-weight: 700; transform: none;
-}
-.cal-day.is-selected::after { background: #FFFFFF; }
-.cal-day:disabled {
-  background: transparent; border-color: transparent;
-  color: var(--ink-mute); opacity: 0.42; font-weight: 500; cursor: not-allowed;
-}
+.cal-day.is-selected, .cal-day.is-selected:hover { background: var(--navy-700); color: #FFFFFF; font-weight: 700; }
+.cal-day:disabled { background: transparent; color: var(--ink-mute); opacity: 0.42; font-weight: 500; cursor: not-allowed; }
+.cal-days.is-loading .cal-day { background: rgb(var(--rgb-night) / 0.08); color: transparent; opacity: 1; animation: bkPulse 900ms ease-in-out infinite alternate; }
+.cal-days.is-loading .cal-day::after { display: none; }
 .cal-prompt {
-  margin: 14px 0 0; padding-top: 14px; border-top: 1px solid var(--line);
+  margin: auto 0 0; padding-top: 14px; border-top: 1px solid var(--line);
   font-size: 13.5px; color: var(--ink-dim); text-align: center;
-  transition: opacity 200ms var(--ease-soft);
 }
-.cal-prompt[hidden] { display: none; }
+.cal-prompt:empty { border-top-color: transparent; }
+.cal-prompt a, .cal-retry { color: var(--navy-700); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.cal-retry { background: none; border: 0; min-height: 32px; padding: 0 4px; }
 
-/* State 2: smooth slot drawer reveal inside fixed card */
-.slot-drawer {
-  display: grid; grid-template-rows: 0fr; opacity: 0;
-  transition: grid-template-rows 300ms var(--ease-out), opacity 220ms var(--ease-soft);
-}
-.slot-drawer.is-open { grid-template-rows: 1fr; opacity: 1; }
-.slot-drawer-inner { overflow: hidden; min-height: 0; }
-.slot-divider { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
-.slot-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-.slot-date-label { margin: 0; font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
-.slot-tz { font-size: 12.5px; font-weight: 500; color: var(--ink-dim); margin-left: 4px; }
-.fmt-toggle {
-  display: inline-flex; border: 1px solid var(--line-strong); border-radius: 10px;
-  background: var(--tint-50); padding: 2px; gap: 2px;
-}
-.fmt-btn {
-  min-width: 44px; min-height: 44px; padding: 0 10px;
-  border: 0; border-radius: 8px; background: transparent;
-  font-size: 12.5px; font-weight: 700; color: var(--ink-dim);
-  transition: background 150ms ease, color 150ms ease;
-}
+/* the picked date travels between its calendar cell and the trail */
+.bk-fly { position: absolute; z-index: 4; display: flex; align-items: center; justify-content: center; overflow: hidden; pointer-events: none; border-radius: 10px; font-weight: 700; white-space: nowrap; }
+
+/* step 2: time */
+.slot-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex: none; margin-bottom: 6px; }
+.slot-tz { margin: 0; font-size: 13px; color: var(--ink-mute); }
+.fmt-toggle { display: inline-flex; gap: 4px; }
+.fmt-btn { min-width: 40px; min-height: 44px; padding: 0 6px; border: 0; background: none; font-size: 13px; font-weight: 600; color: var(--ink-mute); transition: color 150ms ease; }
 .fmt-btn:hover { color: var(--ink); }
-.fmt-btn.active { background: var(--navy-700); color: #FFFFFF; }
+.fmt-btn.active { color: var(--ink); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
 .slot-grid {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;
-  max-height: 248px; overflow-y: auto; padding: 2px;
+  flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 44px; align-content: start; gap: 6px; overflow-y: auto; padding: 2px;
+  scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent;
 }
 .slot-btn {
-  min-height: 44px; padding: 8px 12px; border-radius: 10px;
-  border: 1px solid var(--line-strong); background: var(--bg-elev);
-  color: var(--ink); font-size: 14px; font-weight: 600;
+  min-height: 44px; padding: 0 4px; border: 0; border-radius: 10px;
+  background: rgb(var(--rgb-night) / 0.045); color: var(--ink);
+  font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap;
   display: inline-flex; align-items: center; justify-content: center;
-  transition: background 150ms var(--ease-soft), border-color 150ms var(--ease-soft), color 150ms var(--ease-soft);
+  transition: background 150ms var(--ease-soft), color 150ms var(--ease-soft), transform 140ms var(--ease-soft);
 }
-.slot-btn:hover { border-color: var(--navy-700); background: var(--tint-50); color: var(--navy-700); }
-.slot-btn.is-selected { background: var(--navy-700); border-color: var(--navy-700); color: #FFFFFF; }
+.slot-grid.is-entering .slot-btn { animation: bkSlotIn 360ms var(--ease-out) backwards; animation-delay: calc(90ms + var(--i, 0) * 24ms); }
+@keyframes bkSlotIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.slot-btn:hover { background: rgb(var(--rgb-night) / 0.1); }
+.slot-btn:active { transform: scale(0.96); }
+.slot-btn.is-selected { background: var(--navy-700); color: #FFFFFF; }
 .slot-status { margin: 6px 0; font-size: 13.5px; color: var(--ink-dim); text-align: center; grid-column: 1 / -1; padding: 12px 0; }
 
-/* State 3: Cal.com booking form inside the card */
-.cal-embed-stage { animation: bkStageIn 220ms var(--ease-out); }
-.cal-embed-stage[hidden] { display: none; }
-@keyframes bkStageIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-.cal-embed-bar {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-  padding: 12px 24px; border-bottom: 1px solid var(--line); background: var(--tint-50);
-}
-.cal-back-btn {
-  min-height: 44px; padding: 8px 12px 8px 8px; border-radius: 10px;
-  border: 1px solid var(--line-strong); background: var(--bg-elev); color: var(--ink);
-  font-size: 13.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
-  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
-}
-.cal-back-btn:hover { border-color: var(--navy-700); color: var(--navy-700); }
-.cal-back-btn:hover > .cta-ico--left { transform: translate3d(-3px, 0, 0); }
-.cal-embed-summary { font-size: 13px; font-weight: 600; color: var(--navy-700); }
-.cal-wrap { position: relative; min-height: 520px; min-width: 0; max-width: 100%; overflow-x: auto; }
-.cal-wrap::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 36px; background: #FFFFFF; pointer-events: none; z-index: 2; }
-#cal-booking { width: 100%; min-width: 0 !important; max-width: 100% !important; min-height: 520px; }
+/* step 3: details (Cal.com form) with a ghost of the form while it loads */
+.cal-wrap { position: relative; flex: 1; min-height: 0; min-width: 0; max-width: 100%; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+#cal-booking { width: 100%; min-width: 0 !important; max-width: 100% !important; min-height: 100%; }
 #cal-booking cal-inline, #cal-booking iframe { border: none !important; min-width: 0 !important; max-width: 100% !important; }
+.bk-ghost, .bk-fail { position: absolute; inset: 0; z-index: 3; background: #FFFFFF; }
+.bk-ghost { display: flex; flex-direction: column; gap: 18px; padding: 22px 24px 24px; transition: opacity 320ms var(--ease-soft), visibility 0s; }
+.bk-ghost.is-done { opacity: 0; visibility: hidden; transition: opacity 320ms var(--ease-soft), visibility 0s linear 320ms; }
+.gh { display: block; flex: none; border-radius: 8px; background: linear-gradient(100deg, rgb(var(--rgb-night) / 0.045) 20%, rgb(var(--rgb-night) / 0.1) 45%, rgb(var(--rgb-night) / 0.045) 70%) 0 0 / 240% 100%; animation: bkShimmer 1.5s linear infinite; }
+.gh-field { display: flex; flex-direction: column; gap: 8px; }
+.gh-title { width: 46%; height: 18px; }
+.gh-label { width: 22%; height: 10px; border-radius: 5px; }
+.gh-input { width: 100%; height: 42px; border-radius: 10px; }
+.gh-area { width: 100%; height: 76px; border-radius: 10px; }
+.gh-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: auto; }
+.gh-btn { width: 104px; height: 40px; border-radius: var(--r-btn, 999px); }
+.bk-fail { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px; text-align: center; color: var(--ink-dim); z-index: 4; }
+.bk-fail[hidden] { display: none; }
+.bk-fail p { margin: 0; max-width: 30ch; }
+.bk-fail a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: var(--r-btn, 999px); background: var(--navy-700); color: #FFFFFF; font-weight: 600; }
+@keyframes bkShimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+@keyframes bkPulse { from { opacity: 0.45; } to { opacity: 1; } }
 
 /* ---------- Footer (dark, as index.html footer) ---------- */
 .footer {
@@ -345,7 +368,7 @@ button { font: inherit; cursor: pointer; }
   }
   html, body { overflow-x: clip; }
   body { font-size: var(--m-body); line-height: var(--m-lh-body); }
-  .btn:not(.btn-ico-m), .footer-cta, .slot-btn, .cal-back-btn {
+  .btn:not(.btn-ico-m), .footer-cta {
     white-space: normal; overflow-wrap: anywhere; text-wrap: balance; text-align: center;
   }
   .hdr-inner { padding-left: max(var(--m-pad-x), env(safe-area-inset-left)); padding-right: max(var(--m-pad-x), env(safe-area-inset-right)); gap: 12px; }
@@ -356,7 +379,7 @@ button { font: inherit; cursor: pointer; }
   .detail-item { padding: 14px 0; }
   .detail-text h4 { font-size: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem); overflow-wrap: anywhere; }
   .detail-text p, .book-service, .cal-prompt { font-size: clamp(0.86rem, 0.82rem + 0.25vw, 0.95rem); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
-  .book-tab-name { font-size: clamp(0.85rem, 0.82rem + 0.2vw, 0.94rem); overflow-wrap: anywhere; }
+  .book-tab { font-size: clamp(0.85rem, 0.82rem + 0.2vw, 0.94rem); }
   .cal-month-title { font-size: clamp(0.95rem, 0.9rem + 0.3vw, 1.08rem); }
   .grid { row-gap: var(--m-gap); }
   .book-card { max-width: 100%; }
@@ -369,34 +392,38 @@ button { font: inherit; cursor: pointer; }
   .logo, .hdr .btn, .footer-cta { min-height: 44px; }
   .footer-links a { display: inline-flex; align-items: center; min-height: 44px; }
 }
+@media (max-width: 768px) {
+  .book-body { height: var(--bk-body-h, clamp(468px, calc(100svh - 220px), 520px)); }
+}
 @media (max-width: 768px) and (max-height: 700px) {
   .page { padding: 14px var(--m-pad-x) 20px; }
-  .cal-wrap, #cal-booking { min-height: 420px; }
 }
 @media (max-width: 768px) and (min-height: 860px) {
   .page { min-height: 0; }
 }
 @media (max-width: 520px) {
-  .book-top { padding: 18px 16px 14px; }
-  .cal-picker-stage { padding: 16px 14px 18px; }
-  .cal-embed-bar { padding: 12px 14px; }
+  .book-top { padding: 12px 14px; }
+  .bk-view { padding: 16px 14px 18px; }
+  .bk-view--form { padding: 0; }
   .cal-weekdays, .cal-days { gap: 2px; }
-  .book-selector { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .book-tab { min-width: 0; }
-  .book-tab-role { display: none; }
+  .book-selector { right: 0; }
+  .book-tab { flex: 1; min-width: 0; }
+  .trail-btn { font-size: 15px; }
 }
 @media (max-width: 360px) {
-  .book-selector { grid-template-columns: 1fr; gap: 6px; }
-  .book-top { padding: 14px 12px 12px; }
-  .cal-picker-stage { padding: 12px 10px 14px; }
+  .book-top { padding: 10px 12px; }
+  .bk-view { padding: 12px 10px 14px; }
+  .bk-view--form { padding: 0; }
+  .book-trail { gap: 7px; }
   .cal-day { min-width: 0; min-height: 40px; font-size: 0.85rem; }
   .cal-pad { min-height: 40px; }
   .cal-weekdays span { font-size: 0.65rem; }
-  .slot-grid { grid-template-columns: 1fr; }
+  .slot-btn { font-size: 13px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rise, .cal-embed-stage { animation: none; }
-  .book-tab, .book-tab *, .nav-dd, .nav-caret, .slot-drawer, .cal-day, .slot-btn, .cal-back-btn > .cta-ico { transition: none !important; transform: none !important; }
+  .rise, .gh, .cal-days.is-loading .cal-day, .slot-grid.is-entering .slot-btn { animation: none; }
+  .book-tab, .book-selector, .book-trail, .trail-btn, .nav-dd, .nav-caret, .bk-view, .bk-ghost, .cal-day, .slot-btn, .cal-nav-btn { transition: none !important; }
+  .book-selector, .book-trail, .trail-btn, .nav-dd, .bk-view, .cal-day, .slot-btn, .cal-nav-btn { transform: none !important; }
 }
 /* LOCAL-MOD LM-0002: footer adapts at every width */
 .footer-inner, .footer-copy { padding-inline: clamp(16px, 5vw, var(--pad)); }
@@ -498,19 +525,22 @@ button { font: inherit; cursor: pointer; }
           <div class="book-card rise" style="--i:3">
             <div class="book-top">
               <p class="book-service">Booking: <strong id="svc-name">Free automation audit</strong></p>
-              <div class="book-selector" role="group" aria-label="Host">
-                <button type="button" class="book-tab active" data-host="ben" aria-pressed="true" onclick="switchCal(this)">
-                  <span class="book-avatar" aria-hidden="true">B</span>
-                  <span class="book-tab-name">Ben Tsan</span><span class="book-tab-role">Ops</span>
-                </button>
-                <button type="button" class="book-tab" data-host="josh" aria-pressed="false" onclick="switchCal(this)">
-                  <span class="book-avatar" aria-hidden="true">J</span>
-                  <span class="book-tab-name">Josh Li</span><span class="book-tab-role">Strategy</span>
-                </button>
+              <div class="book-head" id="book-head" data-view="date">
+                <div class="book-selector" id="book-selector" role="group" aria-label="Host">
+                  <button type="button" class="book-tab active" data-host="ben" aria-pressed="true" onclick="switchCal(this)">Ben Tsan</button>
+                  <button type="button" class="book-tab" data-host="josh" aria-pressed="false" onclick="switchCal(this)">Josh Li</button>
+                </div>
+                <nav class="book-trail" id="book-trail" aria-label="Your selection" inert>
+                  <button type="button" class="trail-btn" id="trail-host"></button>
+                  <span class="trail-sep" aria-hidden="true">/</span>
+                  <button type="button" class="trail-btn" id="trail-date"></button>
+                  <span class="trail-sep" id="trail-time-sep" aria-hidden="true" hidden>/</span>
+                  <button type="button" class="trail-btn" id="trail-time" hidden></button>
+                </nav>
               </div>
             </div>
-            <div class="book-body">
-              <div class="cal-picker-stage" id="cal-picker-stage">
+            <div class="book-body" id="book-body">
+              <div class="bk-view bk-view--date is-on" id="view-date">
                 <div class="cal-head">
                   <h2 class="cal-month-title" id="cal-month-label"></h2>
                   <div class="cal-month-nav">
@@ -526,32 +556,35 @@ button { font: inherit; cursor: pointer; }
                   <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
                 </div>
                 <div class="cal-days" id="cal-days" role="grid" aria-label="Available dates"></div>
-                <p class="cal-prompt" id="cal-prompt">Select a date to view available times</p>
-                <div class="slot-drawer" id="slot-drawer" aria-hidden="true" inert>
-                  <div class="slot-drawer-inner">
-                    <div class="slot-divider">
-                      <div class="slot-head">
-                        <p class="slot-date-label" id="slot-date-label"></p>
-                        <div class="fmt-toggle" role="group" aria-label="Time format">
-                          <button type="button" class="fmt-btn active" data-fmt="12h" aria-pressed="true">12h</button>
-                          <button type="button" class="fmt-btn" data-fmt="24h" aria-pressed="false">24h</button>
-                        </div>
-                      </div>
-                      <div class="slot-grid" id="slot-grid" role="group" aria-label="Available times"></div>
-                    </div>
+                <p class="cal-prompt" id="cal-prompt" aria-live="polite"></p>
+              </div>
+              <div class="bk-view bk-view--time" id="view-time" inert>
+                <div class="slot-meta">
+                  <p class="slot-tz" id="slot-tz"></p>
+                  <div class="fmt-toggle" role="group" aria-label="Time format">
+                    <button type="button" class="fmt-btn active" data-fmt="12h" aria-pressed="true">12h</button>
+                    <button type="button" class="fmt-btn" data-fmt="24h" aria-pressed="false">24h</button>
+                  </div>
+                </div>
+                <div class="slot-grid" id="slot-grid" role="group" aria-label="Available times"></div>
+              </div>
+              <div class="bk-view bk-view--form" id="view-form" inert>
+                <div class="cal-wrap" id="cal-wrap">
+                  <div id="cal-booking"></div>
+                  <div class="bk-ghost" id="bk-ghost" aria-hidden="true">
+                    <span class="gh gh-title"></span>
+                    <span class="gh-field"><span class="gh gh-label"></span><span class="gh gh-input"></span></span>
+                    <span class="gh-field"><span class="gh gh-label"></span><span class="gh gh-input"></span></span>
+                    <span class="gh-field"><span class="gh gh-label"></span><span class="gh gh-area"></span></span>
+                    <span class="gh-actions"><span class="gh gh-btn"></span><span class="gh gh-btn"></span></span>
+                  </div>
+                  <div class="bk-fail" id="bk-fail" hidden>
+                    <p>The booking form did not load.</p>
+                    <a id="bk-fail-link" href="https://cal.com/" target="_blank" rel="noopener">Open it on Cal.com</a>
                   </div>
                 </div>
               </div>
-              <div class="cal-embed-stage" id="cal-embed-stage" hidden>
-                <div class="cal-embed-bar">
-                  <button type="button" class="cal-back-btn" id="cal-back-btn">
-                    <svg class="cta-ico cta-ico--left" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-                    Change date or time
-                  </button>
-                  <span class="cal-embed-summary" id="cal-embed-summary"></span>
-                </div>
-                <div class="cal-wrap"><div id="cal-booking"></div></div>
-              </div>
+              <p class="sr-only" id="bk-status" role="status"></p>
             </div>
           </div>
         </section>
@@ -621,29 +654,44 @@ var state = {
   selectedDate: null,
   selectedSlot: null,
   timeFormat: "12h",
-  slots: [],
-  slotCache: {},
-  requestSeq: 0
+  view: "date",
+  months: {}   // "host|YYYY-MM" -> { status: loading | ok | missing | error, days: { "YYYY-MM-DD": [slot] } }
 };
+var HOST_NAMES = { ben: "Ben Tsan", josh: "Josh Li" };
+var reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
-var pickerStage = document.getElementById("cal-picker-stage");
-var embedStage = document.getElementById("cal-embed-stage");
+var bodyEl = document.getElementById("book-body");
+var views = { date: document.getElementById("view-date"), time: document.getElementById("view-time"), form: document.getElementById("view-form") };
 var monthLabelEl = document.getElementById("cal-month-label");
 var prevBtn = document.getElementById("cal-prev");
 var nextBtn = document.getElementById("cal-next");
 var daysEl = document.getElementById("cal-days");
 var promptEl = document.getElementById("cal-prompt");
-var slotDrawerEl = document.getElementById("slot-drawer");
-var slotDateLabelEl = document.getElementById("slot-date-label");
+var cardEl = document.querySelector(".book-card");
+var headEl = document.getElementById("book-head");
+var selectorEl = document.getElementById("book-selector");
+var trailEl = document.getElementById("book-trail");
+var trailHostBtn = document.getElementById("trail-host");
+var trailDateBtn = document.getElementById("trail-date");
+var trailTimeBtn = document.getElementById("trail-time");
+var trailTimeSep = document.getElementById("trail-time-sep");
+var tzEl = document.getElementById("slot-tz");
 var slotGridEl = document.getElementById("slot-grid");
-var embedSummaryEl = document.getElementById("cal-embed-summary");
-var backBtn = document.getElementById("cal-back-btn");
+var calWrapEl = document.getElementById("cal-wrap");
+var calEl = document.getElementById("cal-booking");
+var ghostEl = document.getElementById("bk-ghost");
+var failEl = document.getElementById("bk-fail");
+var failLinkEl = document.getElementById("bk-fail-link");
+var statusEl = document.getElementById("bk-status");
 
 function pad2(n) { return n < 10 ? "0" + n : String(n); }
 function toDateStr(y, m, d) { return y + "-" + pad2(m + 1) + "-" + pad2(d); }
 function parseDateStr(dateStr) {
   var parts = dateStr.split("-").map(Number);
   return new Date(parts[0], parts[1] - 1, parts[2]);
+}
+function getTimeZone() {
+  try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch (e) { return "UTC"; }
 }
 function getTzLabel() {
   try {
@@ -665,31 +713,76 @@ function formatSlotTime(slotObj, fmt) {
   var h12 = h % 12 || 12;
   return h12 + ":" + pad2(m) + " " + suffix;
 }
-function buildFallbackSlots(dateStr) {
-  var base = parseDateStr(dateStr);
-  var now = new Date();
-  var minLead = new Date(now.getTime() + 15 * 60000);
-  var list = [];
-  for (var mins = 9 * 60; mins < 17 * 60; mins += 30) {
-    var h = Math.floor(mins / 60);
-    var m = mins % 60;
-    var slotDate = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, 0, 0);
-    if (slotDate <= minLead) continue;
-    list.push({ dateObj: slotDate, iso: slotDate.toISOString() });
-  }
-  return list;
+
+/* ----- availability: read from Cal.com one month at a time; nothing is shown that Cal did not return ----- */
+function monthKey(host, y, m) { return host + "|" + y + "-" + pad2(m + 1); }
+function groupByDay(data) {
+  var out = {}, now = Date.now();
+  Object.keys(data || {}).forEach(function (k) {
+    (data[k] || []).forEach(function (item) {
+      var raw = typeof item === "string" ? item : item && (item.start || item.time);
+      var d = raw ? new Date(raw) : null;
+      if (!d || isNaN(d.getTime()) || d.getTime() <= now) return;
+      var day = toDateStr(d.getFullYear(), d.getMonth(), d.getDate());
+      (out[day] = out[day] || []).push({ dateObj: d, iso: d.toISOString() });
+    });
+  });
+  Object.keys(out).forEach(function (day) { out[day].sort(function (x, y) { return x.dateObj - y.dateObj; }); });
+  return out;
 }
-function isDateSelectable(y, m, d) {
-  var now = new Date();
-  var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  var target = new Date(y, m, d);
-  var dow = target.getDay();
-  if (dow === 0 || dow === 6) return false;
-  if (target < todayStart) return false;
-  if (target.getTime() === todayStart.getTime()) {
-    return buildFallbackSlots(toDateStr(y, m, d)).length > 0;
+function loadMonth(host, y, m) {
+  var key = monthKey(host, y, m);
+  var hit = state.months[key];
+  if (hit && hit.status !== "error") return hit.promise;
+  var entry = state.months[key] = { status: "loading", days: {} };
+  var start = new Date(y, m, 1), end = new Date(y, m + 1, 0, 23, 59, 59, 999), now = new Date();
+  if (start < now) start = now;
+  if (end <= now) { entry.status = "ok"; entry.promise = Promise.resolve(entry); return entry.promise; }
+  var parts = HOSTS[host].split("/");
+  var url = "https://api.cal.com/v2/slots?username=" + encodeURIComponent(parts[0]) +
+    "&eventTypeSlug=" + encodeURIComponent(parts[1] || "30min") +
+    "&start=" + encodeURIComponent(start.toISOString()) + "&end=" + encodeURIComponent(end.toISOString()) +
+    "&timeZone=" + encodeURIComponent(getTimeZone());
+  var ctrl = new AbortController();
+  var timer = setTimeout(function () { ctrl.abort(); }, 8000);
+  entry.promise = fetch(url, { signal: ctrl.signal, headers: { "cal-api-version": "2024-09-04" } })
+    .then(function (res) {
+      if (res.status === 404) { entry.status = "missing"; return null; }
+      if (!res.ok) throw new Error("cal_slots_" + res.status);
+      return res.json();
+    })
+    .then(function (json) {
+      if (json) { entry.days = groupByDay(json.data); entry.status = "ok"; }
+    })
+    .catch(function () { entry.status = "error"; })
+    .then(function () { clearTimeout(timer); return entry; });
+  return entry.promise;
+}
+
+/* ----- step 1: date ----- */
+function renderPrompt(entry) {
+  var name = HOST_NAMES[state.host];
+  promptEl.textContent = "";
+  if (!entry || entry.status === "loading") { promptEl.textContent = "Checking " + name.split(" ")[0] + "’s calendar"; return; }
+  if (entry.status === "missing") {
+    promptEl.appendChild(document.createTextNode(name + "’s calendar is not available online. "));
+    var mail = document.createElement("a");
+    mail.href = "mailto:hello@querent.ai";
+    mail.textContent = "Email us";
+    promptEl.appendChild(mail);
+    return;
   }
-  return true;
+  if (entry.status === "error") {
+    promptEl.appendChild(document.createTextNode("The calendar did not load. "));
+    var retry = document.createElement("button");
+    retry.type = "button";
+    retry.className = "cal-retry";
+    retry.textContent = "Try again";
+    retry.addEventListener("click", showMonth);
+    promptEl.appendChild(retry);
+    return;
+  }
+  if (!Object.keys(entry.days).length) promptEl.textContent = "No open times left this month. Try the next one.";
 }
 
 function renderCalendar() {
@@ -698,8 +791,12 @@ function renderCalendar() {
   var curM = now.getMonth();
   var todayStr = toDateStr(curY, curM, now.getDate());
   var firstOfMonth = new Date(state.viewYear, state.viewMonth, 1);
+  var entry = state.months[monthKey(state.host, state.viewYear, state.viewMonth)];
+  var loading = !entry || entry.status === "loading";
   monthLabelEl.textContent = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(firstOfMonth);
   prevBtn.disabled = (state.viewYear < curY) || (state.viewYear === curY && state.viewMonth <= curM);
+  daysEl.classList.toggle("is-loading", loading);
+  daysEl.setAttribute("aria-busy", loading ? "true" : "false");
 
   var firstDow = firstOfMonth.getDay();
   var daysInMonth = new Date(state.viewYear, state.viewMonth + 1, 0).getDate();
@@ -713,7 +810,7 @@ function renderCalendar() {
   }
   for (var day = 1; day <= daysInMonth; day++) {
     var dateStr = toDateStr(state.viewYear, state.viewMonth, day);
-    var selectable = isDateSelectable(state.viewYear, state.viewMonth, day);
+    var count = entry && entry.days[dateStr] ? entry.days[dateStr].length : 0;
     var btn = document.createElement("button");
     btn.type = "button";
     btn.className = "cal-day";
@@ -721,64 +818,87 @@ function renderCalendar() {
     if (dateStr === state.selectedDate) btn.classList.add("is-selected");
     btn.dataset.date = dateStr;
     btn.textContent = String(day);
-    btn.disabled = !selectable;
+    btn.disabled = !count;
     btn.setAttribute("aria-pressed", dateStr === state.selectedDate ? "true" : "false");
-    btn.setAttribute("aria-label", new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }).format(new Date(state.viewYear, state.viewMonth, day)));
-    if (selectable) {
-      btn.addEventListener("click", (function (ds) {
-        return function () { selectDate(ds); };
-      })(dateStr));
+    btn.setAttribute("aria-label", new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }).format(new Date(state.viewYear, state.viewMonth, day)) + (count ? ", " + count + " times" : ", unavailable"));
+    if (count) {
+      btn.addEventListener("click", (function (ds, el) {
+        return function () { selectDate(ds, el); };
+      })(dateStr, btn));
     }
     frag.appendChild(btn);
   }
   daysEl.appendChild(frag);
+  renderPrompt(entry);
 }
 
-function fetchAvailableSlots(calLink, dateStr) {
-  var cacheKey = calLink + "|" + dateStr;
-  if (state.slotCache[cacheKey]) return Promise.resolve(state.slotCache[cacheKey]);
-  var parts = calLink.split("/");
-  var username = parts[0];
-  var eventSlug = parts[1] || "30min";
-  var startLocal = parseDateStr(dateStr);
-  var endLocal = new Date(startLocal.getFullYear(), startLocal.getMonth(), startLocal.getDate(), 23, 59, 59, 999);
-  var fallback = buildFallbackSlots(dateStr);
-  if (typeof AbortController === "undefined" || typeof fetch === "undefined") {
-    state.slotCache[cacheKey] = fallback;
-    return Promise.resolve(fallback);
+function showMonth() {
+  var host = state.host, y = state.viewYear, m = state.viewMonth;
+  var pending = loadMonth(host, y, m);
+  renderCalendar();
+  return pending.then(function (entry) {
+    if (host === state.host && y === state.viewYear && m === state.viewMonth) renderCalendar();
+    return entry;
+  });
+}
+
+/* ----- moving between steps ----- */
+function goTo(name) {
+  var order = ["date", "time", "form"], at = order.indexOf(name);
+  order.forEach(function (v, i) {
+    var el = views[v];
+    el.classList.toggle("is-on", i === at);
+    el.classList.toggle("is-past", i < at);
+    el.inert = i !== at;
+  });
+  headEl.dataset.view = name;
+  selectorEl.inert = name !== "date";
+  trailEl.inert = name === "date";
+  trailTimeBtn.hidden = trailTimeSep.hidden = name !== "form";
+  state.view = name;
+}
+function focusSoon(el) {
+  if (el) el.focus({ preventScroll: true });
+}
+/* position inside the card, ignoring any slide transform that is still running */
+function layoutBox(el) {
+  var x = 0, y = 0, n = el;
+  while (n && n !== cardEl) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+  return { left: x + "px", top: y + "px", width: el.offsetWidth + "px", height: el.offsetHeight + "px" };
+}
+/* the picked date travels from its calendar tile into the trail, and back */
+function flyDate(fromEl, toEl, fromText, toText, toTile) {
+  if (reduceMotion || !fromEl || !toEl || !cardEl.animate) return;
+  var css = getComputedStyle(cardEl);
+  var tile = { backgroundColor: css.getPropertyValue("--navy-700").trim(), color: "#FFFFFF", fontSize: "14px" };
+  var word = { backgroundColor: "transparent", color: css.getPropertyValue("--ink").trim(), fontSize: "16px" };
+  var from = Object.assign(layoutBox(fromEl), toTile ? word : tile);
+  var to = Object.assign(layoutBox(toEl), toTile ? tile : word);
+  var fly = document.createElement("span");
+  fly.className = "bk-fly";
+  fly.setAttribute("aria-hidden", "true");
+  fly.textContent = fromText;
+  cardEl.appendChild(fly);
+  fromEl.classList.add("is-hidden");
+  toEl.classList.add("is-hidden");
+  var swap = setTimeout(function () { fly.textContent = toText; }, 140);
+  var finished = false;
+  function done() {
+    if (finished) return;
+    finished = true;
+    clearTimeout(swap);
+    fromEl.classList.remove("is-hidden");
+    toEl.classList.remove("is-hidden");
+    fly.remove();
   }
-  var ctrl = new AbortController();
-  var timer = setTimeout(function () { ctrl.abort(); }, 650);
-  var url = "https://api.cal.com/v2/slots/available?startTime=" + encodeURIComponent(startLocal.toISOString()) + "&endTime=" + encodeURIComponent(endLocal.toISOString()) + "&eventTypeSlug=" + encodeURIComponent(eventSlug) + "&usernameList=" + encodeURIComponent(username);
-  return fetch(url, { signal: ctrl.signal, headers: { "cal-api-version": "2024-08-13" } })
-    .then(function (res) {
-      clearTimeout(timer);
-      if (!res.ok) throw new Error("cal_slots_http");
-      return res.json();
-    })
-    .then(function (json) {
-      var raw = json && json.data && json.data.slots && json.data.slots[dateStr];
-      if (!Array.isArray(raw) || !raw.length) return fallback;
-      var nowLead = new Date(Date.now() + 15 * 60000);
-      var parsed = raw.map(function (item) {
-        var iso = typeof item === "string" ? item : (item && item.time);
-        var d = iso ? new Date(iso) : null;
-        return d && !isNaN(d.getTime()) && d > nowLead ? { dateObj: d, iso: d.toISOString() } : null;
-      }).filter(Boolean);
-      var out = parsed.length ? parsed : fallback;
-      state.slotCache[cacheKey] = out;
-      return out;
-    })
-    .catch(function () {
-      clearTimeout(timer);
-      state.slotCache[cacheKey] = fallback;
-      return fallback;
-    });
+  fly.animate([from, to], { duration: 460, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "both" }).onfinish = done;
+  setTimeout(done, 700);
 }
 
-function renderSlots(slots) {
-  state.slots = slots;
+/* ----- step 2: time ----- */
+function renderSlots(slots, entering) {
   slotGridEl.innerHTML = "";
+  slotGridEl.classList.toggle("is-entering", !!entering);
   if (!slots.length) {
     var empty = document.createElement("p");
     empty.className = "slot-status";
@@ -787,72 +907,124 @@ function renderSlots(slots) {
     return;
   }
   var frag = document.createDocumentFragment();
-  slots.forEach(function (slotObj) {
+  slots.forEach(function (slotObj, i) {
     var btn = document.createElement("button");
     btn.type = "button";
     btn.className = "slot-btn";
+    btn.style.setProperty("--i", Math.min(i, 10));
     var isChosen = state.selectedSlot && state.selectedSlot.iso === slotObj.iso;
     if (isChosen) btn.classList.add("is-selected");
     btn.setAttribute("aria-pressed", isChosen ? "true" : "false");
     btn.textContent = formatSlotTime(slotObj, state.timeFormat);
-    btn.addEventListener("click", function () { selectSlot(slotObj); });
+    btn.addEventListener("click", function () { selectSlot(slotObj, btn); });
     frag.appendChild(btn);
   });
   slotGridEl.appendChild(frag);
 }
-
-function selectDate(dateStr) {
+function slotsFor(dateStr) {
+  var d = parseDateStr(dateStr);
+  var entry = state.months[monthKey(state.host, d.getFullYear(), d.getMonth())];
+  return (entry && entry.days[dateStr]) || [];
+}
+function setTrail(dateStr) {
+  var host = HOST_NAMES[state.host];
+  trailHostBtn.textContent = host.split(" ")[0];
+  trailHostBtn.setAttribute("aria-label", "Host: " + host + ". Change host");
+  trailDateBtn.textContent = formatDateHeading(dateStr);
+  trailDateBtn.setAttribute("aria-label", "Date: " + trailDateBtn.textContent + ". Change date");
+}
+function fillTimeView(dateStr) {
+  setTrail(dateStr);
+  tzEl.textContent = getTzLabel();
+  renderSlots(slotsFor(dateStr), true);
+  slotGridEl.scrollTop = 0;
+}
+function selectDate(dateStr, cell) {
   state.selectedDate = dateStr;
   state.selectedSlot = null;
-  renderCalendar();
-  promptEl.hidden = true;
-  slotDrawerEl.classList.add("is-open");
-  slotDrawerEl.setAttribute("aria-hidden", "false");
-  slotDrawerEl.inert = false;
-  slotDrawerEl.removeAttribute("inert");
-  var tz = getTzLabel();
-  slotDateLabelEl.innerHTML = "";
-  slotDateLabelEl.appendChild(document.createTextNode(formatDateHeading(dateStr)));
-  if (tz) {
-    var tzSpan = document.createElement("span");
-    tzSpan.className = "slot-tz";
-    tzSpan.textContent = "(" + tz + ")";
-    slotDateLabelEl.appendChild(tzSpan);
-  }
-  var cacheKey = HOSTS[state.host] + "|" + dateStr;
-  if (state.slotCache[cacheKey]) {
-    renderSlots(state.slotCache[cacheKey]);
-    return;
-  }
-  slotGridEl.innerHTML = '<p class="slot-status">Checking availability...</p>';
-  var seq = ++state.requestSeq;
-  fetchAvailableSlots(HOSTS[state.host], dateStr).then(function (slots) {
-    if (seq !== state.requestSeq || state.selectedDate !== dateStr) return;
-    renderSlots(slots);
+  Array.prototype.forEach.call(daysEl.querySelectorAll(".cal-day"), function (d) {
+    var on = d.dataset.date === dateStr;
+    d.classList.toggle("is-selected", on);
+    d.setAttribute("aria-pressed", on ? "true" : "false");
   });
+  fillTimeView(dateStr);
+  goTo("time");
+  flyDate(cell, trailDateBtn, cell ? cell.textContent : "", trailDateBtn.textContent, false);
+  statusEl.textContent = slotsFor(dateStr).length + " times on " + formatDateHeading(dateStr);
+  focusSoon(slotGridEl.querySelector(".slot-btn") || trailDateBtn);
+}
+/* back to the calendar from either later step; toHost puts focus on the host choice */
+function backToDates(toHost) {
+  leaveForm();
+  var cell = state.selectedDate && daysEl.querySelector('.cal-day[data-date="' + state.selectedDate + '"]');
+  if (cell) flyDate(trailDateBtn, cell, trailDateBtn.textContent, cell.textContent, true);
+  goTo("date");
+  focusSoon(toHost ? selectorEl.querySelector(".book-tab.active") : cell || prevBtn);
 }
 
-function selectSlot(slotObj) {
+/* ----- step 3: details ----- */
+var calRun = 0, calTimer = null, slotTimer = null;
+function selectSlot(slotObj, btn) {
   state.selectedSlot = slotObj;
-  pickerStage.hidden = true;
-  embedStage.hidden = false;
-  embedSummaryEl.textContent = formatDateHeading(state.selectedDate) + " at " + formatSlotTime(slotObj, state.timeFormat);
-  loadCal(HOSTS[state.host], state.selectedDate, slotObj);
-  backBtn.focus();
+  Array.prototype.forEach.call(slotGridEl.querySelectorAll(".slot-btn"), function (b) {
+    b.classList.toggle("is-selected", b === btn);
+    b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+  });
+  slotGridEl.classList.remove("is-entering");
+  clearTimeout(slotTimer);
+  slotTimer = setTimeout(function () {
+    trailTimeBtn.textContent = formatSlotTime(slotObj, state.timeFormat);
+    trailTimeBtn.setAttribute("aria-label", "Time: " + trailTimeBtn.textContent + ". Change time");
+    goTo("form");
+    loadCal(HOSTS[state.host], state.selectedDate, slotObj);
+    focusSoon(trailTimeBtn);
+  }, reduceMotion ? 0 : 160);
 }
-
-function returnToCalendar() {
-  document.getElementById("cal-booking").innerHTML = "";
-  embedStage.hidden = true;
-  pickerStage.hidden = false;
-  renderSlots(state.slots);
-  var focusTarget = slotGridEl.querySelector(".slot-btn.is-selected") || daysEl.querySelector(".cal-day.is-selected") || prevBtn;
-  if (focusTarget) focusTarget.focus();
+function dropCal() {
+  calRun += 1;
+  clearTimeout(calTimer);
+  clearTimeout(slotTimer);
+}
+/* cancel anything pending and, when leaving the form, clear the frame after it has slid away */
+function leaveForm() {
+  var wasForm = state.view === "form";
+  dropCal();
+  if (!wasForm) return;
+  var run = calRun;
+  setTimeout(function () { if (run === calRun) calEl.innerHTML = ""; }, 480);
+}
+function returnToTimes() {
+  leaveForm();
+  goTo("time");
+  focusSoon(slotGridEl.querySelector(".slot-btn.is-selected") || trailDateBtn);
+}
+function calReady() {
+  clearTimeout(calTimer);
+  var run = calRun;
+  /* a short hold lets the form finish painting under the ghost before it fades */
+  setTimeout(function () {
+    if (run !== calRun || state.view !== "form" || !failEl.hidden) return;
+    ghostEl.classList.add("is-done");
+    statusEl.textContent = "Booking form ready";
+  }, 350);
+}
+function calFailed() {
+  clearTimeout(calTimer);
+  if (state.view !== "form") return;
+  ghostEl.classList.add("is-done");
+  failEl.hidden = false;
+  failLinkEl.href = "https://cal.com/" + HOSTS[state.host];
+  statusEl.textContent = "The booking form did not load";
 }
 
 function loadCal(calLink, dateStr, slotObj) {
-  var el = document.getElementById("cal-booking");
-  el.innerHTML = "";
+  var run = ++calRun;
+  clearTimeout(calTimer);
+  ghostEl.classList.remove("is-done");
+  failEl.hidden = true;
+  calWrapEl.scrollTop = 0;
+  calEl.innerHTML = "";
+  calTimer = setTimeout(function () { if (run === calRun) calFailed(); }, 12000);
   var cfg = {
     layout: "month_view",
     hideBranding: true,
@@ -885,29 +1057,32 @@ function loadCal(calLink, dateStr, slotObj) {
     layout: "month_view"
   });
 }
+/* the ghost stays until Cal.com reports the form is drawn */
+Cal("on", { action: "bookerReady", callback: calReady });
+Cal("on", { action: "linkReady", callback: function () { var run = calRun; setTimeout(function () { if (run === calRun) calReady(); }, 900); } });
+Cal("on", { action: "linkFailed", callback: calFailed });
 
 function switchCal(btn) {
   document.querySelectorAll(".book-tab").forEach(function (t) { t.classList.remove("active"); t.setAttribute("aria-pressed", "false"); });
   btn.classList.add("active");
   btn.setAttribute("aria-pressed", "true");
+  if (state.host === btn.dataset.host) return;
   state.host = btn.dataset.host;
-  if (!embedStage.hidden && state.selectedSlot) {
-    loadCal(HOSTS[state.host], state.selectedDate, state.selectedSlot);
-  } else if (state.selectedDate) {
-    selectDate(state.selectedDate);
-  }
+  state.selectedDate = null;
+  state.selectedSlot = null;
+  showMonth();
 }
 
 prevBtn.addEventListener("click", function () {
   if (prevBtn.disabled) return;
   if (state.viewMonth === 0) { state.viewYear -= 1; state.viewMonth = 11; }
   else { state.viewMonth -= 1; }
-  renderCalendar();
+  showMonth();
 });
 nextBtn.addEventListener("click", function () {
   if (state.viewMonth === 11) { state.viewYear += 1; state.viewMonth = 0; }
   else { state.viewMonth += 1; }
-  renderCalendar();
+  showMonth();
 });
 document.querySelectorAll(".fmt-btn").forEach(function (btn) {
   btn.addEventListener("click", function () {
@@ -917,10 +1092,12 @@ document.querySelectorAll(".fmt-btn").forEach(function (btn) {
       b.classList.toggle("active", active);
       b.setAttribute("aria-pressed", active ? "true" : "false");
     });
-    if (state.slots.length) renderSlots(state.slots);
+    if (state.selectedDate) renderSlots(slotsFor(state.selectedDate), false);
   });
 });
-backBtn.addEventListener("click", returnToCalendar);
+trailHostBtn.addEventListener("click", function () { backToDates(true); });
+trailDateBtn.addEventListener("click", function () { backToDates(false); });
+trailTimeBtn.addEventListener("click", returnToTimes);
 
 /* Top ribbon dropdown keyboard/click support alongside hover + focus-within */
 (function () {
@@ -951,7 +1128,7 @@ backBtn.addEventListener("click", returnToCalendar);
   });
 })();
 
-renderCalendar();
+showMonth();
 </script>
 <!-- STAGING-ONLY: DESIGN SYSTEM PANEL — REMOVE BEFORE MERGING/DEPLOYING TO MAIN -->
 <script src="/staging-ds-panel.js"></script>

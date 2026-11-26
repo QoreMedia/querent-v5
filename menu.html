@@ -269,18 +269,29 @@ body[data-active="cta"] .amb-consult { opacity: 1; }
 .svc-price span { color: var(--ink-dim); font-size: 14px; }
 .svc-actions { display: flex; flex-wrap: wrap; gap: var(--gap-button, 12px); align-items: center; }
 .svc-actions .btn-block { width: auto; padding: 12px 20px; }
-.tog { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 14px; background: transparent; border: var(--bw-button, 1px) solid var(--bc-button, var(--line-strong)); border-radius: var(--r-btn, 999px); font-size: 14px; font-weight: 500; transition: border-color var(--dur-fast) var(--ease-soft), background-color var(--dur-fast) var(--ease-soft); }
+/* LOCAL-MOD LM-0002: the details button answers the press at once and keeps its width when the label changes */
+.tog { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 14px; background: transparent; border: var(--bw-button, 1px) solid var(--bc-button, var(--line-strong)); border-radius: var(--r-btn, 999px); font-size: 14px; font-weight: 500; transition: border-color var(--dur-fast) var(--ease-soft), background-color var(--dur-fast) var(--ease-soft), transform 140ms var(--ease-soft); }
 .tog:hover { border-color: var(--ink); background: rgba(255,255,255,.7); }
+.tog:active { transform: scale(0.96); }
 .tog[aria-expanded="true"] { background: #fff; border-color: var(--blue); }
-.tog svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform var(--dur-base) var(--ease-out); flex: none; }
+.tog-l { display: grid; overflow: hidden; text-align: center; }
+.tog-l > span { grid-area: 1 / 1; transition: transform 320ms var(--ease-out), opacity 200ms var(--ease-soft), visibility 0s linear 0s; }
+.tog-b { visibility: hidden; opacity: 0; transform: translateY(100%); }
+.tog[aria-expanded="true"] .tog-a { visibility: hidden; opacity: 0; transform: translateY(-100%); }
+.tog[aria-expanded="true"] .tog-b { visibility: visible; opacity: 1; transform: none; }
+.tog svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 380ms cubic-bezier(0.34, 1.4, 0.5, 1); flex: none; }
 .tog[aria-expanded="true"] svg { transform: rotate(180deg); }
 
-/* Disclosure (grid-rows height animation) */
-.svc-more { grid-area: more; display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows var(--dur-base) var(--ease-out), visibility 0s linear var(--dur-base); }
-.svc-more.open { grid-template-rows: 1fr; visibility: visible; transition-delay: 0s; }
+/* Disclosure (grid-rows height animation): the columns follow the height in turn; closing is quicker than opening */
+.svc-more { grid-area: more; display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows 300ms var(--ease-in-out) 60ms, visibility 0s linear 360ms; }
+.svc-more.open { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows 460ms var(--ease-soft), visibility 0s; }
 .svc-more-clip { overflow: hidden; min-height: 0; }
-.svc-more-body { margin-top: 40px; display: grid; grid-template-columns: 1.1fr 0.9fr 1fr; gap: var(--gap-panel, 40px); padding: var(--pad-panel, 32px); background: rgba(255,255,255,.82); border: var(--bw-panel, 1px) solid var(--bc-panel, rgb(var(--rgb-blue-600) / .14)); border-radius: var(--r-panel); box-shadow: 0 calc(30px * var(--shk-panel, 1)) calc(70px * var(--shk-panel, 1)) calc(-44px * var(--shk-panel, 1)) rgb(var(--rgb-navy-900) / .45); opacity: 0; transform: translate3d(0, 14px, 0); transition: opacity var(--dur-base) var(--ease-soft), transform var(--dur-base) var(--ease-out); }
-.svc-more.open .svc-more-body { opacity: 1; transform: none; transition-delay: 90ms; }
+.svc-more-body > * { opacity: 0; transform: translate3d(0, 10px, 0); transition: opacity 140ms var(--ease-soft), transform 220ms var(--ease-soft); }
+.svc-more.open .svc-more-body > * { opacity: 1; transform: none; transition: opacity 360ms var(--ease-soft), transform 460ms var(--ease-out); transition-delay: calc(110ms + var(--col, 0) * 70ms); }
+.svc-more-body > :nth-child(2) { --col: 1; }
+.svc-more-body > :nth-child(3) { --col: 2; }
+.svc-more-body { margin-top: 40px; display: grid; grid-template-columns: 1.1fr 0.9fr 1fr; gap: var(--gap-panel, 40px); padding: var(--pad-panel, 32px); background: rgba(255,255,255,.82); border: var(--bw-panel, 1px) solid var(--bc-panel, rgb(var(--rgb-blue-600) / .14)); border-radius: var(--r-panel); box-shadow: 0 calc(30px * var(--shk-panel, 1)) calc(70px * var(--shk-panel, 1)) calc(-44px * var(--shk-panel, 1)) rgb(var(--rgb-navy-900) / .45); opacity: 0; transition: opacity 180ms var(--ease-soft) 120ms; }
+.svc-more.open .svc-more-body { opacity: 1; transition: opacity 260ms var(--ease-soft); }
 .more-h { margin: 0 0 14px; }
 .svc-detail-body { color: var(--ink-dim); line-height: 1.65; margin: 0 0 18px; }
 .svc-works { font-size: 13px; color: var(--ink-dim); margin: 0; }
@@ -432,7 +443,9 @@ body[data-active="cta"] .amb-consult { opacity: 1; }
   html { scroll-behavior: auto; }
   .blob, .layer, .mot *, .amb { animation: none !important; transition: none !important; }
   .js .rv { opacity: 1; translate: none; transition: none; }
-  .svc-more, .svc-more-body, .btn, .tog, .tog svg, .nav-dd, .nav-chev { transition: none !important; }
+  .svc-more, .svc-more-body, .svc-more-body > *, .btn, .tog, .tog svg, .tog-l > span, .nav-dd, .nav-chev { transition: none !important; }
+  .svc-more-body > * { opacity: 1; transform: none; }
+  .tog:active { transform: none; }
   .nav-item:hover .nav-dd, .nav-item:focus-within .nav-dd { transform: none; }
   .mot-chat .bar { transform: scaleY(.7); }
   .mot-radar .ping { opacity: 0; }
@@ -572,7 +585,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
           <p class="svc-price rv" style="--d:3"><strong>$12k–$28k build</strong><span>$2.4k+/mo retainer (optional)</span></p>
           <div class="svc-actions rv" style="--d:4">
           <a href="booking.html?service=concierge" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
-            <button type="button" class="tog" aria-expanded="false" aria-controls="more-concierge"><span class="tog-l">Details &amp; options</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-concierge"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
         <div class="svc-stage rv" style="--d:2"><div class="stage">
@@ -605,7 +618,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
           <p class="svc-price rv" style="--d:3"><strong>$8k–$24k per workflow</strong><span>volume discounts on bundles</span></p>
           <div class="svc-actions rv" style="--d:4">
           <a href="booking.html?service=workflow" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
-            <button type="button" class="tog" aria-expanded="false" aria-controls="more-workflow"><span class="tog-l">Details &amp; options</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-workflow"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
         <div class="svc-stage rv" style="--d:2"><div class="stage">
@@ -641,7 +654,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
           <p class="svc-price rv" style="--d:3"><strong>$15k–$35k build</strong><span>$3.5k+/mo retainer for tuning + scale</span></p>
           <div class="svc-actions rv" style="--d:4">
           <a href="booking.html?service=leadgen" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
-            <button type="button" class="tog" aria-expanded="false" aria-controls="more-leadgen"><span class="tog-l">Details &amp; options</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-leadgen"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
         <div class="svc-stage rv" style="--d:2"><div class="stage">
@@ -675,7 +688,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
           <p class="svc-price rv" style="--d:3"><strong>$10k–$30k per agent</strong><span>volume pricing for multi‑agent rollouts</span></p>
           <div class="svc-actions rv" style="--d:4">
           <a href="booking.html?service=internal" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
-            <button type="button" class="tog" aria-expanded="false" aria-controls="more-internal"><span class="tog-l">Details &amp; options</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-internal"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
         <div class="svc-stage rv" style="--d:2"><div class="stage">
@@ -729,7 +742,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
           <p class="svc-price rv" style="--d:3"><strong>From $4.5k/mo</strong><span>10 strategy hours + async Slack</span></p>
           <div class="svc-actions rv" style="--d:4">
           <a href="booking.html?service=consult" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
-            <button type="button" class="tog" aria-expanded="false" aria-controls="more-consult"><span class="tog-l">Details &amp; options</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-consult"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
         <div class="svc-stage rv" style="--d:2"><div class="stage">
@@ -835,9 +848,18 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
       b.setAttribute('aria-expanded', open);
       p.classList.toggle('open', open);
       p.inert = !open;
-      b.querySelector('.tog-l').textContent = open ? 'Hide details' : 'Details & options';
+      if (open) setTimeout(function () { revealPanel(b, p); }, 140);
     });
   });
+  // bring an opening panel into view without pushing its button under the header
+  function revealPanel(btn, panel) {
+    if (btn.getAttribute('aria-expanded') !== 'true') return;
+    var body = panel.querySelector('.svc-more-body'), hdr = d.querySelector('.hdr');
+    var overflow = panel.getBoundingClientRect().top + parseFloat(getComputedStyle(body).marginTop) + body.offsetHeight + 24 - window.innerHeight;
+    var room = btn.getBoundingClientRect().top - (hdr ? hdr.offsetHeight : 0) - 16;
+    var dy = Math.min(overflow, room);
+    if (dy > 0) window.scrollBy({ top: dy, behavior: reduce ? 'auto' : 'smooth' });
+  }
 
   // Close focus-within header dropdowns on Escape or same-page anchor click
   d.addEventListener('keydown', function (e) {

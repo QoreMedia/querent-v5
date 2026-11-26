@@ -1598,72 +1598,36 @@ html.rv .why-now-reveal {
 .proc2 {
   --p-blue: var(--c-blue-600); --p-blue-d: var(--c-blue-700); --p-navy: var(--c-navy-800); --p-navy-d: var(--c-navy-900); --p-sky: var(--c-blue-300);
   --p-slot-h: 128px;
-  position: relative; display: flex; flex-direction: column; gap: 36px; min-width: 0;
+  position: relative; display: flex; flex-direction: column; gap: 22px; min-width: 0;
 }
 /* calendar (intro stage) */
 
-/* timeline rail */
-.proc2-rail { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); align-items: start; }
-.proc2-line, .proc2-line-fill {
-  position: absolute; left: 12.5%; right: 12.5%; top: 45px; height: 2px; border-radius: 2px; pointer-events: none;
-}
-.proc2-line { background: var(--line-strong); z-index: 0; }
-.proc2-line-fill {
-  z-index: 1; background: linear-gradient(90deg, var(--p-navy), var(--p-blue));
-  transform: scaleX(var(--p, 0)); transform-origin: 0 50%;
-  transition: transform 480ms var(--ease-out);
-}
-.js-anim .proc2-line, .js-anim .proc2-line-fill { opacity: 0; transition: opacity 440ms var(--ease-out) 180ms, transform 480ms var(--ease-out); }
-.js-anim.is-fall .proc2-line, .js-anim.is-fall .proc2-line-fill,
-.js-anim.is-live .proc2-line, .js-anim.is-live .proc2-line-fill { opacity: 1; }
-.js-anim.is-live .proc2-line, .js-anim.is-live .proc2-line-fill { transition: transform 480ms var(--ease-out); }
-
+/* LOCAL-MOD LM-0002: phases drawn as a week schedule, one block per week; the phase name is on the card only.
+   The side padding matches the card so the first week lines up with its title. */
+.proc2-rail { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(2, minmax(max-content, 1fr)) minmax(max-content, 4fr) minmax(max-content, 1.4fr); column-gap: 6px; align-items: start; padding-inline: 40px; }
 .proc2-node {
-  position: relative; z-index: 2; isolation: isolate;
-  display: block; background: none; border: 0; color: inherit; font: inherit;
-  padding: 20px 12px 18px; cursor: pointer; text-align: center;
-  border-radius: var(--radius); -webkit-tap-highlight-color: transparent;
+  position: relative; z-index: 2; min-width: 0;
+  display: block; background: none; border: 0; color: var(--ink-dim); font: inherit;
+  padding: 8px 0; cursor: pointer; text-align: left; -webkit-tap-highlight-color: transparent;
 }
-.proc2-node:focus-visible { outline: 2px solid var(--p-navy); outline-offset: 2px; }
-.proc2-node::before {
-  content: ''; position: absolute; inset: 0; z-index: -1; border-radius: var(--radius);
-  background: var(--bg-elev);
-  border: 1px solid var(--line-strong);
-  box-shadow: 0 10px 22px -16px rgb(var(--rgb-night) / 0.35);
-  opacity: 0; transform: translate3d(0, 0, 0);
-  transition: opacity 340ms var(--ease-out), transform 340ms var(--ease-out);
-}
-.proc2-node.is-active::before { opacity: 0; }
-.proc2-body { display: flex; flex-direction: column; align-items: center; gap: 10px; transition: transform 320ms var(--ease-out); }
-.proc2-node.is-active .proc2-marker { transform: scale(1.08); }
-.proc2-node:hover:not(.is-active) .proc2-marker {
-  border-color: var(--p-blue); color: var(--p-navy); transform: translate3d(0, -2px, 0);
-}
-.proc2-node:hover:not(.is-active) .proc2-key { color: var(--p-navy); }
-.proc2-txt { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.proc2-marker {
-  width: 52px; height: 52px; border-radius: 50%;
-  background: var(--bg); border: 1.5px solid var(--line-strong);
-  display: flex; align-items: center; justify-content: center; color: var(--ink-dim);
-  transition: transform 320ms var(--ease-out), background-color 280ms var(--ease-out), border-color 280ms var(--ease-out), color 280ms var(--ease-out), box-shadow 340ms var(--ease-out);
-}
-.proc2-node.is-done .proc2-marker { border-color: var(--p-navy); color: var(--p-navy); }
-.proc2-node.is-active .proc2-marker {
-  border-color: var(--p-navy); background: var(--p-navy); color: #fff;
-  box-shadow: 0 0 0 4px rgb(var(--rgb-blue-300) / 0.5), 0 10px 22px -10px rgb(var(--rgb-navy-900) / 0.55);
-}
-.proc2-key  { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; transition: color 260ms var(--ease-out); }
-.proc2-time { color: var(--p-blue); opacity: 0; transform: translate3d(0, 4px, 0); transition: opacity 260ms var(--ease-out), transform 280ms var(--ease-out); }
-.proc2-node.is-active .proc2-time, .proc2-node:hover .proc2-time, .proc2-node:focus-visible .proc2-time,
-.js-anim:not(.is-live) .proc2-time, .proc2.is-static .proc2-time { opacity: 1; transform: none; }
-.proc2-node.is-active .proc2-key { color: var(--p-navy-d); }
+.proc2-node:focus-visible { outline: 2px solid var(--p-navy); outline-offset: 4px; border-radius: 4px; }
+.proc2-body { display: flex; flex-direction: column; gap: 14px; }
+.proc2-time { font-family: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif; font-size: 18px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.2; white-space: nowrap; font-variant-numeric: tabular-nums; transition: color 260ms var(--ease-out); }
+.proc2-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.proc2-bar { display: flex; gap: 6px; height: 6px; }
+.proc2-bar i { flex: 1; border-radius: 6px; background: rgb(var(--rgb-navy-800) / 0.13); transition: background-color 280ms var(--ease-out); }
+.proc2-bar--open i { -webkit-mask-image: linear-gradient(90deg, #000 45%, transparent); mask-image: linear-gradient(90deg, #000 45%, transparent); }
+.proc2-node:hover:not(.is-active) { color: var(--p-navy); }
+.proc2-node:hover:not(.is-active) .proc2-bar i { background: rgb(var(--rgb-navy-800) / 0.3); }
+.proc2-node.is-active { color: var(--p-navy-d); }
+.proc2-node.is-active .proc2-time { font-weight: 700; }
+.proc2-node.is-active .proc2-bar i { background: var(--p-navy); }
 
-/* intro choreography: blocks sit on calendar slots, then fall onto the timeline */
+/* intro: the four phases rise into place before the rotation starts */
 .js-anim .proc2-node {
   opacity: 0; translate: var(--dx, 0px) 0;
   transform: translate3d(0, var(--dy, 0px), 0) scale(var(--s, 1));
 }
-.js-anim:not(.is-live) .proc2-node::before { opacity: 1; box-shadow: 0 10px 22px -16px rgb(var(--rgb-night) / 0.35); border-color: var(--line-strong); transform: none; }
 .js-anim.is-cal:not(.is-fall) .proc2-node { animation: procIn 460ms var(--ease-out) both; animation-delay: calc(60ms + var(--i, 0) * 65ms); }
 .js-anim.is-fall:not(.is-live) .proc2-node {
   opacity: 1;
@@ -1671,9 +1635,9 @@ html.rv .why-now-reveal {
   animation-delay: calc(var(--i, 0) * 55ms), calc(var(--i, 0) * 55ms);
 }
 .js-anim.is-live .proc2-node { opacity: 1; translate: none; transform: none; }
-.js-anim:not(.is-live) .proc2-node.is-active .proc2-marker { background: var(--bg); border-color: var(--line-strong); color: var(--ink-dim); box-shadow: none; }
-.js-anim:not(.is-live) .proc2-node.is-active .proc2-key { color: inherit; }
-.js-anim:not(.is-live) .proc2-node.is-active .proc2-body { transform: none; }
+.js-anim:not(.is-live) .proc2-node.is-active { color: var(--ink-dim); }
+.js-anim:not(.is-live) .proc2-node.is-active .proc2-time { font-weight: 500; }
+.js-anim:not(.is-live) .proc2-node.is-active .proc2-bar i { background: rgb(var(--rgb-navy-800) / 0.13); }
 @keyframes procIn {
   from { opacity: 0; transform: translate3d(0, calc(var(--dy, 0px) + 16px), 0) scale(calc(var(--s, 1) * 0.95)); }
   to   { opacity: 1; transform: translate3d(0, var(--dy, 0px), 0) scale(var(--s, 1)); }
@@ -1698,7 +1662,7 @@ html.rv .why-now-reveal {
 .js-anim.is-live .proc2-cards { opacity: 1; transition: opacity 380ms var(--ease-out); }
 .proc2-card {
   grid-area: 1 / 1; min-width: 0;
-  display: grid; grid-template-columns: minmax(180px, 280px) 1fr; gap: 16px 48px; align-items: start;
+  display: grid; grid-template-columns: minmax(180px, 280px) 1fr; gap: 16px 48px; align-items: baseline; align-content: start;
   background: var(--bg-elev); border: 1px solid var(--line); border-radius: var(--radius);
   padding: var(--pad-panel, 32px 40px);
   opacity: 0; visibility: hidden; transform: translate3d(0, 6px, 0); pointer-events: none;
@@ -1710,9 +1674,6 @@ html.rv .why-now-reveal {
   box-shadow: 0 28px 60px -38px rgb(var(--rgb-navy-900) / 0.55);
   transition: opacity 340ms var(--ease-out) 60ms, transform 380ms var(--ease-out) 60ms, visibility 0s;
 }
-.proc2-card-head { display: flex; flex-direction: column; gap: 6px; }
-.proc2-card-head .mono { color: var(--p-blue); }
-.proc2-card-head::before { content: ''; width: 28px; height: 3px; border-radius: 3px; background: var(--p-sky); margin-bottom: 6px; }
 .proc2-card-title { color: var(--p-navy-d); }
 #process {
   position: relative; z-index: 1; isolation: isolate;
@@ -1741,19 +1702,16 @@ html.rv .why-now-reveal {
   grid-area: auto; grid-template-columns: 1fr; padding: 24px 28px;
   opacity: 1; visibility: visible; transform: none; pointer-events: auto; transition: none;
 }
-.proc2.is-static .proc2-line-fill { transition: none; }
-.proc2.is-static .proc2-node::before, .proc2.is-static .proc2-body { transition: none; }
-.proc2.is-static .proc2-node.is-active::before { opacity: 0; }
-.proc2.is-static .proc2-node.is-active .proc2-body { transform: none; }
+.proc2-card-week { display: none; }
+.proc2.is-static .proc2-rail { display: none; }
+.proc2.is-static .proc2-card-week { display: block; margin-top: 4px; font-size: 14px; color: var(--ink-dim); }
 @media (prefers-reduced-motion: reduce) {
   .js-anim .proc2-node,
-  .js-anim .proc2-cards,
-  .js-anim .proc2-line,
-  .js-anim .proc2-line-fill {
+  .js-anim .proc2-cards {
     opacity: 1 !important; translate: none !important; transform: none !important;
     animation: none !important; transition: none !important;
   }
-  .proc2-card, .proc2-node, .proc2-marker, .proc2-key, .proc2-time, .proc2-body, .proc2-line-fill {
+  .proc2-card, .proc2-node, .proc2-bar i, .proc2-time {
     transition: none !important; animation: none !important;
   }
 }
@@ -1770,48 +1728,11 @@ html.rv .why-now-reveal {
   #process .section-head .h2 { font-size: var(--m-h2); line-height: var(--m-lh-head); }
   #process .section-head .lede { font-size: var(--m-body); line-height: var(--m-lh-body); }
   .proc2 { gap: var(--m-gap); }
-  .proc2-rail {
-    display: flex; flex-wrap: nowrap; align-items: stretch; gap: 10px;
-    width: 100%; max-width: 100%; min-width: 0;
-    padding: 4px 2px 10px;
-    overflow-x: auto; overflow-y: hidden;
-    scroll-snap-type: x mandatory; scroll-padding-inline: 2px;
-    -webkit-overflow-scrolling: touch; scrollbar-width: none;
-    overscroll-behavior-x: contain;
-  }
-  .proc2-rail::-webkit-scrollbar { display: none; }
-  .proc2-line, .proc2-line-fill { display: none; }
-  .proc2-rail .proc2-node {
-    flex: 0 0 clamp(106px, 31vw, 134px);
-    scroll-snap-align: center; scroll-snap-stop: always;
-    box-sizing: border-box;
-    padding: 12px 12px 11px;
-    min-height: 98px;
-    text-align: left;
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    box-shadow: 0 4px 12px -10px rgb(var(--rgb-navy-900) / 0.25);
-    transition: transform 280ms var(--ease-out), border-color 260ms var(--ease-out), background-color 260ms var(--ease-out), box-shadow 300ms var(--ease-out), opacity 280ms var(--ease-out);
-  }
-  .proc2-rail .proc2-node::before { display: none; }
-  .proc2-rail .proc2-node.is-done {
-    border-color: color-mix(in oklab, var(--p-navy) 24%, var(--line));
-  }
-  .proc2-rail .proc2-node.is-active {
-    background: var(--panel-light);
-    border-color: color-mix(in oklab, var(--p-navy) 48%, var(--line-strong));
-    box-shadow: 0 12px 24px -16px rgb(var(--rgb-navy-900) / 0.45);
-    transform: translate3d(0, -2px, 0);
-  }
-  .proc2-rail .proc2-body { flex-direction: column; align-items: flex-start; gap: 8px; width: 100%; }
-  .proc2-rail .proc2-marker { width: 32px; height: 32px; flex: none; font-size: 11px; }
-  .proc2-rail .proc2-node.is-active .proc2-marker {
-    transform: scale(1.04);
-    box-shadow: 0 0 0 3px rgb(var(--rgb-blue-300) / 0.48), 0 6px 14px -8px rgb(var(--rgb-navy-900) / 0.5);
-  }
-  .proc2-rail .proc2-txt { align-items: flex-start; gap: 2px; width: 100%; }
-  .proc2-rail .proc2-key { font-size: clamp(0.92rem, 0.88rem + 0.25vw, 1rem); line-height: 1.2; overflow-wrap: anywhere; }
-  .proc2-rail .proc2-time { font-size: 0.7rem; line-height: 1.25; min-height: 13px; }
+  /* narrow screens: the build phase keeps a wider bar, every label stays readable */
+  .proc2-rail { grid-template-columns: repeat(2, minmax(max-content, 1fr)) minmax(max-content, 2fr) minmax(max-content, 1fr); column-gap: 5px; padding-inline: 18px; }
+  .proc2-rail .proc2-body { gap: 10px; }
+  .proc2-rail .proc2-bar { gap: 3px; }
+  .proc2-rail .proc2-time { font-size: clamp(0.78rem, 0.7rem + 0.4vw, 0.95rem); }
   .js-anim .proc2-rail .proc2-node { translate: none; transform: translate3d(0, 10px, 0); }
   .js-anim.is-cal:not(.is-live) .proc2-rail .proc2-node,
   .js-anim.is-fall:not(.is-live) .proc2-rail .proc2-node {
@@ -1819,14 +1740,11 @@ html.rv .why-now-reveal {
     animation-delay: calc(var(--i, 0) * 55ms);
   }
   .js-anim.is-live .proc2-rail .proc2-node { opacity: 1; transform: none; }
-  .js-anim.is-live .proc2-rail .proc2-node.is-active { transform: translate3d(0, -2px, 0); }
   .proc2-cards { order: 0; }
   .proc2-cards .proc2-card {
     grid-template-columns: 1fr; padding: 18px 18px 20px; gap: 8px;
     border-radius: var(--r-card);
   }
-  .proc2-card-head { gap: 4px; }
-  .proc2-card-head::before { width: 24px; height: 2.5px; margin-bottom: 4px; }
   .proc2-card-title { font-size: clamp(1.15rem, 4vw + 0.3rem, 1.4rem); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; }
   .proc2-card-desc { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
   .proc2.is-static .proc2-cards { grid-template-columns: 1fr; gap: 12px; }
@@ -2189,10 +2107,37 @@ html.rv .why-now-reveal {
 }
 .sol-metric { border-radius: var(--r-inner); border-color: var(--panel-dark-line); }
 
-/* process: light panels (steps stay unboxed; WEEK labels only on active/hover/focus) */
+/* LOCAL-MOD LM-0002: on desktop the heading, tabs and card fit one screen; sizes follow the viewport height */
+@media (min-width: 981px) {
+  .sol-band { padding-block: clamp(40px, 7svh, var(--band-pad-y)); }
+  .sol-band .why-now-banner { padding-bottom: clamp(14px, 2.6svh, 32px); margin-bottom: clamp(12px, 2.4svh, 28px); }
+  .sol-band .why-now-headline { flex: 0 1 auto; max-width: 22em; font-size: clamp(30px, 5.6svh, 48px); text-wrap: balance; }
+  .sol-tabs { margin-bottom: clamp(12px, 2.4svh, 28px); }
+  .sol-grid { padding-block: clamp(16px, 3svh, 36px); }
+  .sol-stage { max-width: clamp(380px, calc((74svh - 120px) * 52 / 36.3), 760px); }
+}
+
+/* LOCAL-MOD LM-0002: the FAQ fits one screen at any desktop scale; the chat area takes the spare height
+   and the question chips sit in an even grid */
+@media (min-width: 769px) {
+  .faq-band { padding-block: clamp(56px, 8svh, var(--band-pad-y)); }
+  #faq { display: flex; flex-direction: column; height: clamp(460px, calc(100svh - 96px), 880px); }
+  .faq-head { flex: none; margin-bottom: clamp(14px, 2.4svh, 32px); }
+  .faq-title { font-size: clamp(56px, 13svh, 132px); }
+  .faq-box { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: var(--pad-panel, clamp(12px, 2.2svh, 22px)); }
+  .faq-box .faq-screen { flex: 1 1 0; height: auto; min-height: 96px; }
+  .faq-input-box { flex: none; min-height: 0; margin-top: 10px; }
+  .faq-chat-input { min-height: 46px; max-height: 66px; }
+  .faq-chips { flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: clamp(8px, 1.6svh, 14px); }
+  .faq-chip { border-radius: var(--r-chip, 14px); padding: var(--pad-chip, clamp(6px, 1.2svh, 10px) 14px); }
+}
+@media (min-width: 769px) and (max-width: 1100px) {
+  .faq-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* process: light panels (schedule phases stay unboxed) */
 .proc2-card { background: var(--panel-light); border-color: var(--bc-panel, var(--panel-light-line)); border-width: var(--bw-panel, 1px); border-radius: var(--r-panel); }
-.proc2-card.is-active { border-color: var(--panel-light-line); box-shadow: var(--panel-light-shadow); }
-.proc2-node, .proc2-node::before { border-radius: var(--r-card); }
+.proc2-card.is-active { border-color: var(--panel-light-line); box-shadow: 0 calc(16px * var(--shk-panel, 1)) calc(36px * var(--shk-panel, 1)) calc(-28px * var(--shk-panel, 1)) rgb(var(--rgb-navy-900) / 0.35); }
 .proc2.is-static .proc2-card { border-radius: var(--r-card); }
 
 /* final CTA: light panel, white inner panel, pill label */
@@ -2625,7 +2570,6 @@ html.rv .why-now-reveal {
   .hero-stats .stat { grid-template-columns: minmax(64px, auto) minmax(0, 1fr); gap: 10px; padding: 11px 12px; }
   .hero-stats .stat-num { font-size: 1.35rem; }
   .hero-stats .stat-lbl { font-size: 0.74rem; }
-  .proc2-rail .proc2-node { flex: 0 0 clamp(92px, 30vw, 118px); min-width: 92px; padding: 10px; }
   .sol-band .sol-slide .sol-list { grid-template-columns: 1fr; }
   .why-now-band .value-card { padding: 20px 16px; }
 }
@@ -2644,16 +2588,6 @@ html.rv .why-now-reveal {
 /* LOCAL-MOD LM-0002: footer headings sentence case */
 /* keep the curved band; carry the hero gradient down behind its corners */
 .hero-bg { bottom: calc(-1 * var(--r-band)); }
-/* process timeline is a plain number line (names stay available to screen readers); no rule above the week */
-.proc2-node .proc2-txt { position: absolute !important; width: 1px !important; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.proc2-card-head::before { content: none !important; }
-@media (max-width: 768px) {
-  .proc2-rail { display: flex !important; justify-content: space-between; align-items: center; overflow: visible !important; gap: 0 !important; background: linear-gradient(var(--line-strong), var(--line-strong)) center / 100% 2px no-repeat; }
-  .proc2-rail .proc2-node, .proc2-rail .proc2-body { flex: 0 0 auto !important; width: auto !important; min-width: 44px !important; min-height: 44px !important; padding: 0 !important; margin: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; justify-content: center; align-items: center; }
-  .proc2-rail .proc2-marker { background-color: var(--bg); }
-  .proc2-rail .proc2-node.is-active .proc2-marker { background-color: var(--p-navy); }
-  .proc2-rail::before, .proc2-rail::after, .proc2-rail .proc2-node::before, .proc2-rail .proc2-node::after { display: none !important; }
-}
 .footer-h { text-transform: none !important; letter-spacing: 0 !important; font-size: 14px; }
 /* LOCAL-MOD LM-0002: plain bullets instead of tick glyphs */
 .cta-list { list-style: disc; padding-left: 18px; }
@@ -3335,36 +3269,34 @@ html.rv .why-now-reveal {
       </div>
       <div class="proc2" id="proc2">
         <div class="proc2-rail" role="tablist" aria-label="Four-step path">
-          <div class="proc2-line"></div>
-          <div class="proc2-line-fill" id="proc2-line-fill"></div>
           <button class="proc2-node is-active" style="--i:0" role="tab" id="proc2-tab-0" aria-controls="proc2-panel-0" aria-selected="true" data-step="0">
-            <span class="proc2-body"><span class="proc2-marker"><span class="mono">01</span></span><span class="proc2-txt"><span class="proc2-key">Audit</span><span class="proc2-time mono">Week 1</span></span></span>
+            <span class="proc2-body"><span class="proc2-bar" aria-hidden="true"><i></i></span><span class="proc2-time"><span class="proc2-sr">Audit, </span>Week 1</span></span>
           </button>
           <button class="proc2-node" style="--i:1" role="tab" id="proc2-tab-1" aria-controls="proc2-panel-1" aria-selected="false" tabindex="-1" data-step="1">
-            <span class="proc2-body"><span class="proc2-marker"><span class="mono">02</span></span><span class="proc2-txt"><span class="proc2-key">Strategy</span><span class="proc2-time mono">Week 2</span></span></span>
+            <span class="proc2-body"><span class="proc2-bar" aria-hidden="true"><i></i></span><span class="proc2-time"><span class="proc2-sr">Strategy, </span>Week 2</span></span>
           </button>
           <button class="proc2-node" style="--i:2" role="tab" id="proc2-tab-2" aria-controls="proc2-panel-2" aria-selected="false" tabindex="-1" data-step="2">
-            <span class="proc2-body"><span class="proc2-marker"><span class="mono">03</span></span><span class="proc2-txt"><span class="proc2-key">Build</span><span class="proc2-time mono">Weeks 3–6</span></span></span>
+            <span class="proc2-body"><span class="proc2-bar" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="proc2-time"><span class="proc2-sr">Build, </span>Weeks 3–6</span></span>
           </button>
           <button class="proc2-node" style="--i:3" role="tab" id="proc2-tab-3" aria-controls="proc2-panel-3" aria-selected="false" tabindex="-1" data-step="3">
-            <span class="proc2-body"><span class="proc2-marker"><span class="mono">04</span></span><span class="proc2-txt"><span class="proc2-key">Deploy</span><span class="proc2-time mono">Week 7+</span></span></span>
+            <span class="proc2-body"><span class="proc2-bar proc2-bar--open" aria-hidden="true"><i></i></span><span class="proc2-time"><span class="proc2-sr">Deploy, </span>Week 7+</span></span>
           </button>
         </div>
         <div class="proc2-cards">
           <div class="proc2-card is-active" role="tabpanel" id="proc2-panel-0" aria-labelledby="proc2-tab-0" data-step="0">
-            <div class="proc2-card-head"><span class="mono dim">Week 1</span><h3 class="proc2-card-title">Audit</h3></div>
+            <div class="proc2-card-head"><h3 class="proc2-card-title">Audit</h3><span class="proc2-card-week">Week 1</span></div>
             <p class="proc2-card-desc">We inventory every repetitive workflow, score it for AI fit, and surface the top 3 ROI opportunities.</p>
           </div>
           <div class="proc2-card" role="tabpanel" id="proc2-panel-1" aria-labelledby="proc2-tab-1" data-step="1">
-            <div class="proc2-card-head"><span class="mono dim">Week 2</span><h3 class="proc2-card-title">Strategy</h3></div>
+            <div class="proc2-card-head"><h3 class="proc2-card-title">Strategy</h3><span class="proc2-card-week">Week 2</span></div>
             <p class="proc2-card-desc">Scoped build plan, success metrics, vendor decisions, and a fixed‑price proposal. You sign off on the before/after metric we'll be measured on.</p>
           </div>
           <div class="proc2-card" role="tabpanel" id="proc2-panel-2" aria-labelledby="proc2-tab-2" data-step="2">
-            <div class="proc2-card-head"><span class="mono dim">Weeks 3–6</span><h3 class="proc2-card-title">Build</h3></div>
+            <div class="proc2-card-head"><h3 class="proc2-card-title">Build</h3><span class="proc2-card-week">Weeks 3–6</span></div>
             <p class="proc2-card-desc">We build, test, and stage the system in your stack. Daily Loom updates. Weekly working demos. You see exactly what's being shipped.</p>
           </div>
           <div class="proc2-card" role="tabpanel" id="proc2-panel-3" aria-labelledby="proc2-tab-3" data-step="3">
-            <div class="proc2-card-head"><span class="mono dim">Week 7+</span><h3 class="proc2-card-title">Deploy</h3></div>
+            <div class="proc2-card-head"><h3 class="proc2-card-title">Deploy</h3><span class="proc2-card-week">Week 7+</span></div>
             <p class="proc2-card-desc">Production launch with monitoring, retraining, and a 21‑day SLA. Hand off to your team or stay on retainer for ongoing tuning, new flows, and strategy hours.</p>
           </div>
         </div>
@@ -3862,7 +3794,6 @@ html.rv .why-now-reveal {
         n.tabIndex = on ? 0 : -1;
       });
       cards.forEach(function (c, i) { c.classList.toggle('is-active', i === idx); });
-      proc.style.setProperty('--p', String(idx / (total - 1)));
       centerActiveNode(idx, true);
     }
     function schedule() {
@@ -3882,7 +3813,6 @@ html.rv .why-now-reveal {
       proc.classList.add('is-static');
       nodes.forEach(function (n) { n.classList.remove('is-active'); n.classList.add('is-done'); n.setAttribute('aria-selected', 'false'); n.tabIndex = 0; });
       cards.forEach(function (c) { c.classList.remove('is-active'); });
-      proc.style.setProperty('--p', '1');
       return;
     }
 
