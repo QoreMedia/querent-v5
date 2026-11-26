@@ -272,6 +272,8 @@ body[data-active="cta"] .amb-consult { opacity: 1; }
 .svc-cx-bars i { width: 22px; height: 6px; border-radius: 6px; background: rgb(var(--rgb-navy-800, 21 44 91) / 0.14); }
 .svc-cx-bars i.on { background: var(--c-blue-600, #2563EB); }
 .svc-cx-val { font-weight: 700; color: var(--ink); }
+.svc-cx-note { color: var(--ink-dim); font-size: 13px; }
+.svc-cx { flex-wrap: wrap; }
 .svc-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .svc-tags li {
   font-size: 13px; font-weight: 600; line-height: 1; padding: 8px 12px; border-radius: 999px;
@@ -543,6 +545,25 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
 .hdr .m-nav a { color: #2B3345; border-bottom-color: rgb(21 44 91 / 0.06); }
 .hdr .m-nav a:hover, .hdr .m-nav a:focus-visible { color: var(--c-navy-900); }
 </style>
+<style id="v051-svc-compress">
+/* v0.51: service sections are vertically compressed so an opened "Details" panel fits on one 13" laptop screen */
+@media (min-width: 981px) {
+  .svc { padding: clamp(40px, 6svh, 80px) 0; }
+  .svc-inner { align-items: center; }
+  .svc .stage { aspect-ratio: 16 / 10; max-height: clamp(240px, calc(100svh - 470px), 360px); width: 100%; margin-inline: auto; }
+  .svc-main .h2 { font-size: clamp(32px, 3.2vw, 48px); margin-bottom: 10px; }
+  .svc-sub { font-size: 17.5px; margin-bottom: 16px; }
+  .svc-fit { margin-bottom: 20px; gap: 10px; }
+  .svc-more-body { margin-top: 22px; padding: 22px 26px; gap: 28px; }
+  .more-h { margin-bottom: 8px; }
+  .svc-detail-body { font-size: 15px; line-height: 1.55; margin-bottom: 10px; }
+  .meta-row { padding: 7px 0; font-size: 13.5px; }
+  .meta-row .mono { margin-bottom: 2px; }
+  .svc-list { gap: 5px; }
+  .svc-list li { font-size: 13.5px; }
+  .svc-works { font-size: 12.5px; }
+}
+</style>
 </head>
 <body data-active="hero">
 <div class="ambient" aria-hidden="true"><div class="amb amb-hero"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-concierge"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-workflow"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-leadgen"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-internal"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-consult"><div class="blob b1"></div><div class="blob b2"></div></div></div>
@@ -569,9 +590,9 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
           <a href="menu.html" class="nav-trigger is-active" aria-haspopup="true">Services<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
           <div class="nav-dd" role="menu" aria-label="Services">
             <a href="menu.html" class="is-active" role="menuitem">All Services</a>
-            <a href="menu.html#concierge" role="menuitem">AI Concierge</a>
+            <a href="menu.html#leadgen" role="menuitem">Lead Gen, Outbound / Research</a>
             <a href="menu.html#workflow" role="menuitem">Workflow Automation</a>
-            <a href="menu.html#leadgen" role="menuitem">Outbound &amp; Lead Gen</a>
+            <a href="menu.html#concierge" role="menuitem">AI Concierge</a>
             <a href="menu.html#internal" role="menuitem">Internal Ops Agents</a>
             <a href="menu.html#consult" role="menuitem">Strategy &amp; Advisory</a>
           </div>
@@ -614,34 +635,34 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
     </section>
 
 
-    <!-- ========== 01 Concierge ========== -->
-    <!-- ========== 01 AI Concierge Services ========== -->
-    <section class="svc" id="concierge" data-sec="concierge">
+    <!-- ========== 01 Lead Gen, Outbound / Research ========== -->
+    <section class="svc" id="leadgen" data-sec="leadgen">
       <div class="svc-bg" aria-hidden="true"></div>
       <div class="svc-inner">
         <div class="svc-main">
-          <h2 class="h2 rv" style="--d:1">AI Concierge Services</h2>
-          <p class="svc-sub rv" style="--d:2">Chat + voice agents that answer, qualify and book 24/7.</p>
-          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span><span class="svc-cx-val">Medium</span></div><ul class="svc-tags" aria-label="Good fit for"><li>Clinics &amp; med&#8209;spas</li><li>Property management</li><li>Professional services</li><li>E&#8209;commerce support</li></ul></div>
+          <h2 class="h2 rv" style="--d:1">Lead Gen, Outbound / Research</h2>
+          <p class="svc-sub rv" style="--d:2">Researched, personalized outbound and lead gen, run by a team of agents.</p>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span><span class="svc-cx-val">Medium</span></div><ul class="svc-tags" aria-label="Good fit for"><li>B2B sales teams</li><li>Agencies &amp; consultancies</li><li>SaaS</li><li>Recruiting</li></ul></div>
           <div class="svc-actions rv" style="--d:4">
-          <a href="booking.html?service=concierge" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
-            <button type="button" class="tog" aria-expanded="false" aria-controls="more-concierge"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <a href="booking.html?service=leadgen" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-leadgen"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
         <div class="svc-stage rv" style="--d:2"><div class="stage">
-<svg class="mot mot-chat" viewBox="0 0 480 360" role="img" aria-label="Chat and voice conversation motif" preserveAspectRatio="xMidYMid slice">
-  <g class="bub" style="--k:0"><rect x="36" y="38" width="236" height="62" rx="20" fill="rgba(255,255,255,.08)" stroke="rgba(147,197,253,.4)"/><rect x="58" y="58" width="150" height="7" rx="3.5" fill="#93C5FD" opacity=".75"/><rect x="58" y="74" width="98" height="7" rx="3.5" fill="#93C5FD" opacity=".4"/></g>
-  <g class="bub" style="--k:1"><rect x="176" y="118" width="268" height="70" rx="20" fill="#2563EB"/><rect x="198" y="138" width="190" height="7" rx="3.5" fill="#fff" opacity=".9"/><rect x="198" y="154" width="130" height="7" rx="3.5" fill="#fff" opacity=".55"/></g>
-  <g class="bub" style="--k:2"><rect x="36" y="206" width="210" height="56" rx="20" fill="rgba(255,255,255,.08)" stroke="rgba(147,197,253,.4)"/><rect x="58" y="224" width="128" height="7" rx="3.5" fill="#93C5FD" opacity=".75"/><rect x="58" y="240" width="76" height="7" rx="3.5" fill="#93C5FD" opacity=".4"/></g>
-  <g><rect x="36" y="286" width="86" height="40" rx="20" fill="rgba(255,255,255,.08)" stroke="rgba(147,197,253,.4)"/><circle class="dot" style="--k:0" cx="62" cy="306" r="4" fill="#93C5FD"/><circle class="dot" style="--k:1" cx="79" cy="306" r="4" fill="#93C5FD"/><circle class="dot" style="--k:2" cx="96" cy="306" r="4" fill="#93C5FD"/></g>
-  <g fill="#22D3EE"><rect class="bar" style="--k:0" x="318" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:1" x="333" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:2" x="348" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:3" x="363" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:4" x="378" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:5" x="393" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:6" x="408" y="290" width="7" height="36" rx="3.5"/></g>
+<svg class="mot mot-radar" viewBox="0 0 480 360" role="img" aria-label="Radar signal sweep motif" preserveAspectRatio="xMidYMid slice">
+  <defs><linearGradient id="swp" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#22D3EE" stop-opacity=".55"/><stop offset="1" stop-color="#22D3EE" stop-opacity="0"/></linearGradient></defs>
+  <g fill="none" stroke="#93C5FD" stroke-opacity=".28"><circle cx="240" cy="180" r="40"/><circle cx="240" cy="180" r="80"/><circle cx="240" cy="180" r="120"/><circle cx="240" cy="180" r="160"/><path d="M80 180H400M240 20V340"/></g>
+  <circle class="ping" cx="240" cy="180" r="160" fill="none" stroke="#22D3EE" stroke-width="2"/>
+  <path class="sweep" d="M240 180 L400 180 A160 160 0 0 0 342.9 57.4 Z" fill="url(#swp)"/>
+  <circle cx="240" cy="180" r="5" fill="#fff"/>
+  <g fill="#22D3EE"><circle class="blip" style="--k:0.2" cx="320" cy="132" r="6"/><circle class="blip" style="--k:2.4" cx="188" cy="238" r="6"/><circle class="blip" style="--k:1.2" cx="170" cy="120" r="6"/><circle class="blip" style="--k:3.6" cx="306" cy="250" r="6"/><circle class="blip" style="--k:4.8" cx="262" cy="86" r="6"/></g>
 </svg>
         </div></div>
-        <div class="svc-more" id="more-concierge" role="region" aria-label="AI Concierge Services details">
+        <div class="svc-more" id="more-leadgen" role="region" aria-label="Lead Gen, Outbound / Research details">
           <div class="svc-more-clip"><div class="svc-more-body">
-            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">A unified concierge layer for inbound chat, voice and messaging, running on the model that fits each job. Trained on your knowledge base and wired to your calendar, CRM and ticketing, with fast voice responses and a clean human handoff when confidence drops. Covers the after‑hours desk and frees up the day shift.</p><p class="svc-works"><b>Works with</b>: Claude &middot; OpenAI &middot; Vapi &middot; ElevenLabs &middot; Twilio &middot; WhatsApp &middot; Discord &middot; Intercom &middot; HubSpot</p></div>
-            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Property management, clinics, professional services, e‑commerce support</div><div class="meta-row"><span class="mono dim">Timeline</span>3–4 weeks from kickoff to production</div><div class="meta-row"><span class="mono dim">Ownership</span>You own the trained agent, prompts, and integrations</div></div>
-            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Trained chat + voice agent</li><li>Web, phone, WhatsApp, Slack or Discord install</li><li>Calendar + CRM writeback</li><li>Ticket auto‑routing &amp; escalation</li><li>Weekly QA &amp; retraining report</li><li>Handoff playbook for your team</li></ul></div>
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">A team of agents runs prospecting from start to finish. They find accounts that match your ideal customer, research each one across multiple models and live sources (filings, news, hiring signals, tech stack), draft a personalized first touch for email or social, and route replies into your rep's calendar and CRM. Your team spends its time on conversations, not research.</p><p class="svc-works"><b>Works with</b>: Clay &middot; Apollo &middot; Smartlead &middot; Perplexity &middot; Claude &middot; OpenAI &middot; Grok Bot &middot; HubSpot &middot; Slack &middot; Discord</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>B2B teams with a defined ICP and a closing process that works</div><div class="meta-row"><span class="mono dim">Timeline</span>3–5 weeks to first booked meetings</div><div class="meta-row"><span class="mono dim">Ownership</span>Lists, sequences, and account briefs delivered into your tools</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>ICP &amp; list pipeline (Clay/Apollo)</li><li>Multi‑model research agent with per‑lead briefs</li><li>Personalized email &amp; social sequences</li><li>Reply classifier &amp; sentiment routing</li><li>Lead alerts in Slack or Discord</li><li>Booking &amp; pipeline dashboard</li></ul></div>
           </div></div>
         </div>
       </div>
@@ -655,7 +676,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
         <div class="svc-main">
           <h2 class="h2 rv" style="--d:1">Workflow Automation</h2>
           <p class="svc-sub rv" style="--d:2">Multi‑model workflows and agents across the tools you already pay for, owned by you.</p>
-          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i></i><i></i></span><span class="svc-cx-val">Low to medium</span></div><ul class="svc-tags" aria-label="Good fit for"><li>Ops teams</li><li>Agencies</li><li>Founders</li><li>Finance &amp; admin</li></ul></div>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span><span class="svc-cx-val">Medium</span><span class="svc-cx-note">depends on domain&#8209;specific knowledge</span></div><ul class="svc-tags" aria-label="Good fit for"><li>Ops teams</li><li>Agencies</li><li>Founders</li><li>Finance &amp; admin</li></ul></div>
           <div class="svc-actions rv" style="--d:4">
           <a href="booking.html?service=workflow" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
             <button type="button" class="tog" aria-expanded="false" aria-controls="more-workflow"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
@@ -683,35 +704,33 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
       </div>
     </section>
 
-    <!-- ========== 03 Outbound / Lead Gen ========== -->
-    <!-- ========== 03 Outbound, Research &amp; Lead Gen ========== -->
-    <section class="svc" id="leadgen" data-sec="leadgen">
+    <!-- ========== 03 AI Concierge Services ========== -->
+    <section class="svc" id="concierge" data-sec="concierge">
       <div class="svc-bg" aria-hidden="true"></div>
       <div class="svc-inner">
         <div class="svc-main">
-          <h2 class="h2 rv" style="--d:1">Outbound, Research &amp; Lead Gen</h2>
-          <p class="svc-sub rv" style="--d:2">Researched, personalized outbound and lead gen, run by a team of agents.</p>
-          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="svc-cx-val">Medium to high</span></div><ul class="svc-tags" aria-label="Good fit for"><li>B2B sales teams</li><li>Agencies &amp; consultancies</li><li>SaaS</li><li>Recruiting</li></ul></div>
+          <h2 class="h2 rv" style="--d:1">AI Concierge Services</h2>
+          <p class="svc-sub rv" style="--d:2">Chat + voice agents that answer, qualify and book 24/7.</p>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="svc-cx-val">High</span></div><ul class="svc-tags" aria-label="Good fit for"><li>Clinics &amp; med&#8209;spas</li><li>Property management</li><li>Professional services</li><li>E&#8209;commerce support</li></ul></div>
           <div class="svc-actions rv" style="--d:4">
-          <a href="booking.html?service=leadgen" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
-            <button type="button" class="tog" aria-expanded="false" aria-controls="more-leadgen"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <a href="booking.html?service=concierge" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-concierge"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
         <div class="svc-stage rv" style="--d:2"><div class="stage">
-<svg class="mot mot-radar" viewBox="0 0 480 360" role="img" aria-label="Radar signal sweep motif" preserveAspectRatio="xMidYMid slice">
-  <defs><linearGradient id="swp" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#22D3EE" stop-opacity=".55"/><stop offset="1" stop-color="#22D3EE" stop-opacity="0"/></linearGradient></defs>
-  <g fill="none" stroke="#93C5FD" stroke-opacity=".28"><circle cx="240" cy="180" r="40"/><circle cx="240" cy="180" r="80"/><circle cx="240" cy="180" r="120"/><circle cx="240" cy="180" r="160"/><path d="M80 180H400M240 20V340"/></g>
-  <circle class="ping" cx="240" cy="180" r="160" fill="none" stroke="#22D3EE" stroke-width="2"/>
-  <path class="sweep" d="M240 180 L400 180 A160 160 0 0 0 342.9 57.4 Z" fill="url(#swp)"/>
-  <circle cx="240" cy="180" r="5" fill="#fff"/>
-  <g fill="#22D3EE"><circle class="blip" style="--k:0.2" cx="320" cy="132" r="6"/><circle class="blip" style="--k:2.4" cx="188" cy="238" r="6"/><circle class="blip" style="--k:1.2" cx="170" cy="120" r="6"/><circle class="blip" style="--k:3.6" cx="306" cy="250" r="6"/><circle class="blip" style="--k:4.8" cx="262" cy="86" r="6"/></g>
+<svg class="mot mot-chat" viewBox="0 0 480 360" role="img" aria-label="Chat and voice conversation motif" preserveAspectRatio="xMidYMid slice">
+  <g class="bub" style="--k:0"><rect x="36" y="38" width="236" height="62" rx="20" fill="rgba(255,255,255,.08)" stroke="rgba(147,197,253,.4)"/><rect x="58" y="58" width="150" height="7" rx="3.5" fill="#93C5FD" opacity=".75"/><rect x="58" y="74" width="98" height="7" rx="3.5" fill="#93C5FD" opacity=".4"/></g>
+  <g class="bub" style="--k:1"><rect x="176" y="118" width="268" height="70" rx="20" fill="#2563EB"/><rect x="198" y="138" width="190" height="7" rx="3.5" fill="#fff" opacity=".9"/><rect x="198" y="154" width="130" height="7" rx="3.5" fill="#fff" opacity=".55"/></g>
+  <g class="bub" style="--k:2"><rect x="36" y="206" width="210" height="56" rx="20" fill="rgba(255,255,255,.08)" stroke="rgba(147,197,253,.4)"/><rect x="58" y="224" width="128" height="7" rx="3.5" fill="#93C5FD" opacity=".75"/><rect x="58" y="240" width="76" height="7" rx="3.5" fill="#93C5FD" opacity=".4"/></g>
+  <g><rect x="36" y="286" width="86" height="40" rx="20" fill="rgba(255,255,255,.08)" stroke="rgba(147,197,253,.4)"/><circle class="dot" style="--k:0" cx="62" cy="306" r="4" fill="#93C5FD"/><circle class="dot" style="--k:1" cx="79" cy="306" r="4" fill="#93C5FD"/><circle class="dot" style="--k:2" cx="96" cy="306" r="4" fill="#93C5FD"/></g>
+  <g fill="#22D3EE"><rect class="bar" style="--k:0" x="318" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:1" x="333" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:2" x="348" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:3" x="363" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:4" x="378" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:5" x="393" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:6" x="408" y="290" width="7" height="36" rx="3.5"/></g>
 </svg>
         </div></div>
-        <div class="svc-more" id="more-leadgen" role="region" aria-label="Outbound, Research &amp; Lead Gen details">
+        <div class="svc-more" id="more-concierge" role="region" aria-label="AI Concierge Services details">
           <div class="svc-more-clip"><div class="svc-more-body">
-            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">A team of agents runs prospecting from start to finish. They find accounts that match your ideal customer, research each one across multiple models and live sources (filings, news, hiring signals, tech stack), draft a personalized first touch for email or social, and route replies into your rep's calendar and CRM. Your team spends its time on conversations, not research.</p><p class="svc-works"><b>Works with</b>: Clay &middot; Apollo &middot; Smartlead &middot; Perplexity &middot; Claude &middot; OpenAI &middot; Grok Bot &middot; HubSpot &middot; Slack &middot; Discord</p></div>
-            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>B2B teams with a defined ICP and a closing process that works</div><div class="meta-row"><span class="mono dim">Timeline</span>3–5 weeks to first booked meetings</div><div class="meta-row"><span class="mono dim">Ownership</span>Lists, sequences, and account briefs delivered into your tools</div></div>
-            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>ICP &amp; list pipeline (Clay/Apollo)</li><li>Multi‑model research agent with per‑lead briefs</li><li>Personalized email &amp; social sequences</li><li>Reply classifier &amp; sentiment routing</li><li>Lead alerts in Slack or Discord</li><li>Booking &amp; pipeline dashboard</li></ul></div>
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">A unified concierge layer for inbound chat, voice and messaging, running on the model that fits each job. Trained on your knowledge base and wired to your calendar, CRM and ticketing, with fast voice responses and a clean human handoff when confidence drops. Covers the after‑hours desk and frees up the day shift.</p><p class="svc-works"><b>Works with</b>: Claude &middot; OpenAI &middot; Vapi &middot; ElevenLabs &middot; Twilio &middot; WhatsApp &middot; Discord &middot; Intercom &middot; HubSpot</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Property management, clinics, professional services, e‑commerce support</div><div class="meta-row"><span class="mono dim">Timeline</span>3–4 weeks from kickoff to production</div><div class="meta-row"><span class="mono dim">Ownership</span>You own the trained agent, prompts, and integrations</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Trained chat + voice agent</li><li>Web, phone, WhatsApp, Slack or Discord install</li><li>Calendar + CRM writeback</li><li>Ticket auto‑routing &amp; escalation</li><li>Weekly QA &amp; retraining report</li><li>Handoff playbook for your team</li></ul></div>
           </div></div>
         </div>
       </div>
@@ -840,9 +859,9 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
           <h3 class="footer-h">Services</h3>
           <ul>
             <li><a href="#top">Full Menu of Services</a></li>
-            <li><a href="#concierge">AI Concierge</a></li>
+            <li><a href="#leadgen">Lead Gen, Outbound / Research</a></li>
             <li><a href="#workflow">Workflow Automation</a></li>
-            <li><a href="#leadgen">Outbound &amp; Research</a></li>
+            <li><a href="#concierge">AI Concierge</a></li>
             <li><a href="#internal">Internal Ops Agents</a></li>
             <li><a href="#consult">Strategy &amp; Advisory</a></li>
           </ul>
