@@ -127,7 +127,7 @@ button { font: inherit; cursor: pointer; }
   background: rgba(255,255,255,0.08); color: var(--c-on-night);
 }
 .hdr :focus-visible, .footer :focus-visible { outline-color: var(--c-blue-400); }
-.btn { display: inline-flex; align-items: center; justify-content: center; padding: var(--pad-button, 8px 14px); border-radius: var(--r-btn, 10px); font-size: 13px; font-weight: 600; border: var(--bw-button, 1px) solid var(--bc-button, rgba(255,255,255,0.22)); color: var(--c-on-night); background: transparent; transition: background .15s ease, border-color .15s ease; white-space: nowrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: var(--pad-button, 8px 14px); border-radius: var(--r-btn, 999px); font-size: 13px; font-weight: 600; border: var(--bw-button, 1px) solid var(--bc-button, rgba(255,255,255,0.22)); color: var(--c-on-night); background: transparent; transition: background .15s ease, border-color .15s ease; white-space: nowrap; }
 .btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.4); }
 
 /* ---------- CTA icons (LM-0002; spec: design-system/spec.json ctaIcon) ----------
@@ -420,10 +420,8 @@ button { font: inherit; cursor: pointer; }
           <div class="nav-dd">
             <div class="nav-dd-panel">
               <a href="index.html#why-now">Why Now</a>
-              <a href="index.html#case">Case Studies</a>
               <a href="index.html#process">Process</a>
               <a href="index.html#faq">FAQ</a>
-              <a href="booking.html">Book a Call</a>
             </div>
           </div>
         </div>
@@ -464,7 +462,7 @@ button { font: inherit; cursor: pointer; }
 
         <section class="intro">
           <div class="intro-copy"><h1 class="h1 rise" style="--i:1"><span id="ttl-a">Book a free</span><em id="ttl-b">automation audit.</em></h1>
-          <p class="lede rise" id="lede" style="--i:2">We'll map your top 3 AI‑automatable workflows, model the ROI, and send you a written brief whether you hire us or not... No obligations at all!</p></div>
+          <p class="lede rise" id="lede" style="--i:2">We'll map your top 3 AI‑automatable workflows and model the ROI.</p></div>
           <ul class="detail-list">
             <li class="detail-item rise" style="--i:3">
               <div class="detail-icon" aria-hidden="true">
@@ -472,7 +470,7 @@ button { font: inherit; cursor: pointer; }
               </div>
               <div class="detail-text">
                 <h4>30-minute session</h4>
-                <p>Focused, no-fluff. We come prepared with research on your business.</p>
+                <p>We come prepared with research on your business.</p>
               </div>
             </li>
             <li class="detail-item rise" style="--i:4">
@@ -481,7 +479,7 @@ button { font: inherit; cursor: pointer; }
               </div>
               <div class="detail-text">
                 <h4>Google Meet</h4>
-                <p>Link sent on confirmation. Screen-share ready.</p>
+                <p>Link sent on confirmation.</p>
               </div>
             </li>
             <li class="detail-item rise" style="--i:5">
@@ -490,7 +488,7 @@ button { font: inherit; cursor: pointer; }
               </div>
               <div class="detail-text">
                 <h4>Written brief included</h4>
-                <p>You leave with a short written brief. Yours to keep regardless.</p>
+                <p>Yours to keep, whether or not you hire us.</p>
               </div>
             </li>
           </ul>
@@ -567,7 +565,7 @@ button { font: inherit; cursor: pointer; }
       <a class="logo" href="index.html"><img src="/assets/querent-logo-flat.svg" alt="" style="width:28px;height:28px;display:block;"><span class="logo-word">Querent</span></a>
       <nav class="footer-links" aria-label="Footer">
         <a href="index.html">Home</a>
-        <a href="menu.html">Solutions</a>
+        <a href="menu.html">Services</a>
         <a href="index.html#process">Process</a>
         <a href="index.html#faq">FAQ</a>
         <a href="mailto:hello@querent.ai">hello@querent.ai</a>
@@ -610,10 +608,11 @@ var slug = "audit";
 try { var q = (new URLSearchParams(location.search).get("service") || "").toLowerCase(); if (Object.prototype.hasOwnProperty.call(SERVICES, q)) slug = q; } catch (e) {}
 var SVC = SERVICES[slug];
 document.getElementById("svc-name").textContent = SVC.name;
+if (slug === "audit") document.querySelector(".book-service").style.display = "none"; // the page heading already says it
 document.getElementById("ttl-a").textContent = SVC.ttlA;
 document.getElementById("ttl-b").textContent = SVC.ttlB;
-document.title = SVC.ttlA + " " + SVC.ttlB.replace(".", "") + " \u2014 Querent";
-if (slug !== "audit") document.getElementById("lede").textContent = "30 minutes to scope " + SVC.name + ": what we would build, the timeline and the investment. No obligations at all.";
+document.title = SVC.ttlA + " " + SVC.ttlB.replace(".", "") + " | Querent";
+if (slug !== "audit") document.getElementById("lede").textContent = "30 minutes to scope " + SVC.name + ": what we would build, the timeline and the investment.";
 
 var state = {
   host: "ben",

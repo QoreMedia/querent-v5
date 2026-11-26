@@ -213,7 +213,7 @@
   const presetRow = official && official.parentElement;
   const STORE_KEY = 'q-custom-palettes';
   const readSaved = () => {
-    try { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]').filter((p) => p && typeof p.name === 'string' && /^#[0-9a-f]{6}$/i.test(p.hex)); } catch (e) { return []; }
+    try { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]').filter((p) => p && typeof p.name === 'string' && /^#[0-9a-f]{6}$/i.test(p.hex)); } catch { return []; }
   };
   function addSaved(p) {
     const b = document.createElement('button');
@@ -257,7 +257,7 @@
     form.addEventListener('submit', () => {
       const p = { name: form.elements.title.value.trim() || 'Custom', hex: form.elements.hex.value };
       const saved = readSaved().filter((x) => x.name !== p.name).concat(p);
-      try { localStorage.setItem(STORE_KEY, JSON.stringify(saved)); } catch (e) { /* ignore */ }
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(saved)); } catch { /* ignore */ }
       presetRow.querySelectorAll('[data-custom]').forEach((x) => { if (x.dataset.custom === p.name) x.remove(); });
       const b = addSaved(p);
       unpress(b);
@@ -933,8 +933,8 @@
   // When this page is shown inside the website (slide-in), the left arrow hands control back to it.
   const embedded = window.parent !== window;
   const parentOrigin = (() => {
-    try { if (location.ancestorOrigins && location.ancestorOrigins[0]) return location.ancestorOrigins[0]; } catch (e) { /* ignore */ }
-    try { return new URL(document.referrer).origin; } catch (e) { return ''; }
+    try { if (location.ancestorOrigins && location.ancestorOrigins[0]) return location.ancestorOrigins[0]; } catch { /* ignore */ }
+    try { return new URL(document.referrer).origin; } catch { return ''; }
   })();
   window.addEventListener('message', (e) => {
     if (!e.data || e.data.type !== 'qs-ds-ready') return;

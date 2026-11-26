@@ -15,7 +15,7 @@ const ComingSoon = () => {
                         Coming <span className="text-gradient">soon.</span>
                     </h1>
                     <p className="hero-subtitle mx-auto">
-                        The Querent client portal is under construction. While we put the finishing touches on it, book a call and we'll get you set up directly.
+                        The Querent client portal is under construction. While we put the finishing touches on it, book a call and we&apos;ll get you set up directly.
                     </p>
                     <div className="coming-soon-cta">
                         <Link to="/booking" className="btn btn-primary btn-lg">

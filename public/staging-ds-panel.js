@@ -49,7 +49,7 @@
 
   /* ---------- live preview bridge (receives tweaks from the design system) ---------- */
   var DS_ORIGIN = location.origin;
-  try { DS_ORIGIN = new URL(DESIGN_SYSTEM_URL).origin; } catch (e) { DS_ORIGIN = location.origin; }
+  try { DS_ORIGIN = new URL(DESIGN_SYSTEM_URL).origin; } catch { DS_ORIGIN = location.origin; }
   var ALLOWED_ORIGINS = [DS_ORIGIN, 'http://localhost:8134'];
   function isAllowedOrigin(o) { return Boolean(o) && ALLOWED_ORIGINS.indexOf(o) !== -1; }
   var replyOrigin = (function () {
@@ -59,7 +59,7 @@
       if (isAllowedOrigin(up)) return up;
       var ref = document.referrer ? new URL(document.referrer).origin : '';
       if (isAllowedOrigin(ref)) return ref;
-    } catch (e) { /* ignore */ }
+    } catch { /* ignore */ }
     return DS_ORIGIN;
   })();
 
@@ -104,7 +104,7 @@
   function safeValue(v) {
     if (typeof v !== 'string' || v.length > 600) return false;
     if (/[;{}<>\\"'@]|url\s*\(|expression|import|javascript/i.test(v)) return false;
-    if (!/^[#a-z0-9().,%\s\/+*-]+$/i.test(v)) return false;
+    if (!/^[#a-z0-9().,%\s/+*-]+$/i.test(v)) return false;
     var fns = v.match(/[a-z-]+(?=\()/gi) || [];
     for (var i = 0; i < fns.length; i++) if (COLOR_FNS.indexOf(fns[i].toLowerCase()) === -1) return false;
     return true;
@@ -145,7 +145,7 @@
         },
         hideEventTypeDetails: true, hideBranding: true, layout: 'month_view'
       });
-    } catch (e) { /* ignore */ }
+    } catch { /* ignore */ }
   }
 
   // Tweakable copy of the flat mark: same paths as the official vector, colours taken from the palette. Only used while tweaked.
@@ -226,13 +226,13 @@
     try {
       if (d) window.sessionStorage.setItem(STORE, JSON.stringify({ vars: d.vars, fonts: d.fonts }));
       else window.sessionStorage.removeItem(STORE);
-    } catch (e) { /* ignore */ }
+    } catch { /* ignore */ }
   }
   function restore() {
     try {
       var d = JSON.parse(window.sessionStorage.getItem(STORE) || 'null');
       if (d) { applyTweaks(d); syncMark(); }
-    } catch (e) { /* ignore */ }
+    } catch { /* ignore */ }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', restore);
   else restore();
@@ -267,13 +267,13 @@
           body: getComputedStyle(document.body).backgroundColor, btn: btn ? getComputedStyle(btn).backgroundColor : '',
           head: head ? getComputedStyle(head).fontFamily.slice(0, 40) : ''
         }, replyOrigin);
-      } catch (e) { /* ignore */ }
+      } catch { /* ignore */ }
     }, 700);
   }
 
   // Inside the design-system preview: tell it this page is ready so it can send the current tweaks.
   if (!isTop && replyOrigin) {
-    try { window.parent.postMessage({ type: 'qs-ds-ready' }, replyOrigin); } catch (e) { /* ignore */ }
+    try { window.parent.postMessage({ type: 'qs-ds-ready' }, replyOrigin); } catch { /* ignore */ }
   }
 
   /* ---------- edge tab and slide-in (top-level pages only) ---------- */
@@ -281,8 +281,8 @@
   if (document.getElementById('qs-ds-panel')) return;
 
   var FLAG = 'qs-ds-visited';
-  function visited() { try { return window.sessionStorage.getItem(FLAG) === '1'; } catch (e) { return false; } }
-  function markVisited() { try { window.sessionStorage.setItem(FLAG, '1'); } catch (e) { /* ignore */ } }
+  function visited() { try { return window.sessionStorage.getItem(FLAG) === '1'; } catch { return false; } }
+  function markVisited() { try { window.sessionStorage.setItem(FLAG, '1'); } catch { /* ignore */ } }
 
   var EASE = 'cubic-bezier(.22,1,.36,1)';
   var css =

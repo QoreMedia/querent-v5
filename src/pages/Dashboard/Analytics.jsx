@@ -1,4 +1,4 @@
-import { BarChart3, TrendingUp, Users } from 'lucide-react';
+import { TrendingUp, Users } from 'lucide-react';
 
 const Analytics = () => {
     return (

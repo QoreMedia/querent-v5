@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, Zap, ArrowRight, Activity, Box, Sparkles } from 'lucide-react';
+import { ArrowLeft, Zap, ArrowRight, Activity, Box, Sparkles } from 'lucide-react';
 import './ServiceDetail.css';
 
 const servicesData = {

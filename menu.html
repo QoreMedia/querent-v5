@@ -187,7 +187,7 @@ body[data-active="cta"] .amb-consult { opacity: 1; }
 /* ---------- Buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
-  min-height: 44px; padding: var(--pad-button, 12px 20px); border-radius: var(--r-btn, 12px);
+  min-height: 44px; padding: var(--pad-button, 12px 20px); border-radius: var(--r-btn, 999px);
   font-size: 14px; font-weight: 500; border: var(--bw-button, 1px) solid transparent;
   transition: transform var(--dur-fast) var(--ease-soft), background-color var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft), box-shadow var(--dur-fast) var(--ease-soft);
   white-space: nowrap; max-width: 100%;
@@ -269,7 +269,7 @@ body[data-active="cta"] .amb-consult { opacity: 1; }
 .svc-price span { color: var(--ink-dim); font-size: 14px; }
 .svc-actions { display: flex; flex-wrap: wrap; gap: var(--gap-button, 12px); align-items: center; }
 .svc-actions .btn-block { width: auto; padding: 12px 20px; }
-.tog { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 14px; background: transparent; border: var(--bw-button, 1px) solid var(--bc-button, var(--line-strong)); border-radius: var(--r-btn, 12px); font-size: 14px; font-weight: 500; transition: border-color var(--dur-fast) var(--ease-soft), background-color var(--dur-fast) var(--ease-soft); }
+.tog { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 14px; background: transparent; border: var(--bw-button, 1px) solid var(--bc-button, var(--line-strong)); border-radius: var(--r-btn, 999px); font-size: 14px; font-weight: 500; transition: border-color var(--dur-fast) var(--ease-soft), background-color var(--dur-fast) var(--ease-soft); }
 .tog:hover { border-color: var(--ink); background: rgba(255,255,255,.7); }
 .tog[aria-expanded="true"] { background: #fff; border-color: var(--blue); }
 .tog svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform var(--dur-base) var(--ease-out); flex: none; }
@@ -459,13 +459,36 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
 
 /* LOCAL-MOD LM-0002: plain sentence-case labels, no tracked capitals */
 .mono, .m-nav-grp { text-transform: none; letter-spacing: 0; font-size: 13px; }
-/* footer adapts to its own width */
-.footer-in { container-type: inline-size; padding-inline: clamp(16px, 5vw, var(--pad)); }
-.footer-grid { grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3cqi, 32px); }
-.footer-grid li { overflow-wrap: anywhere; }
-@container (max-width: 820px) { .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .footer-grid > :first-child { grid-column: 1 / -1; } }
-@container (max-width: 520px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .footer-grid > :last-child { grid-column: 1 / -1; } }
-@container (max-width: 340px) { .footer-grid { grid-template-columns: minmax(0, 1fr); } }
+/* LOCAL-MOD LM-0002: shared site footer */
+.footer.footer-shared { display: block; max-width: none; margin: 0; padding: 0; border: 0; background: var(--c-night); color: var(--c-on-night); border-radius: var(--r-band) var(--r-band) 0 0; font-size: 14px; }
+.footer-shared .footer-inner { max-width: var(--maxw); margin: 0 auto; padding: 56px var(--pad) 0; container-type: inline-size; }
+.footer-shared .footer-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr)) minmax(0, 1.3fr); gap: clamp(24px, 3.5cqi, 48px); }
+.footer-shared .footer-tag, .footer-shared .footer-col a, .footer-shared .footer-contact li, .footer-shared .footer-legal span, .footer-shared .footer-bottom { color: var(--c-slate-400); }
+.footer-shared .footer-col ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.footer-shared .footer-col a { overflow-wrap: anywhere; }
+.footer-shared .footer-contact a { color: var(--c-on-night); }
+.footer-shared .logo, .footer-shared a.footer-cta { color: var(--c-on-night); }
+.footer-shared .footer-contact li { display: flex; gap: 12px; align-items: flex-start; }
+.footer-shared .footer-txt { display: flex; flex-direction: column; min-width: 0; overflow-wrap: anywhere; }
+.footer-shared .footer-lbl { font-size: 11px; color: var(--c-slate-500); }
+.footer-shared .footer-ico svg { width: 18px; height: 18px; }
+.footer-shared .footer-h { font-size: 13px; margin: 0 0 16px; }
+.footer-shared .footer-cta { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: var(--r-btn, 999px); background: var(--c-navy-800); border: 1px solid rgb(var(--rgb-blue-300) / .32); }
+.footer-shared .footer-cta .cta-ico { width: 16px; height: 16px; }
+.footer-shared .footer-rule { height: 1px; background: rgb(var(--rgb-blue-300) / .14); margin-top: 48px; }
+.footer-shared .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 24px 0 32px; }
+.footer-shared .footer-legal { display: flex; gap: 24px; }
+@container (max-width: 960px) { .footer-shared .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .footer-shared .footer-brand { grid-column: 1 / -1; } }
+@container (max-width: 620px) { .footer-shared .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .footer-shared .footer-grid > :last-child { grid-column: 1 / -1; } }
+.footer-shared .footer-ico { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex: none; border-radius: 999px; background: rgb(var(--rgb-blue-600) / .14); border: 1px solid rgb(var(--rgb-blue-300) / .18); }
+.footer-shared .footer-ico svg { width: 18px; height: 18px; }
+.footer-shared .footer-cta .cta-ico { width: 16px; height: 16px; }
+.footer.footer-shared { border-radius: var(--r-band, 40px) var(--r-band, 40px) 0 0; }
+/* LOCAL-MOD LM-0002: one header button style across pages */
+@media (min-width: 769px) {
+  .hdr .btn-primary { background: var(--c-navy-800); border-color: rgb(var(--rgb-blue-300) / .32); box-shadow: none; border-radius: var(--r-btn, 999px); font-size: 13px; padding: 8px 14px; min-height: 37px; gap: 6px; }
+  .hdr .btn-primary:hover { background: var(--c-blue-700); }
+}
 </style>
 </head>
 <body data-active="hero">
@@ -485,11 +508,8 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
           <button type="button" class="nav-trigger" aria-haspopup="true">Company<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           <div class="nav-dd" role="menu" aria-label="Company">
             <a href="index.html#why-now" role="menuitem">Why Now</a>
-            <a href="index.html#case" role="menuitem">Case Studies</a>
             <a href="index.html#process" role="menuitem">Process</a>
             <a href="index.html#faq" role="menuitem">FAQ</a>
-            <span class="nav-dd-sep" aria-hidden="true"></span>
-            <a href="booking.html" role="menuitem">Book a Call</a>
           </div>
         </div>
         <div class="nav-item">
@@ -514,7 +534,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
         </div>
       </nav>
       <div class="hdr-actions">
-        <a href="booking.html" class="btn btn-primary btn-sm btn-ico-m" aria-label="Book a call"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Call</a>
+        <a href="booking.html" class="btn btn-primary btn-sm btn-ico-m" aria-label="Book a call"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a call</a>
       </div>
     </div>
   </header>
@@ -525,10 +545,9 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
     <section class="hero" id="top" data-sec="hero">
       <div class="hero-copy">
         <h1 class="h1 rv" style="--d:0">What we ship<br>and what it costs.</h1>
-        <p class="lede rv" style="--d:1">Five productized offers. Fixed&#8209;price per outcome, never hourly. Pick one, stack a few, or start with a strategy retainer and figure out what to build first.</p>
+        <p class="lede rv" style="--d:1">Five offers, each with a fixed price per outcome. Pick one, stack a few, or start with a strategy retainer.</p>
         <div class="hero-cta rv" style="--d:2">
         <a href="booking.html" class="btn btn-primary"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
-        <a href="index.html" class="btn btn-ghost"><svg class="cta-ico cta-ico--left" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Back to home</a>
         </div>
       </div>
       <div class="hero-vis"><svg viewBox="0 0 440 340" role="img" aria-label="Five stacked service layers">
@@ -549,7 +568,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
       <div class="svc-inner">
         <div class="svc-main">
           <h2 class="h2 rv" style="--d:1">AI Concierge Services</h2>
-          <p class="svc-sub rv" style="--d:2">Chat + voice agents that answer, qualify, and book, 24/7.</p>
+          <p class="svc-sub rv" style="--d:2">Chat + voice agents that answer, qualify and book 24/7.</p>
           <p class="svc-price rv" style="--d:3"><strong>$12k–$28k build</strong><span>$2.4k+/mo retainer (optional)</span></p>
           <div class="svc-actions rv" style="--d:4">
           <a href="booking.html?service=concierge" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
@@ -604,7 +623,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
         <div class="svc-more" id="more-workflow" role="region" aria-label="Workflow Automation (n8n) details">
           <div class="svc-more-clip"><div class="svc-more-body">
             <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">End‑to‑end automation built primarily in n8n: the open‑source, self‑hostable workflow engine that means no per‑task pricing, no vendor lock‑in, and no caps on run volume. We wire Google Workspace (Drive, Gmail, Calendar, Sheets), Slack, and your CRM into resilient flows with retries, alerts, and dashboards your team trusts. We'll also work in Zapier or Make if your team already lives there.</p><p class="svc-works"><b>Works with</b>: n8n &middot; Google Workspace &middot; Slack &middot; Zapier &middot; Make &middot; Airtable</p></div>
-            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Operations teams drowning in Sheets/Gmail/Slack copy‑paste</div><div class="meta-row"><span class="mono dim">Timeline</span>2–4 weeks per flow; longer for multi‑system replatforms</div><div class="meta-row"><span class="mono dim">Ownership</span>Self‑hosted in your VPC. Full source. No vendor lock‑in.</div></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Operations teams drowning in Sheets/Gmail/Slack copy‑paste</div><div class="meta-row"><span class="mono dim">Timeline</span>2–4 weeks per flow; longer for multi‑system replatforms</div><div class="meta-row"><span class="mono dim">Ownership</span>Full source, in your own VPC.</div></div>
             <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Workflow audit &amp; opportunity map</li><li>Self‑hosted n8n setup in your VPC</li><li>Google Workspace + Slack integration</li><li>Built + monitored flows with retry logic</li><li>Failure alerts to Slack on‑call</li><li>Runbook + handoff training</li></ul></div>
           </div></div>
         </div>
@@ -728,7 +747,7 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
         </div></div>
         <div class="svc-more" id="more-consult" role="region" aria-label="Operations Strategy &amp; Advisory details">
           <div class="svc-more-clip"><div class="svc-more-body">
-            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">Strategy hours, on retainer. We sit with your team during conception and design, aligning resources, scoping budgets, choosing tools, and writing the brief, so the eventual build is the right one. Whether we ship it or someone else does.</p><p class="svc-works"><b>Works with</b>: Workshop‑led &middot; Async + weekly working sessions &middot; Custom</p></div>
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">We sit with your team during conception and design: aligning resources, scoping budgets, choosing tools and writing the brief, so the eventual build is the right one, whether we ship it or someone else does.</p><p class="svc-works"><b>Format</b>: Workshop‑led &middot; Async + weekly working sessions &middot; Custom</p></div>
             <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Leaders evaluating where AI/automation fits their roadmap</div><div class="meta-row"><span class="mono dim">Timeline</span>Ongoing · monthly minimum, no long contracts</div><div class="meta-row"><span class="mono dim">Ownership</span>All artifacts (briefs, decision docs, roadmaps) yours</div></div>
             <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Workflow inventory &amp; ROI scorecard</li><li>Build vs. buy decision docs</li><li>Vendor &amp; tool selection</li><li>Architecture &amp; systems design with your team</li><li>Org‑design and resourcing input</li><li>90‑day operations roadmap</li></ul></div>
           </div></div>
@@ -747,53 +766,57 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
           </p>
         </div>
         <div class="svc-page-final">
-          <a href="index.html#cta" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book my free audit</a>
+          <a href="index.html#cta" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
           <a href="mailto:hello@querent.ai" class="btn btn-ghost btn-block"><svg class="cta-ico cta-ico--mail" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Email hello@querent.ai</a>
-          <div class="mono dim cta-fine">Replies within 1 business day. No drip sequences.</div>
+          <div class="mono dim cta-fine">We reply within 1 business day.</div>
         </div>
       </div>
     </section>
   </main>
 
   <!-- ========== Footer ========== -->
-  <footer class="footer">
-    <div class="footer-in">
-    <div class="footer-grid">
-      <div>
-        <a class="logo" href="index.html"><img src="/assets/querent-logo-flat.svg" alt="Querent" style="width:26px;height:26px;display:block;"><span class="logo-word">Querent</span></a>
-        <p class="footer-tag">AI automation, productized.</p>
+  <footer class="footer footer-shared">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo" href="index.html#top"><img src="/assets/querent-logo-flat.svg" alt="" style="width:28px;height:28px;display:block;"><span class="logo-word">Querent</span></a>
+          <p class="footer-tag">AI automation, productized. Workflows, agents and ops that give your team its time back.</p>
+          <a class="footer-cta" href="booking.html"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+        </div>
+        <nav class="footer-col" aria-label="Services">
+          <h3 class="footer-h">Services</h3>
+          <ul>
+            <li><a href="#top">Full menu of services</a></li>
+            <li><a href="#concierge">AI Concierge</a></li>
+            <li><a href="#workflow">n8n Workflow Automation</a></li>
+            <li><a href="#leadgen">Outbound &amp; Research</a></li>
+            <li><a href="#internal">Internal Ops Agents</a></li>
+            <li><a href="#consult">Strategy &amp; Advisory</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Explore">
+          <h3 class="footer-h">Explore</h3>
+          <ul>
+            <li><a href="index.html#top">Home</a></li>
+            <li><a href="index.html#why-now">Why now</a></li>
+            <li><a href="index.html#services">Solutions</a></li>
+            <li><a href="index.html#process">Process</a></li>
+            <li><a href="index.html#faq">FAQ</a></li>
+          </ul>
+        </nav>
+        <div class="footer-col">
+          <h3 class="footer-h">Contact</h3>
+          <ul class="footer-contact">
+            <li><span class="footer-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span><span class="footer-txt"><span class="footer-lbl">Email</span><a href="mailto:hello@querent.ai">hello@querent.ai</a></span></li>
+            <li><span class="footer-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><span class="footer-txt"><span class="footer-lbl">Coverage</span><span>Americas · APAC · Global Remote</span></span></li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <div class="mono dim footer-h">Services</div>
-        <ul>
-          <li><a href="menu.html" class="cta-link">Menu of services<svg class="cta-ico cta-ico--right" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></li>
-          <li><a href="#concierge">AI Concierge</a></li>
-          <li><a href="#workflow">n8n Workflow Automation</a></li>
-          <li><a href="#leadgen">Outbound &amp; Research</a></li>
-          <li><a href="#internal">Internal Ops Agents</a></li>
-          <li><a href="#consult">Strategy &amp; Advisory</a></li>
-        </ul>
+      <div class="footer-rule"></div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Querent Labs, Inc. All rights reserved.</span>
+        <span class="footer-legal"><span>Privacy</span><span>Terms</span></span>
       </div>
-      <div>
-        <div class="mono dim footer-h">Company</div>
-        <ul>
-          <li><a href="index.html#case">Case studies</a></li>
-          <li><a href="index.html#process">Process</a></li>
-          <li><a href="index.html#faq">FAQ</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="mono dim footer-h">Contact</div>
-        <ul>
-          <li>hello@querent.ai</li>
-          <li>Brooklyn · Lagos · Remote</li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-rule"></div>
-    <div class="footer-bottom mono dim">
-      <span>© 2026 Querent Labs, Inc.</span>
-    </div>
     </div>
   </footer>
 </div>

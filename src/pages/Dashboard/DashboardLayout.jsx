@@ -1,5 +1,5 @@
 import { Outlet, NavLink } from 'react-router-dom';
-import { LayoutDashboard, BarChart3, Bot, Settings, LogOut, ArrowLeft } from 'lucide-react';
+import { LayoutDashboard, BarChart3, Bot, LogOut, ArrowLeft } from 'lucide-react';
 import './DashboardLayout.css';
 
 const DashboardLayout = () => {
