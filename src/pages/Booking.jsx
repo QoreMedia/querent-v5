@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calendar, Clock, Video, Mail, CheckCircle2 } from 'lucide-react';
+import { Calendar, Clock, Video, CheckCircle2 } from 'lucide-react';
 import './Booking.css';
 
 const Booking = () => {
@@ -32,7 +32,7 @@ const Booking = () => {
                     <div className="booking-info animate-fade-in">
                         <h1 className="hero-title">Architect the future. <span className="text-gradient">Book a consultation.</span></h1>
                         <p className="hero-subtitle pt-2">
-                            Let's map out your operations and custom design an AI implementation to handle the heavy lifting.
+                            Let&apos;s map out your operations and custom design an AI implementation to handle the heavy lifting.
                         </p>
 
                         <div className="booking-details mt-4">
@@ -66,7 +66,7 @@ const Booking = () => {
                                 <CheckCircle2 size={64} className="success-icon mx-auto mb-4" />
                                 <h2>Request Received!</h2>
                                 <p className="text-muted mt-2 mb-6">
-                                    Thank you, {formData.name}. We'll send a calendar invitation to {formData.email} shortly.
+                                    Thank you, {formData.name}. We&apos;ll send a calendar invitation to {formData.email} shortly.
                                 </p>
                                 <button className="btn btn-outline" onClick={() => setSubmitted(false)}>
                                     Book Another Call
