@@ -1,0 +1,109 @@
+/* STAGING-ONLY: Version A default. Purple structures the page, teal supports it, and pink marks primary actions. */
+:root {
+  --col-btn-bg: #A62478;
+  --col-btn-dark-bg: #A62478;
+  --col-btn-hover: #8C1B65;
+  --col-btn-line: #A62478;
+  --col-btn-dark-line: #D87AB2;
+  --col-shadow-btn: #A62478;
+  --rgb-shadow-btn: 166 36 120;
+
+  --col-bg-dark: #191022;
+  --col-bg-dark-elev: #26163E;
+  --rgb-bg-dark: 25 16 34;
+  --col-bg-slab-start: #26163E;
+  --col-bg-slab-end: #452462;
+  --rgb-bg-slab-end: 69 36 98;
+  --col-bg-dark-grad-start: #191022;
+  --col-bg-dark-grad-mid: #26163E;
+  --col-bg-dark-grad-end: #301B48;
+  --col-bg-light-wash: #F1ECF6;
+  --col-bg-shade-1: #7849AD;
+  --col-bg-shade-2: #176B65;
+  --col-bg-shade-3: #81D6C7;
+  --rgb-bg-shade-1: 120 73 173;
+  --rgb-bg-shade-2: 23 107 101;
+  --rgb-bg-shade-3: 129 214 199;
+
+  --col-nav-brand: #6F1490;
+  --col-nav-active: #6F1490;
+  --col-txt-accent-light: #6336A3;
+  --col-txt-accent-dark: var(--col-bg-shade-3);
+  --col-txt-accent-dark-soft: var(--col-bg-shade-3);
+  --col-txt-grad-start: #6336A3;
+  --col-txt-grad-end: var(--col-bg-shade-2);
+  --col-txt-mark: var(--col-bg-shade-3);
+  --rgb-txt-mark: var(--rgb-bg-shade-3);
+
+  --col-card-light: #F1ECF6;
+  --col-card-light-grad: var(--col-bg-shade-1);
+  --rgb-card-light-grad: var(--rgb-bg-shade-1);
+  --col-card-light-line: rgb(var(--rgb-bg-shade-1) / 0.16);
+  --col-card-dark: #26163E;
+  --col-card-dark-grad: #191022;
+  --col-card-dark-glow: var(--col-bg-shade-1);
+  --rgb-card-dark-glow: var(--rgb-bg-shade-1);
+  --col-card-dark-line: rgb(var(--rgb-bg-shade-3) / 0.18);
+
+  --col-pill-active-bg: #6336A3;
+  --col-pill-dark-active-bg: #452462;
+  --col-pill-txt: #6336A3;
+  --col-pill-line: rgb(var(--rgb-bg-shade-1) / 0.20);
+  --col-pill-hover-line: var(--col-bg-shade-2);
+  --rgb-pill-accent: var(--rgb-bg-shade-1);
+  --col-stage-track: rgb(var(--rgb-bg-shade-1) / 0.16);
+  --col-stage-track-dark: rgb(var(--rgb-bg-shade-3) / 0.20);
+  --col-stage-fill: var(--col-bg-shade-2);
+  --col-stage-fill-dark: var(--col-bg-shade-3);
+  --col-stage-grad: var(--col-bg-shade-2);
+  --col-stage-pulse: var(--col-bg-shade-2);
+  --col-shadow-light: #26163E;
+  --rgb-shadow-light: 38 22 62;
+  --col-shadow-focus: var(--col-bg-shade-2);
+  --rgb-shadow-focus: var(--rgb-bg-shade-2);
+
+  /* Legacy brand tokens still used by decorative surfaces and the design-system samples. */
+  --c-night: var(--col-bg-dark);
+  --c-blue-300: var(--col-bg-shade-3);
+  --c-blue-400: var(--col-bg-shade-3);
+  --c-blue-600: var(--col-bg-shade-1);
+  --c-blue-700: var(--col-txt-accent-light);
+  --c-navy-900: var(--col-bg-slab-start);
+  --c-navy-800: var(--col-bg-slab-end);
+  --c-cyan-500: var(--col-bg-shade-2);
+  --c-cyan-300: var(--col-bg-shade-3);
+  --c-panel-light: var(--col-card-light);
+  --c-panel-dark-start: var(--col-card-dark);
+  --c-panel-dark-end: var(--col-card-dark-grad);
+  --rgb-blue-600: var(--rgb-bg-shade-1);
+  --rgb-blue-300: var(--rgb-bg-shade-3);
+  --rgb-blue-700: 99 54 163;
+  --rgb-blue-400: var(--rgb-bg-shade-3);
+  --rgb-cyan-500: var(--rgb-bg-shade-2);
+  --rgb-cyan-300: var(--rgb-bg-shade-3);
+  --rgb-navy-800: var(--rgb-bg-slab-end);
+  --rgb-navy-900: var(--rgb-shadow-light);
+  --rgb-night: var(--rgb-bg-dark);
+}
+
+/* The design-system canvas uses the same palette through its value-layer aliases. */
+:root:where(:has(.ds-ribbon)) {
+  --night: var(--col-bg-dark);
+  --night-2: var(--col-bg-dark-elev);
+  --blue-300: var(--col-bg-shade-3);
+  --blue-400: var(--col-bg-shade-3);
+  --blue-600: var(--col-bg-shade-1);
+  --blue-700: var(--col-txt-accent-light);
+  --navy-900: var(--col-bg-slab-start);
+  --navy-800: var(--col-bg-slab-end);
+  --cyan-500: var(--col-bg-shade-2);
+  --panel-light: radial-gradient(ellipse 60% 70% at 85% 0%, rgb(var(--rgb-card-light-grad) / 0.16), transparent 70%), var(--col-card-light);
+  --panel-dark: radial-gradient(ellipse 70% 80% at 100% 0%, rgb(var(--rgb-card-dark-glow) / 0.22), transparent 70%), linear-gradient(160deg, var(--col-card-dark), var(--col-card-dark-grad));
+  --panel-light-line: var(--col-card-light-line);
+  --panel-dark-line: var(--col-card-dark-line);
+  --btn-bg: var(--col-btn-bg);
+  --btn-dark-bg: var(--col-btn-dark-bg);
+  --btn-line: var(--col-btn-line);
+  --btn-dark-line: var(--col-btn-dark-line);
+  --btn-hover: var(--col-btn-hover);
+}

@@ -1,5 +1,5 @@
 // Live tweakers: exploration tools for the colour and font sections.
-// They change the open page only. The official palette and fonts are always the default; nothing is saved.
+// They change the open page only. Version A supplies the default colors. Current selections can be saved separately.
 (() => {
   // ---------- OKLCH math ----------
   const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
@@ -39,6 +39,7 @@
   const o = (L, C, h, a) => `oklch(${L.toFixed(3)} ${C.toFixed(3)} ${h.toFixed(1)}${a == null ? '' : ' / ' + a})`;
   const trip = (l) => l.map((x) => Math.round(gam(x) * 255)).join(' ');
 
+  const DEFAULT_PALETTE = 'Version A';
   const OFFICIAL = {
     /* 1. Buttons */
     '--col-btn-bg': '#0D1B38', '--col-btn-grad': '#1D4ED8', '--col-btn-hover': '#1D4ED8', '--col-btn-txt': '#FFFFFF', '--col-btn-dark-bg': '#152C5B', '--col-btn-line': '#0D1B38',
@@ -70,6 +71,11 @@
     '--col-mark-primary': '#1D4ED8', '--col-mark-secondary': '#06B6D4', '--col-mark-ring': '#0A0B0E',
   };
   const NAMES = Object.keys(OFFICIAL);
+  const pageColors = getComputedStyle(document.documentElement);
+  NAMES.forEach((name) => {
+    const value = pageColors.getPropertyValue(name).trim();
+    if (/^#[0-9a-f]{6}$/i.test(value)) OFFICIAL[name] = value;
+  });
   const sheet = document.createElement('style');
   sheet.id = 'q-tweak-color';
   document.head.appendChild(sheet);
@@ -271,7 +277,7 @@
   const picks = {};
   const hexTags = {};
   const gradToggles = {};
-  let source = 'Official Querent';
+  let source = DEFAULT_PALETTE;
   const manual = new Set();
 
   const COLOR_GROUPS = [
@@ -759,12 +765,12 @@
     pillGradOn = false;
     stageGradOn = false;
     currentAnchorHex = null;
-    source = 'Official Querent';
+    source = DEFAULT_PALETTE;
     calTints = null;
     extra = '';
     hue = null;
     sheet.textContent = '';
-    if (anchor) anchor.value = '#2563eb';
+    if (anchor) anchor.value = OFFICIAL['--col-bg-shade-1'].toLowerCase();
     unpress(official);
     updatePickers();
     updateReport();
@@ -880,7 +886,7 @@
   const nowShape = document.getElementById('now-shape');
   function updateNow() {
     if (nowSw) nowSw.innerHTML = strip(['--col-bg-light', '--col-txt-light', '--col-bg-shade-1', '--col-btn-bg', '--col-bg-shade-3', '--col-bg-shade-2'].map(current));
-    if (nowPal) nowPal.textContent = manual.size && source === 'Official Querent' ? 'Official with edits' : source;
+    if (nowPal) nowPal.textContent = manual.size && source === DEFAULT_PALETTE ? DEFAULT_PALETTE + ' with edits' : source;
     if (nowLogo) nowLogo.textContent = LOGO_LABELS[logoVariant] || 'Flat mark';
     if (nowOther) {
       const parts = [];
@@ -1739,8 +1745,8 @@
     btnGradOn = Boolean(col.btnGradOn);
     pillGradOn = Boolean(col.pillGradOn);
     stageGradOn = Boolean(col.stageGradOn);
-    source = col.source || p.name || 'Official Querent';
-    unpress(source === 'Official Querent' && !manual.size && !btnGradOn && !pillGradOn && !stageGradOn ? official : null);
+    source = col.source || p.name || DEFAULT_PALETTE;
+    unpress(source === DEFAULT_PALETTE && !manual.size && !btnGradOn && !pillGradOn && !stageGradOn ? official : null);
 
     // 3. Typography
     clearTypeState();
@@ -2019,7 +2025,7 @@
               isBooting = false;
               applySelection({
                 color: {
-                  source: 'Official Querent',
+                  source: DEFAULT_PALETTE,
                   state: hydrated,
                   manual: hydratedManual,
                   btnGradOn: typeof sv['--btn-bg'] === 'string' && sv['--btn-bg'].indexOf('linear-gradient') === 0,
