@@ -194,10 +194,10 @@ body[data-active="cta"] .amb-consult { opacity: 1; }
 }
 .btn-sm { padding: 8px 16px; font-size: 13px; }
 .btn-block { width: 100%; padding: 14px 20px; }
-.btn-primary { background: var(--navy-900); color: #fff; border-color: var(--bc-button, var(--navy-900)); box-shadow: 0 calc(10px * var(--shk-button, 1)) calc(26px * var(--shk-button, 1)) calc(-12px * var(--shk-button, 1)) rgb(var(--rgb-navy-900) / .55); }
-.btn-primary:hover { background: var(--blue-700); border-color: var(--blue-700); transform: translateY(-1px); }
-.hdr .btn-primary { background: var(--navy-800); border-color: rgb(var(--rgb-blue-300) / .32); box-shadow: none; }
-.hdr .btn-primary:hover { background: var(--blue-700); }
+.btn-primary { background: var(--btn-bg, var(--navy-900)); color: var(--btn-ink, #fff); border-color: var(--bc-button, var(--btn-line, var(--navy-900))); box-shadow: 0 calc(10px * var(--shk-button, 1)) calc(26px * var(--shk-button, 1)) calc(-12px * var(--shk-button, 1)) rgb(var(--rgb-navy-900) / .55); }
+.btn-primary:hover { background: var(--btn-hover, var(--blue-700)); border-color: var(--btn-hover, var(--blue-700)); transform: translateY(-1px); }
+.hdr .btn-primary { background: var(--btn-dark-bg, var(--navy-800)); color: var(--btn-ink, #fff); border-color: var(--btn-dark-line, rgb(var(--rgb-blue-300) / .32)); box-shadow: none; }
+.hdr .btn-primary:hover { background: var(--btn-hover, var(--blue-700)); }
 .btn-ghost { background: rgba(255,255,255,.6); color: var(--ink); border-color: var(--bc-button, var(--line-strong)); }
 .btn-ghost:hover { border-color: var(--ink); background: #fff; }
 
@@ -511,8 +511,8 @@ svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
 .footer.footer-shared { border-radius: var(--r-band, 40px) var(--r-band, 40px) 0 0; }
 /* LOCAL-MOD LM-0002: one header button style across pages */
 @media (min-width: 769px) {
-  .hdr .btn-primary { background: var(--c-navy-800); border-color: rgb(var(--rgb-blue-300) / .32); box-shadow: none; border-radius: var(--r-btn, 999px); font-size: 13px; padding: 8px 14px; min-height: 37px; gap: 6px; }
-  .hdr .btn-primary:hover { background: var(--c-blue-700); }
+  .hdr .btn-primary { background: var(--btn-dark-bg, var(--c-navy-800)); color: var(--btn-ink, #fff); border-color: var(--btn-dark-line, rgb(var(--rgb-blue-300) / .32)); box-shadow: none; border-radius: var(--r-btn, 999px); font-size: 13px; padding: 8px 14px; min-height: 37px; gap: 6px; }
+  .hdr .btn-primary:hover { background: var(--btn-hover, var(--c-blue-700)); }
 }
 </style>
 <style id="v05-light-header">

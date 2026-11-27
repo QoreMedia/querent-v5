@@ -40,8 +40,13 @@
   const trip = (l) => l.map((x) => Math.round(gam(x) * 255)).join(' ');
 
   const OFFICIAL = {
-    '--bg': '#F4F4F2', '--bg-elev': '#FFFFFF', '--bg-elev-2': '#EAEAE6', '--ink': '#0A0B0E', '--ink-dim': '#5A5F69', '--ink-mute': '#8A8F99',
-    '--night': '#0A0B0E', '--navy-900': '#0D1B38', '--navy-800': '#152C5B', '--blue-700': '#1D4ED8', '--blue-600': '#2563EB', '--blue-400': '#60A5FA', '--blue-300': '#93C5FD', '--cyan-500': '#06B6D4',
+    '--bg': '#F4F4F2', '--bg-elev': '#FFFFFF', '--bg-elev-2': '#EAEAE6',
+    '--ink': '#0A0B0E', '--ink-dim': '#5A5F69', '--ink-mute': '#8A8F99',
+    '--night': '#0A0B0E', '--night-2': '#13151A',
+    '--on-night': '#ECEEF2', '--on-night-dim': '#94A3B8', '--on-night-mute': '#64748B',
+    '--navy-900': '#0D1B38', '--btn-grad': '#1D4ED8', '--blue-700': '#1D4ED8', '--btn-ink': '#FFFFFF', '--navy-800': '#152C5B',
+    '--card-light': '#E8EEFA', '--card-light-grad': '#2563EB', '--card-dark': '#111C38', '--card-dark-grad': '#0B1226',
+    '--blue-600': '#2563EB', '--blue-400': '#60A5FA', '--blue-300': '#93C5FD', '--cyan-500': '#06B6D4',
     '--ok': hex(rgb(0.62, 0.16, 150)), '--warn': hex(rgb(0.68, 0.16, 70)), '--danger': '#B42318',
   };
   const NAMES = Object.keys(OFFICIAL);
@@ -49,9 +54,15 @@
   sheet.id = 'q-tweak-color';
   document.head.appendChild(sheet);
   const state = {};
+  let btnGradOn = false;
+  let currentAnchorHex = null;
   let extra = '';
   let hue = null;
   let calTints = null;
+  const hexTrip = (hx) => {
+    const n = parseInt(String(hx || '#000000').slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(' ');
+  };
 
   // ---------- derivation from one anchor ----------
   function derive(anchorHex) {
@@ -63,25 +74,32 @@
     const blue600 = ensure(Math.min(0.62, Math.max(0.45, aL)), C, h, white, 4.5, -1);
     const bL = toOklch(blue600)[0];
     const cyanH = (h + 310) % 360;
+    const cardLightRgb = rgb(0.945, Math.min(0.03, C * 0.25), h);
+    const cardDarkStartRgb = rgb(0.22, C * 0.5, h);
+    const cardDarkEndRgb = rgb(0.17, C * 0.45, h);
     const d = {
       '--bg': bg, '--bg-elev': white, '--bg-elev-2': rgb(0.93, tc * 1.3, h),
       '--ink': ensure(0.17, tc * 1.5, h, bg, 12, -1), '--ink-dim': ensure(0.46, tc * 2, h, bg, 4.5, -1), '--ink-mute': ensure(0.62, tc * 2, h, bg, 3, -1),
-      '--night': night, '--blue-600': blue600, '--blue-700': ensure(bL - 0.07, C, h, white, 4.5, -1),
+      '--night': night, '--night-2': rgb(0.19, Math.min(0.03, C * 0.2), h),
+      '--on-night': rgb(0.94, tc, h), '--on-night-dim': ensure(0.74, tc * 3, h, night, 4.5, 1), '--on-night-mute': ensure(0.6, tc * 3, h, night, 3, 1),
+      '--blue-600': blue600, '--blue-700': ensure(bL - 0.07, C, h, white, 4.5, -1),
+      '--btn-grad': ensure(bL - 0.04, C, h, white, 4.5, -1), '--btn-ink': white,
       '--navy-900': ensure(0.25, C * 0.55, h, white, 7, -1), '--navy-800': ensure(0.32, C * 0.6, h, white, 4.5, -1),
+      '--card-light': cardLightRgb, '--card-light-grad': blue600,
+      '--card-dark': cardDarkStartRgb, '--card-dark-grad': cardDarkEndRgb,
       '--blue-400': ensure(0.72, C * 0.85, h, night, 4.5, 1), '--blue-300': ensure(0.84, C * 0.5, h, night, 4.5, 1),
       '--cyan-500': rgb(0.72, C * 0.8, cyanH),
     };
     const out = {};
     for (const k of Object.keys(d)) out[k] = hex(d[k]);
     calTints = { '--cal-bg-muted': hex(rgb(0.972, Math.min(0.02, C * 0.1), h)), '--cal-bg-emphasis': hex(rgb(0.94, Math.min(0.03, C * 0.14), h)), '--cal-border': hex(rgb(0.9, Math.min(0.035, C * 0.17), h)), '--cal-border-emphasis': hex(rgb(0.82, Math.min(0.06, C * 0.3), h)) };
-    const panelBase = o(0.945, Math.min(0.03, C * 0.25), h);
-    extra = `--night-2: ${hex(rgb(0.19, Math.min(0.03, C * 0.2), h))}; --on-night: ${hex(rgb(0.94, tc, h))}; --on-night-dim: ${hex(ensure(0.74, tc * 3, h, night, 4.5, 1))}; --on-night-mute: ${hex(ensure(0.6, tc * 3, h, night, 3, 1))};
-      --accent-soft: ${o(0.17, 0.01, h, 0.08)}; --line: ${o(0.2, 0.01, h, 0.1)}; --line-strong: ${o(0.2, 0.01, h, 0.18)};
+    const panelBase = out['--card-light'];
+    extra = `--accent-soft: ${o(0.17, 0.01, h, 0.08)}; --line: ${o(0.2, 0.01, h, 0.1)}; --line-strong: ${o(0.2, 0.01, h, 0.18)};
       --panel-light: radial-gradient(ellipse 60% 70% at 85% 0%, ${o(bL, C, h, 0.14)}, transparent 70%), ${panelBase};
       --panel-light-line: ${o(bL, C, h, 0.16)};
-      --panel-dark: radial-gradient(ellipse 70% 80% at 100% 0%, ${o(bL, C, h, 0.22)}, transparent 70%), linear-gradient(160deg, ${o(0.22, C * 0.5, h)} 0%, ${o(0.17, C * 0.45, h)} 100%);
+      --panel-dark: radial-gradient(ellipse 70% 80% at 100% 0%, ${o(bL, C, h, 0.22)}, transparent 70%), linear-gradient(160deg, ${out['--card-dark']} 0%, ${out['--card-dark-grad']} 100%);
       --panel-dark-line: ${o(0.82, C * 0.4, h, 0.16)};
-      --panel-dark-start: ${o(0.22, C * 0.5, h)}; --panel-dark-end: ${o(0.17, C * 0.45, h)};
+      --panel-dark-start: ${out['--card-dark']}; --panel-dark-end: ${out['--card-dark-grad']};
       --field-line: ${o(bL, C, h, 0.18)}; --field-ring: 0 0 0 3px ${o(bL, C, h, 0.18)}; --pill-line: ${o(bL, C, h, 0.2)};
       --hairline-on-night: ${o(0.82, C * 0.4, h, 0.14)}; --hairline-on-night-strong: ${o(0.82, C * 0.4, h, 0.24)};
       --btn-dark-line: ${o(0.82, C * 0.4, h, 0.32)}; --tile-dark-bg: ${o(bL, C, h, 0.14)}; --tile-dark-line: ${o(0.82, C * 0.4, h, 0.18)};
@@ -91,13 +109,42 @@
     return out;
   }
 
+  function computedOverrides() {
+    const out = {};
+    if (btnGradOn) {
+      out['--btn-bg'] = `linear-gradient(135deg, ${current('--navy-900')} 0%, ${current('--btn-grad')} 100%)`;
+      out['--btn-dark-bg'] = `linear-gradient(135deg, ${current('--navy-800')} 0%, ${current('--btn-grad')} 100%)`;
+    } else {
+      if (state['--navy-900']) out['--btn-bg'] = state['--navy-900'];
+      if (state['--navy-800']) out['--btn-dark-bg'] = state['--navy-800'];
+    }
+    if (state['--navy-900']) out['--btn-line'] = state['--navy-900'];
+    if (state['--blue-700']) out['--btn-hover'] = state['--blue-700'];
+    if (state['--btn-ink']) { out['--btn-ink'] = state['--btn-ink']; out['--pill-on-ink'] = state['--btn-ink']; }
+    if (state['--card-light'] || state['--card-light-grad']) {
+      const glow = hexTrip(current('--card-light-grad'));
+      out['--panel-light'] = `radial-gradient(ellipse 60% 70% at 85% 0%, rgb(${glow} / 0.16), transparent 70%), ${current('--card-light')}`;
+      out['--panel-light-line'] = `rgb(${glow} / 0.18)`;
+      out['--ds-tint'] = current('--card-light');
+    }
+    if (state['--card-dark'] || state['--card-dark-grad'] || state['--blue-600']) {
+      const glow = hexTrip(current('--blue-600'));
+      out['--panel-dark'] = `radial-gradient(ellipse 70% 80% at 100% 0%, rgb(${glow} / 0.22), transparent 70%), linear-gradient(160deg, ${current('--card-dark')} 0%, ${current('--card-dark-grad')} 100%)`;
+      out['--panel-dark-start'] = current('--card-dark');
+      out['--panel-dark-end'] = current('--card-dark-grad');
+    }
+    return out;
+  }
+
   function render() {
     const props = NAMES.filter((n) => state[n]).map((n) => `${n}: ${state[n]};`).join(' ');
+    const comp = computedOverrides();
+    const compProps = Object.entries(comp).map(([k, v]) => `${k}: ${v};`).join(' ');
     let dark = '';
     if (hue !== null && extra) {
       dark = `[data-q-theme="dark"] { --bg-elev: ${o(0.2, 0.02, hue, 0.85)}; --bg-elev-2: ${o(0.24, 0.03, hue)}; --ground-bg: radial-gradient(ellipse 55% 60% at 86% 18%, ${o(0.5, 0.15, hue, 0.24)}, transparent 70%), radial-gradient(ellipse 48% 55% at 14% 84%, ${o(0.7, 0.1, (hue + 310) % 360, 0.12)}, transparent 70%), var(--night); }`;
     }
-    sheet.textContent = `:root { ${extra} ${props} } ${dark}`;
+    sheet.textContent = `:root { ${extra} ${props} ${compProps} } ${dark}`;
     if (typeof renderEdgeSheet === 'function' && (edgeCount() || iconStroke !== null)) renderEdgeSheet();
     updatePickers();
     updateReport();
@@ -105,51 +152,353 @@
     updateNow();
   }
 
-  // ---------- colour UI ----------
+  // ---------- colour UI (grouped toggle configurator with side-by-side Background <-> Text layers) ----------
   const grid = document.getElementById('q-picks');
   const report = document.getElementById('q-report');
   const anchor = document.getElementById('q-anchor');
   const picks = {};
+  const hexTags = {};
+  let gradToggleEl = null;
   let source = 'Official Querent';
   const manual = new Set();
-  const GROUPS = [
-    ['Backgrounds', [['--bg', 'Page'], ['--bg-elev', 'Raised'], ['--bg-elev-2', 'Well'], ['--night', 'Dark ground']]],
-    ['Text', [['--ink', 'Main'], ['--ink-dim', 'Muted'], ['--ink-mute', 'Hint']]],
-    ['Accents', [['--blue-600', 'Accent'], ['--blue-700', 'Accent hover'], ['--blue-400', 'Accent on dark'], ['--blue-300', 'Highlight'], ['--navy-900', 'Button'], ['--navy-800', 'Button on dark'], ['--cyan-500', 'Partner']]],
-    ['Status', [['--ok', 'Success'], ['--warn', 'Warning'], ['--danger', 'Error']]],
+
+  const COLOR_GROUPS = [
+    {
+      id: 'buttons',
+      title: 'Primary buttons',
+      desc: 'Main button fill, optional gradient blend, hover highlight, and label text',
+      open: true,
+      dots: ['--navy-900', '--btn-grad', '--blue-700', '--btn-ink'],
+      items: [
+        { key: '--navy-900', name: 'Primary button color', desc: 'Main fill color for primary action buttons' },
+        { key: '--btn-grad', name: 'Button gradient', desc: 'Second color blended across primary buttons', gradientToggle: true },
+        { key: '--blue-700', name: 'Button highlight', desc: 'Hover, focus, and active highlight state' },
+        { key: '--btn-ink', name: 'Button text', desc: 'Label and icon color inside primary buttons' },
+        { key: '--navy-800', name: 'Button on dark', desc: 'Primary button fill on dark headers and slabs' },
+      ],
+    },
+    {
+      id: 'light-surface',
+      title: 'Light background and text',
+      desc: 'Light canvas surfaces paired side by side with the text layers drawn on them',
+      open: true,
+      dots: ['--bg', '--bg-elev', '--ink', '--ink-dim'],
+      preview: 'light',
+      pair: [
+        {
+          title: 'Light background',
+          tag: 'Surface layer',
+          items: [
+            { key: '--bg', name: 'Page background', desc: 'Main light canvas behind page sections' },
+            { key: '--bg-elev', name: 'Elevated surface', desc: 'White input fields and raised inner blocks' },
+            { key: '--bg-elev-2', name: 'Subtle well', desc: 'Recessed containers and soft dividers' },
+          ],
+        },
+        {
+          title: 'Text on light',
+          tag: 'Connected text layer',
+          items: [
+            { key: '--ink', name: 'Primary text', desc: 'Headlines and main reading copy on light' },
+            { key: '--ink-dim', name: 'Secondary text', desc: 'Supporting paragraphs and subheadings' },
+            { key: '--ink-mute', name: 'Muted text', desc: 'Placeholders, hints, and small captions' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'dark-surface',
+      title: 'Dark background and text',
+      desc: 'Dark band surfaces paired side by side with the light text layers drawn on them',
+      open: true,
+      dots: ['--night', '--night-2', '--on-night', '--on-night-dim'],
+      preview: 'dark',
+      pair: [
+        {
+          title: 'Dark background',
+          tag: 'Surface layer',
+          items: [
+            { key: '--night', name: 'Dark band ground', desc: 'Header, footer, and inverted dark slabs' },
+            { key: '--night-2', name: 'Dark elevated surface', desc: 'Dropdown menus and raised dark blocks' },
+          ],
+        },
+        {
+          title: 'Text on dark',
+          tag: 'Connected text layer',
+          items: [
+            { key: '--on-night', name: 'Primary text', desc: 'Headlines and main copy on dark bands' },
+            { key: '--on-night-dim', name: 'Secondary text', desc: 'Nav links and body copy on dark bands' },
+            { key: '--on-night-mute', name: 'Muted text', desc: 'Footnotes and metadata on dark bands' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'cards',
+      title: 'Cards and gradients',
+      desc: 'Main fill color and gradient tone for light panels and dark feature cards',
+      open: true,
+      dots: ['--card-light', '--card-light-grad', '--card-dark', '--card-dark-grad'],
+      pair: [
+        {
+          title: 'Light card',
+          tag: 'Panel fill and glow',
+          preview: 'card-light',
+          items: [
+            { key: '--card-light', name: 'Card main color', desc: 'Base fill tint for light panels and cards' },
+            { key: '--card-light-grad', name: 'Card gradient', desc: 'Soft radial accent wash across light cards' },
+          ],
+        },
+        {
+          title: 'Dark card',
+          tag: 'Panel fill and fade',
+          preview: 'card-dark',
+          items: [
+            { key: '--card-dark', name: 'Card main color', desc: 'Top base fill for dark feature cards' },
+            { key: '--card-dark-grad', name: 'Card gradient', desc: 'Deep bottom gradient fade on dark cards' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'accents',
+      title: 'Brand accents and ambient glow',
+      desc: 'Interactive highlights, icons on dark surfaces, and background glow colors',
+      open: false,
+      dots: ['--blue-600', '--blue-400', '--blue-300', '--cyan-500'],
+      items: [
+        { key: '--blue-600', name: 'Primary accent', desc: 'Active states, links, chat bubbles, and glow' },
+        { key: '--blue-400', name: 'Accent on dark', desc: 'Icons and active highlights on dark bands' },
+        { key: '--blue-300', name: 'Soft highlight', desc: 'Marker sweeps, hairlines, and light glow' },
+        { key: '--cyan-500', name: 'Ambient partner', desc: 'Secondary background gradient and logo facet' },
+      ],
+    },
+    {
+      id: 'status',
+      title: 'Status indicators',
+      desc: 'Semantic dot and alert colors for verified, pending, and error states',
+      open: false,
+      dots: ['--ok', '--warn', '--danger'],
+      items: [
+        { key: '--ok', name: 'Success', desc: 'Completed and verified status dots' },
+        { key: '--warn', name: 'Warning', desc: 'Pending and attention indicators' },
+        { key: '--danger', name: 'Error', desc: 'Validation and failure alerts' },
+      ],
+    },
   ];
-  if (grid) {
-    GROUPS.forEach(([title, items]) => {
-      const group = document.createElement('div');
-      group.className = 'q-group';
-      const h = document.createElement('p');
-      h.className = 'q-tweak__label';
-      h.textContent = title;
-      const row = document.createElement('div');
-      row.className = 'q-pick-grid';
-      items.forEach(([n, short]) => {
-        const label = document.createElement('label');
-        label.className = 'q-pick';
-        const input = document.createElement('input');
-        input.type = 'color';
-        input.value = OFFICIAL[n].toLowerCase();
-        input.setAttribute('aria-label', short + ' (' + n + ')');
-        const name = document.createElement('span');
-        name.className = 'q-pick__label';
-        name.innerHTML = '<b></b><span></span>';
-        name.firstChild.textContent = short;
-        name.lastChild.textContent = n;
-        input.addEventListener('input', () => { state[n] = input.value; manual.add(n); render(); });
-        label.append(input, name);
-        row.appendChild(label);
-        picks[n] = input;
+
+  const groupKeys = (g) => (g.pair ? g.pair.flatMap((col) => col.items.map((it) => it.key)) : g.items.map((it) => it.key));
+  const groupRefs = [];
+
+  function makePickerRow(item) {
+    const label = document.createElement('label');
+    label.className = 'q-pick';
+    const input = document.createElement('input');
+    input.type = 'color';
+    input.value = OFFICIAL[item.key].toLowerCase();
+    input.setAttribute('aria-label', item.name + ': ' + item.desc);
+    const info = document.createElement('span');
+    info.className = 'q-pick__label';
+    const b = document.createElement('b');
+    b.textContent = item.name;
+    const desc = document.createElement('span');
+    desc.textContent = item.desc;
+    info.append(b, desc);
+    const hx = document.createElement('span');
+    hx.className = 'q-pick__hex';
+    hx.textContent = OFFICIAL[item.key].toUpperCase();
+    input.addEventListener('input', () => {
+      state[item.key] = input.value;
+      manual.add(item.key);
+      if (item.gradientToggle) {
+        btnGradOn = true;
+        if (gradToggleEl) gradToggleEl.checked = true;
+      }
+      render();
+    });
+    label.append(input, info);
+    if (item.gradientToggle) {
+      const tog = document.createElement('label');
+      tog.className = 'q-pick__toggle';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = btnGradOn;
+      cb.setAttribute('aria-label', 'Enable button gradient');
+      cb.addEventListener('click', (e) => e.stopPropagation());
+      cb.addEventListener('change', () => {
+        btnGradOn = cb.checked;
+        if (btnGradOn) manual.add('--btn-grad');
+        else manual.delete('--btn-grad');
+        render();
       });
-      group.append(h, row);
-      grid.appendChild(group);
+      tog.addEventListener('click', (e) => e.stopPropagation());
+      tog.append(cb, document.createTextNode('On'));
+      gradToggleEl = cb;
+      label.append(tog);
+    }
+    label.append(hx);
+    picks[item.key] = input;
+    hexTags[item.key] = hx;
+    return label;
+  }
+
+  function makePreviewStrip(kind) {
+    if (kind === 'light') {
+      const box = document.createElement('div');
+      box.className = 'q-cprev q-cprev--light';
+      box.innerHTML =
+        '<span class="q-cprev__h">Primary headline</span>' +
+        '<span class="q-cprev__p">Secondary body copy</span>' +
+        '<span class="q-cprev__m">Muted hint</span>';
+      return box;
+    }
+    if (kind === 'dark') {
+      const box = document.createElement('div');
+      box.className = 'q-cprev q-cprev--dark';
+      box.innerHTML =
+        '<span class="q-cprev__h">Primary headline</span>' +
+        '<span class="q-cprev__p">Secondary body copy</span>' +
+        '<span class="q-cprev__m">Muted label</span>';
+      return box;
+    }
+    if (kind === 'card-light') {
+      const box = document.createElement('div');
+      box.className = 'q-cprev-card q-cprev-card--light';
+      box.innerHTML = '<b>Light card preview</b><span>Main color + top radial gradient</span>';
+      return box;
+    }
+    if (kind === 'card-dark') {
+      const box = document.createElement('div');
+      box.className = 'q-cprev-card q-cprev-card--dark';
+      box.innerHTML = '<b>Dark card preview</b><span>Main color + deep gradient fade</span>';
+      return box;
+    }
+    return null;
+  }
+
+  if (grid) {
+    COLOR_GROUPS.forEach((g) => {
+      const det = document.createElement('details');
+      det.className = 'q-cgrp';
+      det.dataset.colorGroup = g.id;
+      if (g.open) det.open = true;
+
+      const sum = document.createElement('summary');
+      sum.className = 'q-cgrp__head';
+
+      const left = document.createElement('span');
+      left.className = 'q-cgrp__left';
+      left.innerHTML = '<svg class="q-cgrp__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
+      const meta = document.createElement('span');
+      meta.className = 'q-cgrp__meta';
+      const title = document.createElement('span');
+      title.className = 'q-cgrp__title';
+      title.textContent = g.title;
+      const desc = document.createElement('span');
+      desc.className = 'q-cgrp__desc';
+      desc.textContent = g.desc;
+      meta.append(title, desc);
+      left.append(meta);
+
+      const right = document.createElement('span');
+      right.className = 'q-cgrp__right';
+      const dots = document.createElement('span');
+      dots.className = 'q-cgrp__dots';
+      dots.setAttribute('aria-hidden', 'true');
+      const dotEls = g.dots.map((k) => {
+        const dot = document.createElement('i');
+        dot.style.background = OFFICIAL[k];
+        dots.appendChild(dot);
+        return { key: k, el: dot };
+      });
+      const resetG = document.createElement('button');
+      resetG.type = 'button';
+      resetG.className = 'q-cgrp__reset';
+      resetG.textContent = 'Reset';
+      resetG.hidden = true;
+      resetG.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const keys = groupKeys(g);
+        keys.forEach((k) => {
+          delete state[k];
+          manual.delete(k);
+        });
+        if (g.id === 'buttons') {
+          btnGradOn = false;
+          if (gradToggleEl) gradToggleEl.checked = false;
+        }
+        render();
+      });
+      right.append(dots, resetG);
+      sum.append(left, right);
+
+      const body = document.createElement('div');
+      body.className = 'q-cgrp__body';
+      if (g.preview) {
+        const stripEl = makePreviewStrip(g.preview);
+        if (stripEl) body.appendChild(stripEl);
+      }
+      if (g.pair) {
+        const pair = document.createElement('div');
+        pair.className = 'q-cpair';
+        g.pair.forEach((col) => {
+          const box = document.createElement('div');
+          box.className = 'q-ccol';
+          const head = document.createElement('div');
+          head.className = 'q-ccol__head';
+          const ct = document.createElement('span');
+          ct.className = 'q-ccol__title';
+          ct.textContent = col.title;
+          const tg = document.createElement('span');
+          tg.className = 'q-ccol__tag';
+          tg.textContent = col.tag;
+          head.append(ct, tg);
+          box.appendChild(head);
+          if (col.preview) {
+            const cprev = makePreviewStrip(col.preview);
+            if (cprev) box.appendChild(cprev);
+          }
+          const list = document.createElement('div');
+          list.className = 'q-ccol__list';
+          col.items.forEach((it) => list.appendChild(makePickerRow(it)));
+          box.appendChild(list);
+          pair.appendChild(box);
+        });
+        body.appendChild(pair);
+      } else {
+        const row = document.createElement('div');
+        row.className = 'q-pick-grid';
+        g.items.forEach((it) => row.appendChild(makePickerRow(it)));
+        body.appendChild(row);
+      }
+
+      det.append(sum, body);
+      grid.appendChild(det);
+      groupRefs.push({ id: g.id, keys: groupKeys(g), dotEls, resetBtn: resetG, det });
+    });
+
+    document.querySelectorAll('[data-color-toggle-all]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const open = btn.dataset.colorToggleAll === 'open';
+        groupRefs.forEach((r) => { r.det.open = open; });
+      });
     });
   }
+
   const current = (n) => state[n] || OFFICIAL[n];
-  function updatePickers() { NAMES.forEach((n) => { if (picks[n]) picks[n].value = current(n).toLowerCase(); }); }
+  function updatePickers() {
+    NAMES.forEach((n) => {
+      const val = current(n);
+      if (picks[n]) picks[n].value = val.toLowerCase();
+      if (hexTags[n]) hexTags[n].textContent = val.toUpperCase();
+    });
+    if (gradToggleEl) gradToggleEl.checked = btnGradOn;
+    groupRefs.forEach((r) => {
+      r.dotEls.forEach((d) => { d.el.style.background = current(d.key); });
+      const edited = r.keys.some((k) => manual.has(k)) || (r.id === 'buttons' && btnGradOn);
+      r.resetBtn.hidden = !edited;
+    });
+  }
   function updateReport() {
     if (!report) return;
     const c = (n) => fromHex(current(n));
@@ -172,10 +521,12 @@
   const presets = document.querySelectorAll('.q-preset:not([data-type-preset]):not([data-shape-preset])');
   const official = document.querySelector('[data-preset="official"]');
   const unpress = (except) => document.querySelectorAll('.q-preset:not([data-type-preset]):not([data-shape-preset])').forEach((b) => b.setAttribute('aria-pressed', String(b === except)));
-  function applyAnchor(hx, name) { Object.keys(state).forEach((k) => delete state[k]); manual.clear(); source = name; Object.assign(state, derive(hx)); render(); }
+  function applyAnchor(hx, name) { Object.keys(state).forEach((k) => delete state[k]); manual.clear(); currentAnchorHex = hx; source = name; Object.assign(state, derive(hx)); render(); }
   function clearColorState() {
     Object.keys(state).forEach((k) => delete state[k]);
     manual.clear();
+    btnGradOn = false;
+    currentAnchorHex = null;
     source = 'Official Querent';
     calTints = null;
     extra = '';
@@ -820,13 +1171,20 @@
   };
   function siteVars() {
     const v = {};
-    ['--bg', '--bg-elev', '--bg-elev-2', '--ink', '--ink-dim', '--ink-mute', '--ok', '--warn'].forEach((n) => { if (state[n]) v[n] = state[n]; });
+    ['--bg', '--bg-elev', '--bg-elev-2', '--ink', '--ink-dim', '--ink-mute', '--ok', '--warn', '--danger', '--night-2'].forEach((n) => { if (state[n]) v[n] = state[n]; });
     const map = (from, tos) => { if (state[from]) tos.forEach((t) => { v[t] = state[from]; }); };
     map('--navy-900', ['--btn-bg', '--btn-line', '--pill-on-bg', '--p-navy-d']);
     map('--navy-800', ['--btn-dark-bg', '--pill-dark-on-bg', '--p-navy']);
     map('--blue-700', ['--btn-hover', '--p-blue-d']);
+    map('--btn-ink', ['--btn-ink', '--pill-on-ink']);
     map('--blue-600', ['--pill-hover-line', '--p-blue']);
     map('--blue-300', ['--p-sky']);
+    map('--on-night', ['--c-on-night', '--on-night']);
+    map('--on-night-dim', ['--c-slate-400', '--on-night-dim']);
+    map('--on-night-mute', ['--c-slate-500', '--on-night-mute']);
+    map('--card-light', ['--c-panel-light']);
+    map('--card-dark', ['--c-panel-dark-start']);
+    map('--card-dark-grad', ['--c-panel-dark-end']);
     // Brand colour variables the site uses for fixed colours (hex plus an r g b triplet for translucent uses).
     const trip = (hx) => { const n = parseInt(hx.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(' '); };
     const brand = (from, c, r) => { if (state[from]) { v[c] = state[from]; if (r) v[r] = trip(state[from]); } };
@@ -848,8 +1206,10 @@
     if (state['--navy-800']) v['--cal-brand'] = state['--navy-800'];
     if (state['--navy-900']) v['--cal-brand-emphasis'] = state['--navy-900'];
     const comp = parseExtra();
-    [['--on-night', '--c-on-night'], ['--on-night-dim', '--c-slate-400'], ['--on-night-mute', '--c-slate-500'], ['--ds-tint', '--c-panel-light'], ['--panel-dark-start', '--c-panel-dark-start'], ['--panel-dark-end', '--c-panel-dark-end']].forEach(([f, t]) => { if (comp[f]) v[t] = comp[f]; });
+    [['--on-night', '--c-on-night'], ['--on-night-dim', '--c-slate-400'], ['--on-night-mute', '--c-slate-500'], ['--ds-tint', '--c-panel-light'], ['--panel-dark-start', '--c-panel-dark-start'], ['--panel-dark-end', '--c-panel-dark-end']].forEach(([f, t]) => { if (comp[f] && !v[t]) v[t] = comp[f]; });
     ['--panel-light', '--panel-light-line', '--panel-dark', '--panel-dark-line', '--field-line', '--pill-line', '--btn-dark-line', '--accent-soft', '--line', '--line-strong'].forEach((n) => { if (comp[n]) v[n] = comp[n]; });
+    const live = computedOverrides();
+    ['--btn-bg', '--btn-dark-bg', '--btn-line', '--btn-hover', '--btn-ink', '--pill-on-ink', '--panel-light', '--panel-light-line', '--panel-dark'].forEach((n) => { if (live[n]) v[n] = live[n]; });
     return v;
   }
   function siteFonts() {
@@ -1069,6 +1429,336 @@
     if (e.data.type !== 'qs-ds-applied') return;
     frames().forEach((f) => { if (e.source === f.contentWindow && e.origin === f.dataset.origin) f.dataset.report = JSON.stringify(e.data); });
   });
+  // ---------- saved full-selection presets (shared via /api/staging-presets on Vercel, localStorage fallback) ----------
+  const SAVED_KEY = 'q-saved-selections-v1';
+  const PRESET_API = (location.port === '8134' ? SITE_ORIGIN : location.origin) + '/api/staging-presets';
+  const savedWrap = document.getElementById('ds-saved');
+  const savedGrid = document.getElementById('ds-saved-grid');
+  const savedStatus = document.getElementById('ds-saved-status');
+  const savePresetBtn = document.getElementById('ds-save-preset');
+  const copyLinkBtn = document.getElementById('ds-copy-link');
+  let savedPresets = [];
+  let isSharedStorage = false;
+  let activeSavedId = null;
+
+  function readLocalSelections() {
+    try {
+      const arr = JSON.parse(localStorage.getItem(SAVED_KEY) || '[]');
+      return Array.isArray(arr) ? arr.filter((p) => p && typeof p.name === 'string') : [];
+    } catch { return []; }
+  }
+  function writeLocalSelections(list) {
+    try { localStorage.setItem(SAVED_KEY, JSON.stringify(list)); } catch { /* ignore */ }
+  }
+
+  function captureSelection(name, author) {
+    const displayName = sel.display && FONTS.display[Number(sel.display.value)] ? FONTS.display[Number(sel.display.value)][0] : FONTS.display[0][0];
+    const bodyName = sel.body && FONTS.body[Number(sel.body.value)] ? FONTS.body[Number(sel.body.value)][0] : FONTS.body[0][0];
+    const colorState = {};
+    NAMES.forEach((k) => { if (state[k]) colorState[k] = state[k]; });
+    const edgeCopy = {};
+    Object.keys(edge).forEach((f) => { edgeCopy[f] = Object.assign({}, edge[f]); });
+    return {
+      id: 'p-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6),
+      name: String(name || 'Untitled preset').trim().slice(0, 40),
+      author: String(author || '').trim().slice(0, 32),
+      updatedAt: new Date().toISOString(),
+      swatches: ['--bg', '--ink', '--blue-600', '--navy-900', '--blue-300', '--cyan-500'].map(current),
+      logo: logoVariant,
+      color: {
+        source,
+        anchorHex: currentAnchorHex,
+        state: colorState,
+        manual: Array.from(manual),
+        btnGradOn,
+      },
+      typography: {
+        preset: typePreset,
+        display: displayName,
+        body: bodyName,
+        vars: Object.assign({}, typeVars),
+      },
+      shape: {
+        preset: shapePreset,
+        iconStroke,
+        edge: edgeCopy,
+      },
+    };
+  }
+
+  function applySelection(p) {
+    if (!p || typeof p !== 'object') return;
+    // 1. Logo
+    setLogoVariant(p.logo || 'flat', true);
+
+    // 2. Color
+    clearColorState();
+    const col = p.color && typeof p.color === 'object' ? p.color : {};
+    if (col.anchorHex && /^#[0-9a-f]{6}$/i.test(col.anchorHex)) {
+      currentAnchorHex = col.anchorHex;
+      Object.assign(state, derive(col.anchorHex));
+      if (anchor) anchor.value = col.anchorHex;
+    }
+    if (col.state && typeof col.state === 'object') {
+      Object.keys(col.state).forEach((k) => {
+        if (Object.prototype.hasOwnProperty.call(OFFICIAL, k) && /^#[0-9a-f]{6}$/i.test(col.state[k])) {
+          state[k] = col.state[k];
+        }
+      });
+    }
+    if (Array.isArray(col.manual)) {
+      col.manual.forEach((k) => { if (Object.prototype.hasOwnProperty.call(OFFICIAL, k)) manual.add(k); });
+    }
+    btnGradOn = Boolean(col.btnGradOn);
+    source = col.source || p.name || 'Official Querent';
+    unpress(source === 'Official Querent' && !manual.size && !btnGradOn ? official : null);
+
+    // 3. Typography
+    clearTypeState();
+    const ty = p.typography && typeof p.typography === 'object' ? p.typography : {};
+    if (ty.display && sel.display) {
+      const dIdx = FONTS.display.findIndex(([n]) => n === ty.display);
+      if (dIdx >= 0) sel.display.value = String(dIdx);
+    }
+    if (ty.body && sel.body) {
+      const bIdx = FONTS.body.findIndex(([n]) => n === ty.body);
+      if (bIdx >= 0) sel.body.value = String(bIdx);
+    }
+    detectTypePreset();
+    if (ty.vars && typeof ty.vars === 'object') {
+      Object.keys(ty.vars).forEach((k) => { typeVars[k] = ty.vars[k]; });
+      TYPE_MODAL_CTLS.forEach((cfg) => {
+        const el = document.getElementById(cfg.id);
+        if (!el || typeVars[cfg.css] === undefined) return;
+        const raw = String(typeVars[cfg.css]).replace(/(px|em)$/i, '');
+        el.value = raw === 'none' ? '0' : raw;
+        setCtlOutput(el, cfg.out(el.value));
+      });
+      if (typeVars['--t-align']) {
+        alignBtns.forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.tAlign || 'left') === typeVars['--t-align'])));
+      }
+    }
+    renderTypeSheet();
+
+    // 4. Shape
+    clearShapeState();
+    const sh = p.shape && typeof p.shape === 'object' ? p.shape : {};
+    if (sh.edge && typeof sh.edge === 'object') {
+      Object.keys(sh.edge).forEach((f) => {
+        if (FAMS[f] && sh.edge[f] && typeof sh.edge[f] === 'object') edge[f] = Object.assign({}, sh.edge[f]);
+      });
+    }
+    iconStroke = typeof sh.iconStroke === 'number' ? sh.iconStroke : null;
+    if (strokeEl) {
+      strokeEl.value = iconStroke !== null ? String(iconStroke) : strokeDefault;
+      setCtlOutput(strokeEl, strokeEl.value + 'px');
+    }
+    shapePreset = sh.preset && SHAPE_PRESETS[sh.preset] ? sh.preset : (edgeCount() || iconStroke !== null ? 'custom' : 'default');
+    syncShapePresetButtons();
+    renderEdgeSheet();
+    renderCtls();
+
+    activeSavedId = p.id || null;
+    render();
+    renderSavedList();
+  }
+
+  function renderSavedList() {
+    if (!savedWrap || !savedGrid) return;
+    if (savedStatus) savedStatus.textContent = isSharedStorage ? 'Shared on staging' : 'Local browser';
+    if (!savedPresets.length) {
+      savedWrap.hidden = true;
+      savedGrid.innerHTML = '';
+      return;
+    }
+    savedWrap.hidden = false;
+    savedGrid.innerHTML = '';
+    savedPresets.forEach((p) => {
+      const card = document.createElement('div');
+      card.className = 'ds-saved__card' + (p.id && p.id === activeSavedId ? ' is-active' : '');
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ds-saved__apply';
+      const sw = document.createElement('span');
+      sw.className = 'ds-saved__sw';
+      const cols = Array.isArray(p.swatches) && p.swatches.length ? p.swatches : ['#F4F4F2', '#0A0B0E', '#2563EB', '#0D1B38', '#93C5FD', '#06B6D4'];
+      sw.innerHTML = strip(cols);
+
+      const nm = document.createElement('span');
+      nm.className = 'ds-saved__name';
+      nm.textContent = p.name;
+
+      const meta = document.createElement('span');
+      meta.className = 'ds-saved__meta';
+      const parts = [
+        LOGO_LABELS[p.logo] || 'Flat mark',
+        (p.typography && p.typography.display) ? p.typography.display : 'Bricolage Grotesque',
+        (p.shape && p.shape.preset) ? (SHAPE_PRESETS[p.shape.preset] ? SHAPE_PRESETS[p.shape.preset].label : 'Custom') : 'Default',
+      ];
+      if (p.author) parts.push('by ' + p.author);
+      meta.textContent = parts.join(' / ');
+
+      btn.append(sw, nm, meta);
+      btn.addEventListener('click', () => applySelection(p));
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'ds-saved__del';
+      del.setAttribute('aria-label', 'Delete preset ' + p.name);
+      del.textContent = '\u00D7';
+      del.addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteSavedPreset(p.id);
+      });
+
+      card.append(btn, del);
+      savedGrid.appendChild(card);
+    });
+  }
+
+  async function loadSavedPresets() {
+    const local = readLocalSelections();
+    savedPresets = local;
+    renderSavedList();
+    try {
+      const res = await fetch(PRESET_API, { cache: 'no-store' });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data && data.shared && Array.isArray(data.presets)) {
+        isSharedStorage = true;
+        savedPresets = data.presets;
+        renderSavedList();
+      }
+    } catch { /* localhost without API: stay on localStorage */ }
+  }
+
+  async function saveCurrentPreset(name, author) {
+    const preset = captureSelection(name, author);
+    activeSavedId = preset.id;
+    try {
+      const res = await fetch(PRESET_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(preset),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.shared && Array.isArray(data.presets)) {
+          isSharedStorage = true;
+          savedPresets = data.presets;
+          activeSavedId = data.preset ? data.preset.id : preset.id;
+          renderSavedList();
+          return;
+        }
+      }
+    } catch { /* fall back to localStorage */ }
+    const lower = preset.name.toLowerCase();
+    savedPresets = [preset, ...readLocalSelections().filter((x) => String(x.name || '').toLowerCase() !== lower)].slice(0, 40);
+    writeLocalSelections(savedPresets);
+    renderSavedList();
+  }
+
+  async function deleteSavedPreset(id) {
+    if (!id) return;
+    if (activeSavedId === id) activeSavedId = null;
+    if (isSharedStorage) {
+      try {
+        const res = await fetch(PRESET_API + '?id=' + encodeURIComponent(id), { method: 'DELETE' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.presets)) {
+            savedPresets = data.presets;
+            renderSavedList();
+            return;
+          }
+        }
+      } catch { /* ignore */ }
+    }
+    savedPresets = readLocalSelections().filter((x) => x.id !== id);
+    writeLocalSelections(savedPresets);
+    renderSavedList();
+  }
+
+  // Save full selection dialog
+  if (savePresetBtn) {
+    const saveDlg = document.createElement('dialog');
+    saveDlg.setAttribute('aria-labelledby', 'q-save-sel-title');
+    saveDlg.style.cssText = 'width:min(400px,calc(100vw - 32px));padding:24px;border:1px solid var(--line-strong,#ccc);border-radius:var(--r-card,16px);background:var(--bg-elev,#fff);color:var(--ink,#111)';
+    saveDlg.innerHTML =
+      '<form method="dialog" style="display:grid;gap:14px">' +
+        '<h3 id="q-save-sel-title" style="margin:0;font-family:var(--font-display)">Save current selection</h3>' +
+        '<p id="q-save-sel-summary" style="margin:0;font-size:13px;color:var(--ink-dim)"></p>' +
+        '<label style="display:grid;gap:6px;font-size:13px;font-weight:600">Preset name<input type="text" name="name" required maxlength="40" placeholder="e.g. Executive Navy" style="min-height:42px;padding:0 12px;border:1px solid var(--line-strong,#ccc);border-radius:10px;font:inherit"></label>' +
+        '<label style="display:grid;gap:6px;font-size:13px;font-weight:600">Saved by (optional)<input type="text" name="author" maxlength="32" placeholder="Your name" style="min-height:42px;padding:0 12px;border:1px solid var(--line-strong,#ccc);border-radius:10px;font:inherit"></label>' +
+        '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">' +
+          '<button type="button" class="q-btn q-btn--ghost q-btn--sm" data-save-cancel>Cancel</button>' +
+          '<button type="submit" class="q-btn q-btn--primary q-btn--sm">Save preset</button>' +
+        '</div>' +
+      '</form>';
+    document.body.appendChild(saveDlg);
+    const saveForm = saveDlg.querySelector('form');
+    const summaryEl = saveDlg.querySelector('#q-save-sel-summary');
+    savePresetBtn.addEventListener('click', () => {
+      saveForm.reset();
+      const snap = captureSelection('', '');
+      summaryEl.textContent = 'Saves Logo (' + (LOGO_LABELS[snap.logo] || 'Flat mark') + '), Color (' + snap.color.source + '), Typography (' + snap.typography.display + '), and Shape (' + (SHAPE_PRESETS[snap.shape.preset] ? SHAPE_PRESETS[snap.shape.preset].label : 'Custom') + ').';
+      saveDlg.showModal();
+    });
+    saveDlg.querySelector('[data-save-cancel]').addEventListener('click', () => saveDlg.close());
+    saveDlg.addEventListener('keydown', (e) => { if (e.key === 'Escape') e.stopPropagation(); });
+    saveForm.addEventListener('submit', () => {
+      const nm = saveForm.elements.name.value.trim();
+      const au = saveForm.elements.author.value.trim();
+      if (nm) saveCurrentPreset(nm, au);
+    });
+  }
+
+  // Shareable URL (?preset=...) for the full Current selection
+  const encodePreset = (obj) => {
+    const json = JSON.stringify(obj);
+    const bytes = new TextEncoder().encode(json);
+    let bin = '';
+    bytes.forEach((b) => { bin += String.fromCharCode(b); });
+    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  };
+  const decodePreset = (str) => {
+    const pad = str.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((str.length + 3) % 4);
+    const bin = atob(pad);
+    const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+    return JSON.parse(new TextDecoder().decode(bytes));
+  };
+
+  if (copyLinkBtn) {
+    copyLinkBtn.addEventListener('click', () => {
+      try {
+        const snap = captureSelection(source, '');
+        delete snap.id;
+        delete snap.updatedAt;
+        const url = new URL(location.href);
+        url.searchParams.set('preset', encodePreset(snap));
+        navigator.clipboard.writeText(url.toString()).then(() => {
+          const orig = copyLinkBtn.textContent;
+          copyLinkBtn.textContent = 'Copied';
+          setTimeout(() => { copyLinkBtn.textContent = orig; }, 1600);
+        }).catch(() => {});
+      } catch { /* ignore */ }
+    });
+  }
+
+  document.querySelectorAll('[data-reset-all]').forEach((b) => b.addEventListener('click', () => {
+    activeSavedId = null;
+    renderSavedList();
+  }));
+
+  // Apply ?preset=... from URL if shared
+  try {
+    const sharedParam = new URLSearchParams(location.search).get('preset');
+    if (sharedParam) applySelection(decodePreset(sharedParam));
+  } catch { /* ignore invalid shared param */ }
+
+  loadSavedPresets();
+
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     const modals = openModals();

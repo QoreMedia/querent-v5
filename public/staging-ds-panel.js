@@ -66,10 +66,10 @@
   // Only these site custom properties can be set.
   var ALLOWED_VARS = [
     '--bg', '--bg-elev', '--bg-elev-2', '--ink', '--ink-dim', '--ink-mute', '--line', '--line-strong',
-    '--accent-soft', '--ok', '--warn',
+    '--accent-soft', '--ok', '--warn', '--danger', '--night-2', '--on-night', '--on-night-dim', '--on-night-mute',
     '--panel-light', '--panel-light-line', '--panel-dark', '--panel-dark-line',
-    '--field-line', '--pill-line', '--pill-hover-line', '--pill-on-bg', '--pill-dark-on-bg',
-    '--btn-bg', '--btn-line', '--btn-hover', '--btn-dark-bg', '--btn-dark-line',
+    '--field-line', '--pill-line', '--pill-hover-line', '--pill-on-bg', '--pill-on-ink', '--pill-dark-on-bg',
+    '--btn-bg', '--btn-ink', '--btn-line', '--btn-hover', '--btn-dark-bg', '--btn-dark-line',
     '--p-blue', '--p-blue-d', '--p-navy', '--p-navy-d', '--p-sky',
     '--c-night', '--c-on-night', '--c-slate-400', '--c-slate-500', '--c-blue-300', '--c-blue-400', '--c-blue-600', '--c-blue-700',
     '--c-navy-900', '--c-navy-800', '--c-cyan-500', '--c-cyan-300', '--c-panel-light', '--c-panel-dark-end', '--c-panel-dark-start', '--c-canvas',

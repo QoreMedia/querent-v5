@@ -6,9 +6,10 @@ Delete exactly this:
 
 1. `public/staging-ds-panel.js` (whole file).
 2. `public/design-system/` (whole staged design system directory).
-3. In `index.html`, `booking.html`, `menu.html`, `va.html`: the block between
+3. `api/staging-presets.js` (whole file; also unlink/delete the Preview-only Upstash Redis store in Vercel Storage if attached).
+4. In `index.html`, `booking.html`, `menu.html`, `va.html`: the block between
    `<!-- STAGING-ONLY: DESIGN SYSTEM PANEL ... -->` and `<!-- /STAGING-ONLY -->` (one `<script src="/staging-ds-panel.js">` tag).
-4. This file (`STAGING-ONLY.md`).
+5. This file (`STAGING-ONLY.md`).
 
 Check: `grep -rn "STAGING-ONLY" . --exclude-dir=node_modules --exclude-dir=dist` must return nothing.
 

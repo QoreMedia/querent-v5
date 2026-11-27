@@ -40,7 +40,14 @@
   <main class="ds-main" id="top">
     <h1 class="ds-visually-hidden">Querent Design System</h1>
     <section class="ds-now" id="ds-now" aria-label="Current selection">
-      <div class="ds-now__head"><h2 class="ds-now__title">Current selection</h2><button class="ds-now__reset" type="button" data-reset-all>Return to default</button></div>
+      <div class="ds-now__head">
+        <h2 class="ds-now__title">Current selection</h2>
+        <div class="ds-now__acts">
+          <button class="ds-now__save" type="button" id="ds-save-preset">Save preset</button>
+          <button class="ds-now__reset" type="button" id="ds-copy-link">Copy link</button>
+          <button class="ds-now__reset" type="button" data-reset-all>Return to default</button>
+        </div>
+      </div>
       <div class="ds-now__grid">
         <button class="ds-now__item" type="button" data-jump="sec-01-identity--logo-variants">
           <span class="ds-now__label">Logo</span>
@@ -63,6 +70,13 @@
           <span class="ds-now__label">Shape</span>
           <span class="ds-now__value" id="now-shape">Default</span>
         </button>
+      </div>
+      <div class="ds-saved" id="ds-saved" hidden>
+        <div class="ds-saved__head">
+          <span class="ds-now__title">Saved presets</span>
+          <span class="ds-saved__status" id="ds-saved-status">Local browser</span>
+        </div>
+        <div class="ds-saved__grid" id="ds-saved-grid"></div>
       </div>
     </section>
 
@@ -249,7 +263,16 @@
             <div class="ds-specimens ds-specimens--1">
               <div class="ds-specimen">
                 <div class="ds-stage">
-                  <div class="q-tweak"><div class="q-pick-grid" id="q-picks"></div></div>
+                  <div class="q-tweak">
+                    <div class="q-color-toolbar">
+                      <span class="q-color-toolbar__hint">Toggle any group to adjust colors and see paired layers live.</span>
+                      <div class="q-color-toolbar__acts">
+                        <button class="q-btn q-btn--ghost q-btn--sm" type="button" data-color-toggle-all="open">Expand all</button>
+                        <button class="q-btn q-btn--ghost q-btn--sm" type="button" data-color-toggle-all="close">Collapse all</button>
+                      </div>
+                    </div>
+                    <div class="q-color-groups" id="q-picks"></div>
+                  </div>
                 </div>
               </div>
             </div>
