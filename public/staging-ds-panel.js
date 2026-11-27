@@ -411,6 +411,7 @@
     // Return to default: clear this page and tell the design system (if loaded) to reset everywhere.
     root.querySelector('.qs-default').addEventListener('click', function () {
       clearTweaks(); remember(null); syncMark(); updateCal(null);
+      try { window.sessionStorage.removeItem('qs-ds-working-v1'); } catch { /* ignore */ }
       if (frame && frame.contentWindow && DS_ORIGIN) frame.contentWindow.postMessage({ type: 'qs-ds-default' }, DS_ORIGIN);
     });
     document.addEventListener('keydown', function (e) {

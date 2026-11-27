@@ -527,7 +527,7 @@
     const hx = document.createElement('span');
     hx.className = 'q-pick__hex';
     hx.textContent = OFFICIAL[item.key].toUpperCase();
-    input.addEventListener('input', () => {
+    const onPick = () => {
       state[item.key] = input.value;
       manual.add(item.key);
       if (item.gradFlag) {
@@ -535,7 +535,9 @@
         if (gradToggles[item.gradFlag]) gradToggles[item.gradFlag].checked = true;
       }
       render();
-    });
+    };
+    input.addEventListener('input', onPick);
+    input.addEventListener('change', onPick);
     label.append(input, info);
     if (item.gradFlag) {
       const tog = document.createElement('label');
@@ -1481,10 +1483,31 @@
       }
     }
   }
+  const WORKING_KEY = 'qs-ds-working-v1';
+  let isBooting = true;
+  function saveWorkingState() {
+    if (isBooting) return;
+    try {
+      const hasAny = Object.keys(state).length > 0 || btnGradOn || pillGradOn || stageGradOn ||
+        logoVariant !== 'flat' || edgeCount() > 0 || iconStroke !== null ||
+        Object.keys(typeVars).length > 0 ||
+        (sel.display && Number(sel.display.value) !== 0) ||
+        (sel.body && Number(sel.body.value) !== 0);
+      if (!hasAny) {
+        window.sessionStorage.removeItem(WORKING_KEY);
+        window.sessionStorage.removeItem('qs-ds-tweaks');
+        return;
+      }
+      const snap = captureSelection(source, '');
+      snap.id = activeSavedId || null;
+      window.sessionStorage.setItem(WORKING_KEY, JSON.stringify(snap));
+    } catch { /* ignore */ }
+  }
   function push() {
     syncLogo();
     const vars = siteVars(), fonts = siteFonts();
     lastMsg = Object.keys(vars).length || Object.keys(fonts).length ? { type: 'qs-ds-tweak', vars, fonts } : { type: 'qs-ds-reset' };
+    saveWorkingState();
     frames().forEach((f) => { if (f.dataset.ready && f.contentWindow) f.contentWindow.postMessage(lastMsg, f.dataset.origin); });
     if (embedded && parentOrigin) window.parent.postMessage(lastMsg, parentOrigin);
   }
@@ -1570,6 +1593,7 @@
     body.classList.toggle('is-site-open', open);
     site.inert = !open;
     site.setAttribute('aria-hidden', String(!open));
+    if (!open) { updatePickers(); updateNow(); }
     const target = open ? site.querySelector('[data-site-close]') : document.querySelector('[data-site-open]');
     if (target) target.focus({ preventScroll: true });
   };
@@ -1956,11 +1980,60 @@
     renderSavedList();
   }));
 
-  // Apply ?preset=... from URL if shared
+  // Apply ?preset=... from URL if shared; otherwise restore the active session working state (or live site tweaks).
+  let restoredFromUrl = false;
   try {
     const sharedParam = new URLSearchParams(location.search).get('preset');
-    if (sharedParam) applySelection(decodePreset(sharedParam));
+    if (sharedParam) {
+      isBooting = false;
+      applySelection(decodePreset(sharedParam));
+      restoredFromUrl = true;
+    }
   } catch { /* ignore invalid shared param */ }
+
+  if (!restoredFromUrl) {
+    try {
+      const rawWorking = window.sessionStorage.getItem(WORKING_KEY);
+      if (rawWorking) {
+        const parsed = JSON.parse(rawWorking);
+        if (parsed && typeof parsed === 'object') {
+          isBooting = false;
+          applySelection(parsed);
+        }
+      } else {
+        // Fallback: if site tweaks exist in qs-ds-tweaks from before WORKING_KEY was saved, hydrate matching color tokens.
+        const rawSite = window.sessionStorage.getItem('qs-ds-tweaks');
+        if (rawSite) {
+          const siteData = JSON.parse(rawSite);
+          const sv = siteData && siteData.vars && typeof siteData.vars === 'object' ? siteData.vars : null;
+          if (sv) {
+            const hydrated = {};
+            const hydratedManual = [];
+            NAMES.forEach((k) => {
+              if (typeof sv[k] === 'string' && /^#[0-9a-f]{6}$/i.test(sv[k])) {
+                hydrated[k] = sv[k];
+                hydratedManual.push(k);
+              }
+            });
+            if (hydratedManual.length) {
+              isBooting = false;
+              applySelection({
+                color: {
+                  source: 'Official Querent',
+                  state: hydrated,
+                  manual: hydratedManual,
+                  btnGradOn: typeof sv['--btn-bg'] === 'string' && sv['--btn-bg'].indexOf('linear-gradient') === 0,
+                  pillGradOn: typeof sv['--pill-on-bg'] === 'string' && sv['--pill-on-bg'].indexOf('linear-gradient') === 0,
+                  stageGradOn: typeof sv['--col-stage-fill'] === 'string' && sv['--col-stage-fill'].indexOf('linear-gradient') === 0,
+                },
+              });
+            }
+          }
+        }
+      }
+    } catch { /* ignore */ }
+  }
+  isBooting = false;
 
   loadSavedPresets();
 
