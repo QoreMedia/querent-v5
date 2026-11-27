@@ -1,9 +1,9 @@
 /* STAGING-ONLY: Version A default. Purple structures the page, teal supports it, and pink marks primary actions. */
 :root {
-  --col-btn-bg: #A62478;
+  --col-btn-bg: #941F6C;
   --col-btn-dark-bg: #A62478;
   --col-btn-hover: #8C1B65;
-  --col-btn-line: #A62478;
+  --col-btn-line: #941F6C;
   --col-btn-dark-line: #D87AB2;
   --col-shadow-btn: #A62478;
   --rgb-shadow-btn: 166 36 120;
