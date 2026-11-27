@@ -74,8 +74,10 @@ function cleanPreset(body) {
     source: cleanStr(colorIn.source, 40) || 'Official Querent',
     anchorHex: typeof colorIn.anchorHex === 'string' && /^#[0-9a-f]{6}$/i.test(colorIn.anchorHex) ? colorIn.anchorHex : null,
     state: cleanHexMap(colorIn.state),
-    manual: Array.isArray(colorIn.manual) ? colorIn.manual.filter((k) => typeof k === 'string' && /^--[a-z0-9-]+$/i.test(k)).slice(0, 32) : [],
+    manual: Array.isArray(colorIn.manual) ? colorIn.manual.filter((k) => typeof k === 'string' && /^--[a-z0-9-]+$/i.test(k)).slice(0, 64) : [],
     btnGradOn: Boolean(colorIn.btnGradOn),
+    pillGradOn: Boolean(colorIn.pillGradOn),
+    stageGradOn: Boolean(colorIn.stageGradOn),
   };
 
   const typeIn = body.typography && typeof body.typography === 'object' ? body.typography : {};

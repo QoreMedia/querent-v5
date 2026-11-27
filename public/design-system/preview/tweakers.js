@@ -40,14 +40,34 @@
   const trip = (l) => l.map((x) => Math.round(gam(x) * 255)).join(' ');
 
   const OFFICIAL = {
-    '--bg': '#F4F4F2', '--bg-elev': '#FFFFFF', '--bg-elev-2': '#EAEAE6',
-    '--ink': '#0A0B0E', '--ink-dim': '#5A5F69', '--ink-mute': '#8A8F99',
-    '--night': '#0A0B0E', '--night-2': '#13151A',
-    '--on-night': '#ECEEF2', '--on-night-dim': '#94A3B8', '--on-night-mute': '#64748B',
-    '--navy-900': '#0D1B38', '--btn-grad': '#1D4ED8', '--blue-700': '#1D4ED8', '--btn-ink': '#FFFFFF', '--navy-800': '#152C5B',
-    '--card-light': '#E8EEFA', '--card-light-grad': '#2563EB', '--card-dark': '#111C38', '--card-dark-grad': '#0B1226',
-    '--blue-600': '#2563EB', '--blue-400': '#60A5FA', '--blue-300': '#93C5FD', '--cyan-500': '#06B6D4',
-    '--ok': hex(rgb(0.62, 0.16, 150)), '--warn': hex(rgb(0.68, 0.16, 70)), '--danger': '#B42318',
+    /* 1. Buttons */
+    '--col-btn-bg': '#0D1B38', '--col-btn-grad': '#1D4ED8', '--col-btn-hover': '#1D4ED8', '--col-btn-txt': '#FFFFFF', '--col-btn-dark-bg': '#152C5B', '--col-btn-line': '#0D1B38',
+    /* 2. Backgrounds, Gradients & Ambient Shading */
+    '--col-bg-light': '#F4F4F2', '--col-bg-light-elev': '#FFFFFF', '--col-bg-light-well': '#EAEAE6',
+    '--col-bg-dark': '#0A0B0E', '--col-bg-dark-elev': '#13151A',
+    '--col-bg-slab-start': '#0D1B38', '--col-bg-slab-end': '#152C5B',
+    '--col-bg-dark-grad-end': '#0D1B38', '--col-bg-light-wash': '#E8EEFA',
+    '--col-bg-shade-1': '#2563EB', '--col-bg-shade-2': '#06B6D4', '--col-bg-shade-3': '#93C5FD',
+    /* 3. Text, Header & Text Gradients */
+    '--col-txt-light': '#0A0B0E', '--col-txt-light-dim': '#5A5F69', '--col-txt-light-mute': '#8A8F99',
+    '--col-txt-dark': '#ECEEF2', '--col-txt-dark-dim': '#94A3B8', '--col-txt-dark-mute': '#64748B',
+    '--col-nav-brand': '#0D1B38', '--col-nav-link': '#5A6275', '--col-nav-active': '#0D1B38',
+    '--col-txt-accent-light': '#152C5B', '--col-txt-accent-dark': '#60A5FA',
+    '--col-txt-grad-start': '#152C5B', '--col-txt-grad-end': '#2563EB', '--col-txt-mark': '#60A5FA',
+    /* 4. Cards & Card Gradients */
+    '--col-card-light': '#E8EEFA', '--col-card-light-grad': '#2563EB',
+    '--col-card-dark': '#111C38', '--col-card-dark-grad': '#0B1226', '--col-card-dark-glow': '#2563EB',
+    /* 5. Pills, Chips & Tags */
+    '--col-pill-bg': '#F6F8FC', '--col-pill-active-bg': '#0D1B38', '--col-pill-grad': '#2563EB',
+    '--col-pill-txt': '#152C5B', '--col-pill-active-txt': '#FFFFFF', '--col-pill-hover-line': '#2563EB',
+    /* 6. Loading, Progress & Stage Indicators */
+    '--col-stage-fill': '#152C5B', '--col-stage-fill-dark': '#60A5FA', '--col-stage-grad': '#06B6D4',
+    '--col-stage-pulse': '#2563EB', '--col-stage-shimmer': '#0A0B0E',
+    /* 7. Shadows & Elevation Shading */
+    '--col-shadow-light': '#0D1B38', '--col-shadow-dark': '#000000', '--col-shadow-btn': '#0D1B38', '--col-shadow-focus': '#2563EB',
+    /* 8. Status & Brand Marks */
+    '--col-status-ok': hex(rgb(0.62, 0.16, 150)), '--col-status-warn': hex(rgb(0.68, 0.16, 70)), '--col-status-err': '#B42318',
+    '--col-mark-primary': '#1D4ED8', '--col-mark-secondary': '#06B6D4', '--col-mark-ring': '#0A0B0E',
   };
   const NAMES = Object.keys(OFFICIAL);
   const sheet = document.createElement('style');
@@ -55,6 +75,8 @@
   document.head.appendChild(sheet);
   const state = {};
   let btnGradOn = false;
+  let pillGradOn = false;
+  let stageGradOn = false;
   let currentAnchorHex = null;
   let extra = '';
   let hue = null;
@@ -74,65 +96,155 @@
     const blue600 = ensure(Math.min(0.62, Math.max(0.45, aL)), C, h, white, 4.5, -1);
     const bL = toOklch(blue600)[0];
     const cyanH = (h + 310) % 360;
+    const blue700 = ensure(bL - 0.07, C, h, white, 4.5, -1);
+    const navy900 = ensure(0.25, C * 0.55, h, white, 7, -1);
+    const navy800 = ensure(0.32, C * 0.6, h, white, 4.5, -1);
+    const blue400 = ensure(0.72, C * 0.85, h, night, 4.5, 1);
+    const blue300 = ensure(0.84, C * 0.5, h, night, 4.5, 1);
+    const cyan500 = rgb(0.72, C * 0.8, cyanH);
     const cardLightRgb = rgb(0.945, Math.min(0.03, C * 0.25), h);
     const cardDarkStartRgb = rgb(0.22, C * 0.5, h);
     const cardDarkEndRgb = rgb(0.17, C * 0.45, h);
+    const inkRgb = ensure(0.17, tc * 1.5, h, bg, 12, -1);
+    const inkDimRgb = ensure(0.46, tc * 2, h, bg, 4.5, -1);
+    const inkMuteRgb = ensure(0.62, tc * 2, h, bg, 3, -1);
+    const night2Rgb = rgb(0.19, Math.min(0.03, C * 0.2), h);
+    const onNightRgb = rgb(0.94, tc, h);
+    const onNightDimRgb = ensure(0.74, tc * 3, h, night, 4.5, 1);
+    const onNightMuteRgb = ensure(0.6, tc * 3, h, night, 3, 1);
     const d = {
-      '--bg': bg, '--bg-elev': white, '--bg-elev-2': rgb(0.93, tc * 1.3, h),
-      '--ink': ensure(0.17, tc * 1.5, h, bg, 12, -1), '--ink-dim': ensure(0.46, tc * 2, h, bg, 4.5, -1), '--ink-mute': ensure(0.62, tc * 2, h, bg, 3, -1),
-      '--night': night, '--night-2': rgb(0.19, Math.min(0.03, C * 0.2), h),
-      '--on-night': rgb(0.94, tc, h), '--on-night-dim': ensure(0.74, tc * 3, h, night, 4.5, 1), '--on-night-mute': ensure(0.6, tc * 3, h, night, 3, 1),
-      '--blue-600': blue600, '--blue-700': ensure(bL - 0.07, C, h, white, 4.5, -1),
-      '--btn-grad': ensure(bL - 0.04, C, h, white, 4.5, -1), '--btn-ink': white,
-      '--navy-900': ensure(0.25, C * 0.55, h, white, 7, -1), '--navy-800': ensure(0.32, C * 0.6, h, white, 4.5, -1),
-      '--card-light': cardLightRgb, '--card-light-grad': blue600,
-      '--card-dark': cardDarkStartRgb, '--card-dark-grad': cardDarkEndRgb,
-      '--blue-400': ensure(0.72, C * 0.85, h, night, 4.5, 1), '--blue-300': ensure(0.84, C * 0.5, h, night, 4.5, 1),
-      '--cyan-500': rgb(0.72, C * 0.8, cyanH),
+      '--col-btn-bg': navy900, '--col-btn-grad': blue700, '--col-btn-hover': blue700, '--col-btn-txt': white, '--col-btn-dark-bg': navy800, '--col-btn-line': navy900,
+      '--col-bg-light': bg, '--col-bg-light-elev': white, '--col-bg-light-well': rgb(0.93, tc * 1.3, h),
+      '--col-bg-dark': night, '--col-bg-dark-elev': night2Rgb,
+      '--col-bg-slab-start': navy900, '--col-bg-slab-end': navy800,
+      '--col-bg-dark-grad-end': navy900, '--col-bg-light-wash': cardLightRgb,
+      '--col-bg-shade-1': blue600, '--col-bg-shade-2': cyan500, '--col-bg-shade-3': blue300,
+      '--col-txt-light': inkRgb, '--col-txt-light-dim': inkDimRgb, '--col-txt-light-mute': inkMuteRgb,
+      '--col-txt-dark': onNightRgb, '--col-txt-dark-dim': onNightDimRgb, '--col-txt-dark-mute': onNightMuteRgb,
+      '--col-nav-brand': navy900, '--col-nav-link': inkDimRgb, '--col-nav-active': navy900,
+      '--col-txt-accent-light': navy800, '--col-txt-accent-dark': blue400,
+      '--col-txt-grad-start': navy800, '--col-txt-grad-end': blue600, '--col-txt-mark': blue400,
+      '--col-card-light': cardLightRgb, '--col-card-light-grad': blue600,
+      '--col-card-dark': cardDarkStartRgb, '--col-card-dark-grad': cardDarkEndRgb, '--col-card-dark-glow': blue600,
+      '--col-pill-bg': rgb(0.97, Math.min(0.018, C * 0.12), h), '--col-pill-active-bg': navy900, '--col-pill-grad': blue600,
+      '--col-pill-txt': navy800, '--col-pill-active-txt': white, '--col-pill-hover-line': blue600,
+      '--col-stage-fill': navy800, '--col-stage-fill-dark': blue400, '--col-stage-grad': cyan500,
+      '--col-stage-pulse': blue600, '--col-stage-shimmer': night,
+      '--col-shadow-light': navy900, '--col-shadow-dark': [0, 0, 0], '--col-shadow-btn': navy900, '--col-shadow-focus': blue600,
+      '--col-mark-primary': blue700, '--col-mark-secondary': cyan500, '--col-mark-ring': night,
     };
     const out = {};
     for (const k of Object.keys(d)) out[k] = hex(d[k]);
     calTints = { '--cal-bg-muted': hex(rgb(0.972, Math.min(0.02, C * 0.1), h)), '--cal-bg-emphasis': hex(rgb(0.94, Math.min(0.03, C * 0.14), h)), '--cal-border': hex(rgb(0.9, Math.min(0.035, C * 0.17), h)), '--cal-border-emphasis': hex(rgb(0.82, Math.min(0.06, C * 0.3), h)) };
-    const panelBase = out['--card-light'];
+    const panelBase = out['--col-card-light'];
     extra = `--accent-soft: ${o(0.17, 0.01, h, 0.08)}; --line: ${o(0.2, 0.01, h, 0.1)}; --line-strong: ${o(0.2, 0.01, h, 0.18)};
-      --panel-light: radial-gradient(ellipse 60% 70% at 85% 0%, ${o(bL, C, h, 0.14)}, transparent 70%), ${panelBase};
-      --panel-light-line: ${o(bL, C, h, 0.16)};
-      --panel-dark: radial-gradient(ellipse 70% 80% at 100% 0%, ${o(bL, C, h, 0.22)}, transparent 70%), linear-gradient(160deg, ${out['--card-dark']} 0%, ${out['--card-dark-grad']} 100%);
-      --panel-dark-line: ${o(0.82, C * 0.4, h, 0.16)};
-      --panel-dark-start: ${out['--card-dark']}; --panel-dark-end: ${out['--card-dark-grad']};
-      --field-line: ${o(bL, C, h, 0.18)}; --field-ring: 0 0 0 3px ${o(bL, C, h, 0.18)}; --pill-line: ${o(bL, C, h, 0.2)};
+      --field-line: ${o(bL, C, h, 0.18)}; --field-ring: 0 0 0 3px ${o(bL, C, h, 0.18)};
       --hairline-on-night: ${o(0.82, C * 0.4, h, 0.14)}; --hairline-on-night-strong: ${o(0.82, C * 0.4, h, 0.24)};
       --btn-dark-line: ${o(0.82, C * 0.4, h, 0.32)}; --tile-dark-bg: ${o(bL, C, h, 0.14)}; --tile-dark-line: ${o(0.82, C * 0.4, h, 0.18)};
       --halo-core: ${o(bL, C, h, 0.3)}; --halo-mid: ${o(bL, C, h, 0.1)}; --wash-bottom: ${o(0.92, C * 0.2, h, 0.6)};
-      --blob-blue: ${trip(rgb(bL, C, h))}; --blob-cyan: ${trip(rgb(0.72, C * 0.8, cyanH))}; --blob-navy: ${trip(d['--navy-900'])}; --blob-ice: ${trip(d['--blue-300'])};
+      --blob-blue: ${trip(blue600)}; --blob-cyan: ${trip(cyan500)}; --blob-navy: ${trip(navy900)}; --blob-ice: ${trip(blue300)};
       --ds-tint: ${panelBase};`;
     return out;
   }
 
   function computedOverrides() {
     const out = {};
+    /* 1. Buttons (strictly isolated) */
     if (btnGradOn) {
-      out['--btn-bg'] = `linear-gradient(135deg, ${current('--navy-900')} 0%, ${current('--btn-grad')} 100%)`;
-      out['--btn-dark-bg'] = `linear-gradient(135deg, ${current('--navy-800')} 0%, ${current('--btn-grad')} 100%)`;
+      const gradLight = `linear-gradient(135deg, ${current('--col-btn-bg')} 0%, ${current('--col-btn-grad')} 100%)`;
+      const gradDark = `linear-gradient(135deg, ${current('--col-btn-dark-bg')} 0%, ${current('--col-btn-grad')} 100%)`;
+      out['--col-btn-bg'] = gradLight;
+      out['--col-btn-dark-bg'] = gradDark;
+      out['--btn-bg'] = gradLight;
+      out['--btn-dark-bg'] = gradDark;
     } else {
-      if (state['--navy-900']) out['--btn-bg'] = state['--navy-900'];
-      if (state['--navy-800']) out['--btn-dark-bg'] = state['--navy-800'];
+      if (state['--col-btn-bg']) out['--btn-bg'] = state['--col-btn-bg'];
+      if (state['--col-btn-dark-bg']) out['--btn-dark-bg'] = state['--col-btn-dark-bg'];
     }
-    if (state['--navy-900']) out['--btn-line'] = state['--navy-900'];
-    if (state['--blue-700']) out['--btn-hover'] = state['--blue-700'];
-    if (state['--btn-ink']) { out['--btn-ink'] = state['--btn-ink']; out['--pill-on-ink'] = state['--btn-ink']; }
-    if (state['--card-light'] || state['--card-light-grad']) {
-      const glow = hexTrip(current('--card-light-grad'));
-      out['--panel-light'] = `radial-gradient(ellipse 60% 70% at 85% 0%, rgb(${glow} / 0.16), transparent 70%), ${current('--card-light')}`;
+    if (state['--col-btn-line']) out['--btn-line'] = state['--col-btn-line'];
+    else if (state['--col-btn-bg']) { out['--col-btn-line'] = state['--col-btn-bg']; out['--btn-line'] = state['--col-btn-bg']; }
+    if (state['--col-btn-hover']) out['--btn-hover'] = state['--col-btn-hover'];
+    if (state['--col-btn-txt']) out['--btn-ink'] = state['--col-btn-txt'];
+
+    /* 2. Backgrounds & Ambient Shading */
+    if (state['--col-bg-light']) out['--bg'] = state['--col-bg-light'];
+    if (state['--col-bg-light-elev']) out['--bg-elev'] = state['--col-bg-light-elev'];
+    if (state['--col-bg-light-well']) out['--bg-elev-2'] = state['--col-bg-light-well'];
+    if (state['--col-bg-dark']) { out['--night'] = state['--col-bg-dark']; out['--col-bg-dark-grad-start'] = state['--col-bg-dark']; out['--rgb-bg-dark'] = hexTrip(state['--col-bg-dark']); }
+    if (state['--col-bg-dark-elev']) out['--night-2'] = state['--col-bg-dark-elev'];
+    if (state['--col-bg-slab-end']) out['--rgb-bg-slab-end'] = hexTrip(state['--col-bg-slab-end']);
+    if (state['--col-bg-shade-1']) { out['--rgb-bg-shade-1'] = hexTrip(state['--col-bg-shade-1']); out['--blob-blue'] = hexTrip(state['--col-bg-shade-1']); }
+    if (state['--col-bg-shade-2']) { out['--rgb-bg-shade-2'] = hexTrip(state['--col-bg-shade-2']); out['--blob-cyan'] = hexTrip(state['--col-bg-shade-2']); }
+    if (state['--col-bg-shade-3']) { out['--rgb-bg-shade-3'] = hexTrip(state['--col-bg-shade-3']); out['--blob-ice'] = hexTrip(state['--col-bg-shade-3']); }
+
+    /* 3. Text & Highlights */
+    if (state['--col-txt-light']) out['--ink'] = state['--col-txt-light'];
+    if (state['--col-txt-light-dim']) out['--ink-dim'] = state['--col-txt-light-dim'];
+    if (state['--col-txt-light-mute']) out['--ink-mute'] = state['--col-txt-light-mute'];
+    if (state['--col-txt-dark']) out['--on-night'] = state['--col-txt-dark'];
+    if (state['--col-txt-dark-dim']) out['--on-night-dim'] = state['--col-txt-dark-dim'];
+    if (state['--col-txt-dark-mute']) out['--on-night-mute'] = state['--col-txt-dark-mute'];
+    if (state['--col-txt-mark']) out['--rgb-txt-mark'] = hexTrip(state['--col-txt-mark']);
+    if (state['--col-txt-accent-dark']) out['--col-txt-accent-dark-soft'] = state['--col-txt-accent-dark'];
+
+    /* 4. Cards & Card Gradients */
+    if (state['--col-card-light'] || state['--col-card-light-grad']) {
+      const glow = hexTrip(current('--col-card-light-grad'));
+      out['--rgb-card-light-grad'] = glow;
+      out['--col-card-light-line'] = `rgb(${glow} / 0.18)`;
+      out['--panel-light'] = `radial-gradient(ellipse 60% 70% at 85% 0%, rgb(${glow} / 0.16), transparent 70%), ${current('--col-card-light')}`;
       out['--panel-light-line'] = `rgb(${glow} / 0.18)`;
-      out['--ds-tint'] = current('--card-light');
+      out['--ds-tint'] = current('--col-card-light');
     }
-    if (state['--card-dark'] || state['--card-dark-grad'] || state['--blue-600']) {
-      const glow = hexTrip(current('--blue-600'));
-      out['--panel-dark'] = `radial-gradient(ellipse 70% 80% at 100% 0%, rgb(${glow} / 0.22), transparent 70%), linear-gradient(160deg, ${current('--card-dark')} 0%, ${current('--card-dark-grad')} 100%)`;
-      out['--panel-dark-start'] = current('--card-dark');
-      out['--panel-dark-end'] = current('--card-dark-grad');
+    if (state['--col-card-dark'] || state['--col-card-dark-grad'] || state['--col-card-dark-glow']) {
+      const glow = hexTrip(current('--col-card-dark-glow'));
+      out['--rgb-card-dark-glow'] = glow;
+      out['--panel-dark'] = `radial-gradient(ellipse 70% 80% at 100% 0%, rgb(${glow} / 0.22), transparent 70%), linear-gradient(160deg, ${current('--col-card-dark')} 0%, ${current('--col-card-dark-grad')} 100%)`;
     }
+
+    /* 5. Pills, Chips & Tags */
+    if (pillGradOn) {
+      const pGrad = `linear-gradient(135deg, ${current('--col-pill-active-bg')} 0%, ${current('--col-pill-grad')} 100%)`;
+      out['--col-pill-active-bg'] = pGrad;
+      out['--pill-on-bg'] = pGrad;
+    } else if (state['--col-pill-active-bg']) {
+      out['--pill-on-bg'] = state['--col-pill-active-bg'];
+    }
+    if (state['--col-pill-bg']) out['--pill-bg'] = state['--col-pill-bg'];
+    if (state['--col-pill-active-txt']) out['--pill-on-ink'] = state['--col-pill-active-txt'];
+    if (state['--col-pill-hover-line']) {
+      const prgb = hexTrip(state['--col-pill-hover-line']);
+      out['--rgb-pill-accent'] = prgb;
+      out['--col-pill-line'] = `rgb(${prgb} / 0.20)`;
+      out['--pill-line'] = `rgb(${prgb} / 0.20)`;
+      out['--pill-hover-line'] = state['--col-pill-hover-line'];
+    }
+
+    /* 6. Loading, Progress & Stage Indicators */
+    if (stageGradOn) {
+      out['--col-stage-fill'] = `linear-gradient(90deg, ${current('--col-stage-fill')} 0%, ${current('--col-stage-grad')} 100%)`;
+      out['--col-stage-fill-dark'] = `linear-gradient(90deg, ${current('--col-stage-fill-dark')} 0%, ${current('--col-stage-grad')} 100%)`;
+    }
+    if (state['--col-stage-shimmer']) out['--rgb-stage-shimmer'] = hexTrip(state['--col-stage-shimmer']);
+
+    /* 7. Shadows & Elevation Shading */
+    if (state['--col-shadow-light']) out['--rgb-shadow-light'] = hexTrip(state['--col-shadow-light']);
+    if (state['--col-shadow-dark']) out['--rgb-shadow-dark'] = hexTrip(state['--col-shadow-dark']);
+    if (state['--col-shadow-btn']) out['--rgb-shadow-btn'] = hexTrip(state['--col-shadow-btn']);
+    if (state['--col-shadow-focus']) {
+      const frgb = hexTrip(state['--col-shadow-focus']);
+      out['--rgb-shadow-focus'] = frgb;
+      out['--field-ring'] = `0 0 0 3px rgb(${frgb} / 0.18)`;
+    }
+
+    /* 8. Status & Brand Marks */
+    if (state['--col-status-ok']) out['--ok'] = state['--col-status-ok'];
+    if (state['--col-status-warn']) out['--warn'] = state['--col-status-warn'];
+    if (state['--col-status-err']) out['--danger'] = state['--col-status-err'];
+    if (state['--col-mark-primary']) out['--mark-primary'] = state['--col-mark-primary'];
+    if (state['--col-mark-secondary']) out['--mark-secondary'] = state['--col-mark-secondary'];
+    if (state['--col-mark-ring']) out['--mark-ring'] = state['--col-mark-ring'];
+
     return out;
   }
 
@@ -152,13 +264,13 @@
     updateNow();
   }
 
-  // ---------- colour UI (grouped toggle configurator with side-by-side Background <-> Text layers) ----------
+  // ---------- colour UI (grouped toggle configurator with strict category isolation) ----------
   const grid = document.getElementById('q-picks');
   const report = document.getElementById('q-report');
   const anchor = document.getElementById('q-anchor');
   const picks = {};
   const hexTags = {};
-  let gradToggleEl = null;
+  const gradToggles = {};
   let source = 'Official Querent';
   const manual = new Set();
 
@@ -166,41 +278,42 @@
     {
       id: 'buttons',
       title: 'Primary buttons',
-      desc: 'Main button fill, optional gradient blend, hover highlight, and label text',
+      desc: 'Action button fill, optional gradient blend, hover highlight, border, and label text',
       open: true,
-      dots: ['--navy-900', '--btn-grad', '--blue-700', '--btn-ink'],
+      dots: ['--col-btn-bg', '--col-btn-grad', '--col-btn-hover', '--col-btn-txt'],
       items: [
-        { key: '--navy-900', name: 'Primary button color', desc: 'Main fill color for primary action buttons' },
-        { key: '--btn-grad', name: 'Button gradient', desc: 'Second color blended across primary buttons', gradientToggle: true },
-        { key: '--blue-700', name: 'Button highlight', desc: 'Hover, focus, and active highlight state' },
-        { key: '--btn-ink', name: 'Button text', desc: 'Label and icon color inside primary buttons' },
-        { key: '--navy-800', name: 'Button on dark', desc: 'Primary button fill on dark headers and slabs' },
+        { key: '--col-btn-bg', name: 'Primary button fill', desc: 'Main fill color for primary action buttons only' },
+        { key: '--col-btn-grad', name: 'Button gradient', desc: 'Optional second stop blended across primary buttons', gradFlag: 'btn' },
+        { key: '--col-btn-hover', name: 'Button highlight', desc: 'Hover and active fill color on primary buttons' },
+        { key: '--col-btn-txt', name: 'Button text', desc: 'Label and icon color inside primary buttons' },
+        { key: '--col-btn-dark-bg', name: 'Button on dark', desc: 'Primary button fill on dark slabs and footers' },
+        { key: '--col-btn-line', name: 'Button border', desc: 'Outline stroke around light-surface buttons' },
       ],
     },
     {
       id: 'light-surface',
       title: 'Light background and text',
-      desc: 'Light canvas surfaces paired side by side with the text layers drawn on them',
+      desc: 'Light canvas surfaces paired side by side with the reading text drawn on them',
       open: true,
-      dots: ['--bg', '--bg-elev', '--ink', '--ink-dim'],
+      dots: ['--col-bg-light', '--col-bg-light-elev', '--col-txt-light', '--col-txt-light-dim'],
       preview: 'light',
       pair: [
         {
           title: 'Light background',
           tag: 'Surface layer',
           items: [
-            { key: '--bg', name: 'Page background', desc: 'Main light canvas behind page sections' },
-            { key: '--bg-elev', name: 'Elevated surface', desc: 'White input fields and raised inner blocks' },
-            { key: '--bg-elev-2', name: 'Subtle well', desc: 'Recessed containers and soft dividers' },
+            { key: '--col-bg-light', name: 'Page background', desc: 'Main light canvas behind page sections' },
+            { key: '--col-bg-light-elev', name: 'Elevated surface', desc: 'White fields, nav dropdowns, and raised inner blocks' },
+            { key: '--col-bg-light-well', name: 'Subtle well', desc: 'Recessed containers and soft section dividers' },
           ],
         },
         {
           title: 'Text on light',
           tag: 'Connected text layer',
           items: [
-            { key: '--ink', name: 'Primary text', desc: 'Headlines and main reading copy on light' },
-            { key: '--ink-dim', name: 'Secondary text', desc: 'Supporting paragraphs and subheadings' },
-            { key: '--ink-mute', name: 'Muted text', desc: 'Placeholders, hints, and small captions' },
+            { key: '--col-txt-light', name: 'Primary text', desc: 'Headlines and main reading copy on light' },
+            { key: '--col-txt-light-dim', name: 'Secondary text', desc: 'Supporting paragraphs and subheadings' },
+            { key: '--col-txt-light-mute', name: 'Muted text', desc: 'Placeholders, hints, and small captions' },
           ],
         },
       ],
@@ -210,42 +323,71 @@
       title: 'Dark background and text',
       desc: 'Dark band surfaces paired side by side with the light text layers drawn on them',
       open: true,
-      dots: ['--night', '--night-2', '--on-night', '--on-night-dim'],
+      dots: ['--col-bg-dark', '--col-bg-dark-elev', '--col-txt-dark', '--col-txt-dark-dim'],
       preview: 'dark',
       pair: [
         {
           title: 'Dark background',
           tag: 'Surface layer',
           items: [
-            { key: '--night', name: 'Dark band ground', desc: 'Header, footer, and inverted dark slabs' },
-            { key: '--night-2', name: 'Dark elevated surface', desc: 'Dropdown menus and raised dark blocks' },
+            { key: '--col-bg-dark', name: 'Dark band ground', desc: 'Inverted slabs, FAQ band, and footer base' },
+            { key: '--col-bg-dark-elev', name: 'Dark elevated surface', desc: 'Raised dark containers and inner panels' },
           ],
         },
         {
           title: 'Text on dark',
           tag: 'Connected text layer',
           items: [
-            { key: '--on-night', name: 'Primary text', desc: 'Headlines and main copy on dark bands' },
-            { key: '--on-night-dim', name: 'Secondary text', desc: 'Nav links and body copy on dark bands' },
-            { key: '--on-night-mute', name: 'Muted text', desc: 'Footnotes and metadata on dark bands' },
+            { key: '--col-txt-dark', name: 'Primary text', desc: 'Headlines and main copy on dark bands' },
+            { key: '--col-txt-dark-dim', name: 'Secondary text', desc: 'Links and body copy on dark bands' },
+            { key: '--col-txt-dark-mute', name: 'Muted text', desc: 'Footnotes and metadata on dark bands' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'header-text',
+      title: 'Header, accent text and text gradients',
+      desc: 'Navigation wordmark, emphasized headings, gradient text, and marker highlights',
+      open: true,
+      dots: ['--col-nav-brand', '--col-txt-accent-light', '--col-txt-grad-end', '--col-txt-mark'],
+      pair: [
+        {
+          title: 'Header and accent text',
+          tag: 'Navigation and emphasis',
+          items: [
+            { key: '--col-nav-brand', name: 'Header brand wordmark', desc: 'Querent logo text and menu icon in top bar' },
+            { key: '--col-nav-link', name: 'Navigation links', desc: 'Default link text inside the top navigation' },
+            { key: '--col-nav-active', name: 'Navigation active state', desc: 'Hovered and active nav link text and underline' },
+            { key: '--col-txt-accent-light', name: 'Accent text on light', desc: 'Typed hero phrase, process titles, and light accents' },
+            { key: '--col-txt-accent-dark', name: 'Accent text on dark', desc: 'Highlighted headlines and stats on dark bands' },
+          ],
+        },
+        {
+          title: 'Text gradients and highlights',
+          tag: 'Gradient fill and sweep',
+          items: [
+            { key: '--col-txt-grad-start', name: 'Text gradient start', desc: 'Leading color for gradient headlines and underlines' },
+            { key: '--col-txt-grad-end', name: 'Text gradient end', desc: 'Trailing color for gradient headlines and underlines' },
+            { key: '--col-txt-mark', name: 'Marker highlight wash', desc: 'Animated highlight sweep behind emphasized words' },
           ],
         },
       ],
     },
     {
       id: 'cards',
-      title: 'Cards and gradients',
+      title: 'Cards and card gradients',
       desc: 'Main fill color and gradient tone for light panels and dark feature cards',
       open: true,
-      dots: ['--card-light', '--card-light-grad', '--card-dark', '--card-dark-grad'],
+      dots: ['--col-card-light', '--col-card-light-grad', '--col-card-dark', '--col-card-dark-grad'],
       pair: [
         {
           title: 'Light card',
           tag: 'Panel fill and glow',
           preview: 'card-light',
           items: [
-            { key: '--card-light', name: 'Card main color', desc: 'Base fill tint for light panels and cards' },
-            { key: '--card-light-grad', name: 'Card gradient', desc: 'Soft radial accent wash across light cards' },
+            { key: '--col-card-light', name: 'Light card main color', desc: 'Base fill tint for light panels and cards' },
+            { key: '--col-card-light-grad', name: 'Light card gradient', desc: 'Soft radial accent wash across light cards' },
           ],
         },
         {
@@ -253,39 +395,118 @@
           tag: 'Panel fill and fade',
           preview: 'card-dark',
           items: [
-            { key: '--card-dark', name: 'Card main color', desc: 'Top base fill for dark feature cards' },
-            { key: '--card-dark-grad', name: 'Card gradient', desc: 'Deep bottom gradient fade on dark cards' },
+            { key: '--col-card-dark', name: 'Dark card main color', desc: 'Top base fill for dark feature cards' },
+            { key: '--col-card-dark-grad', name: 'Dark card gradient', desc: 'Deep bottom gradient fade on dark cards' },
+            { key: '--col-card-dark-glow', name: 'Dark card radial glow', desc: 'Top-corner ambient accent light on dark cards' },
           ],
         },
       ],
     },
     {
-      id: 'accents',
-      title: 'Brand accents and ambient glow',
-      desc: 'Interactive highlights, icons on dark surfaces, and background glow colors',
+      id: 'bg-gradients',
+      title: 'Background gradients and shading',
+      desc: 'Hero split slab gradient, dark section fades, and drifting ambient mesh shading',
       open: false,
-      dots: ['--blue-600', '--blue-400', '--blue-300', '--cyan-500'],
-      items: [
-        { key: '--blue-600', name: 'Primary accent', desc: 'Active states, links, chat bubbles, and glow' },
-        { key: '--blue-400', name: 'Accent on dark', desc: 'Icons and active highlights on dark bands' },
-        { key: '--blue-300', name: 'Soft highlight', desc: 'Marker sweeps, hairlines, and light glow' },
-        { key: '--cyan-500', name: 'Ambient partner', desc: 'Secondary background gradient and logo facet' },
+      dots: ['--col-bg-slab-start', '--col-bg-slab-end', '--col-bg-shade-1', '--col-bg-shade-2'],
+      pair: [
+        {
+          title: 'Section and slab gradients',
+          tag: 'Band backgrounds',
+          items: [
+            { key: '--col-bg-slab-start', name: 'Hero slab gradient start', desc: 'Left color stop of the hero metrics slab' },
+            { key: '--col-bg-slab-end', name: 'Hero slab gradient end', desc: 'Right color stop of the hero metrics slab' },
+            { key: '--col-bg-dark-grad-end', name: 'Dark slab bottom fade', desc: 'Lower gradient stop on dark showcase bands' },
+            { key: '--col-bg-light-wash', name: 'Light section wash', desc: 'Soft lower tint on process and CTA sections' },
+          ],
+        },
+        {
+          title: 'Ambient background shading',
+          tag: 'Drifting mesh glows',
+          items: [
+            { key: '--col-bg-shade-1', name: 'Primary ambient shade', desc: 'Main radial glow across hero and dark bands' },
+            { key: '--col-bg-shade-2', name: 'Secondary ambient shade', desc: 'Partner radial glow across page backgrounds' },
+            { key: '--col-bg-shade-3', name: 'Soft highlight shade', desc: 'Light ice glow and subtle dark-band hairlines' },
+          ],
+        },
       ],
     },
     {
-      id: 'status',
-      title: 'Status indicators',
-      desc: 'Semantic dot and alert colors for verified, pending, and error states',
+      id: 'pills',
+      title: 'Pills, chips and tags',
+      desc: 'FAQ question chips, calendar dates, booking selectors, and service fit tags',
       open: false,
-      dots: ['--ok', '--warn', '--danger'],
+      dots: ['--col-pill-bg', '--col-pill-active-bg', '--col-pill-grad', '--col-pill-txt'],
       items: [
-        { key: '--ok', name: 'Success', desc: 'Completed and verified status dots' },
-        { key: '--warn', name: 'Warning', desc: 'Pending and attention indicators' },
-        { key: '--danger', name: 'Error', desc: 'Validation and failure alerts' },
+        { key: '--col-pill-bg', name: 'Pill fill (idle)', desc: 'Background fill for unselected chips and tags' },
+        { key: '--col-pill-active-bg', name: 'Pill active fill', desc: 'Selected fill for active chips, dates, and tags' },
+        { key: '--col-pill-grad', name: 'Pill gradient', desc: 'Optional second stop blended across active pills', gradFlag: 'pill' },
+        { key: '--col-pill-txt', name: 'Pill text', desc: 'Label color inside unselected chips and tags' },
+        { key: '--col-pill-active-txt', name: 'Pill active text', desc: 'Label color inside selected pills and dates' },
+        { key: '--col-pill-hover-line', name: 'Pill border and hover', desc: 'Border and hover accent around chips and tags' },
+      ],
+    },
+    {
+      id: 'stages',
+      title: 'Loading and progress stages',
+      desc: 'Timeline bars, tab loading sweeps, complexity meters, typing dots, and shimmers',
+      open: false,
+      dots: ['--col-stage-fill', '--col-stage-fill-dark', '--col-stage-grad', '--col-stage-pulse'],
+      items: [
+        { key: '--col-stage-fill', name: 'Stage fill on light', desc: 'Active phase bars and complexity meters on light' },
+        { key: '--col-stage-fill-dark', name: 'Stage fill on dark', desc: 'Tab loading underline and slide progress on dark' },
+        { key: '--col-stage-grad', name: 'Stage gradient', desc: 'Optional second stop across active progress bars', gradFlag: 'stage' },
+        { key: '--col-stage-pulse', name: 'Typing and live pulse', desc: 'Chat typing dots, blinking carets, and live dots' },
+        { key: '--col-stage-shimmer', name: 'Skeleton shimmer', desc: 'Loading placeholder sweep tint on booking forms' },
+      ],
+    },
+    {
+      id: 'shadows',
+      title: 'Shadows and elevation shading',
+      desc: 'Drop shadow tints and focus halos separated from button and card fills',
+      open: false,
+      dots: ['--col-shadow-light', '--col-shadow-dark', '--col-shadow-btn', '--col-shadow-focus'],
+      items: [
+        { key: '--col-shadow-light', name: 'Card and panel shadow', desc: 'Drop shadow tint under light cards and header' },
+        { key: '--col-shadow-dark', name: 'Dark surface shadow', desc: 'Deep elevation shadow under dark panels' },
+        { key: '--col-shadow-btn', name: 'Button shadow', desc: 'Drop shadow tint beneath primary CTA buttons' },
+        { key: '--col-shadow-focus', name: 'Focus ring and halo', desc: 'Keyboard focus outlines and active field rings' },
+      ],
+    },
+    {
+      id: 'status-marks',
+      title: 'Status and brand marks',
+      desc: 'Semantic status indicators paired with independent logo mark facet colors',
+      open: false,
+      dots: ['--col-status-ok', '--col-status-warn', '--col-mark-primary', '--col-mark-secondary'],
+      pair: [
+        {
+          title: 'Status indicators',
+          tag: 'Feedback states',
+          items: [
+            { key: '--col-status-ok', name: 'Success', desc: 'Completed and verified status dots' },
+            { key: '--col-status-warn', name: 'Warning', desc: 'Pending and attention indicators' },
+            { key: '--col-status-err', name: 'Error', desc: 'Validation and failure alerts' },
+          ],
+        },
+        {
+          title: 'Brand marks',
+          tag: 'Logo and favicon facets',
+          items: [
+            { key: '--col-mark-primary', name: 'Logo primary facet', desc: 'Main facet of the Querent mark and favicon' },
+            { key: '--col-mark-secondary', name: 'Logo secondary facet', desc: 'Accent facet of the Querent mark' },
+            { key: '--col-mark-ring', name: 'Logo inner ring', desc: 'Inner Q ring of the flat logo mark' },
+          ],
+        },
       ],
     },
   ];
 
+  const getGradFlag = (f) => (f === 'btn' ? btnGradOn : (f === 'pill' ? pillGradOn : stageGradOn));
+  const setGradFlag = (f, val) => {
+    if (f === 'btn') btnGradOn = val;
+    else if (f === 'pill') pillGradOn = val;
+    else if (f === 'stage') stageGradOn = val;
+  };
   const groupKeys = (g) => (g.pair ? g.pair.flatMap((col) => col.items.map((it) => it.key)) : g.items.map((it) => it.key));
   const groupRefs = [];
 
@@ -309,30 +530,30 @@
     input.addEventListener('input', () => {
       state[item.key] = input.value;
       manual.add(item.key);
-      if (item.gradientToggle) {
-        btnGradOn = true;
-        if (gradToggleEl) gradToggleEl.checked = true;
+      if (item.gradFlag) {
+        setGradFlag(item.gradFlag, true);
+        if (gradToggles[item.gradFlag]) gradToggles[item.gradFlag].checked = true;
       }
       render();
     });
     label.append(input, info);
-    if (item.gradientToggle) {
+    if (item.gradFlag) {
       const tog = document.createElement('label');
       tog.className = 'q-pick__toggle';
       const cb = document.createElement('input');
       cb.type = 'checkbox';
-      cb.checked = btnGradOn;
-      cb.setAttribute('aria-label', 'Enable button gradient');
+      cb.checked = getGradFlag(item.gradFlag);
+      cb.setAttribute('aria-label', 'Enable ' + item.name.toLowerCase());
       cb.addEventListener('click', (e) => e.stopPropagation());
       cb.addEventListener('change', () => {
-        btnGradOn = cb.checked;
-        if (btnGradOn) manual.add('--btn-grad');
-        else manual.delete('--btn-grad');
+        setGradFlag(item.gradFlag, cb.checked);
+        if (cb.checked) manual.add(item.key);
+        else manual.delete(item.key);
         render();
       });
       tog.addEventListener('click', (e) => e.stopPropagation());
       tog.append(cb, document.createTextNode('On'));
-      gradToggleEl = cb;
+      gradToggles[item.gradFlag] = cb;
       label.append(tog);
     }
     label.append(hx);
@@ -423,10 +644,9 @@
           delete state[k];
           manual.delete(k);
         });
-        if (g.id === 'buttons') {
-          btnGradOn = false;
-          if (gradToggleEl) gradToggleEl.checked = false;
-        }
+        if (g.id === 'buttons') { btnGradOn = false; if (gradToggles.btn) gradToggles.btn.checked = false; }
+        if (g.id === 'pills') { pillGradOn = false; if (gradToggles.pill) gradToggles.pill.checked = false; }
+        if (g.id === 'stages') { stageGradOn = false; if (gradToggles.stage) gradToggles.stage.checked = false; }
         render();
       });
       right.append(dots, resetG);
@@ -492,20 +712,28 @@
       if (picks[n]) picks[n].value = val.toLowerCase();
       if (hexTags[n]) hexTags[n].textContent = val.toUpperCase();
     });
-    if (gradToggleEl) gradToggleEl.checked = btnGradOn;
+    if (gradToggles.btn) gradToggles.btn.checked = btnGradOn;
+    if (gradToggles.pill) gradToggles.pill.checked = pillGradOn;
+    if (gradToggles.stage) gradToggles.stage.checked = stageGradOn;
     groupRefs.forEach((r) => {
       r.dotEls.forEach((d) => { d.el.style.background = current(d.key); });
-      const edited = r.keys.some((k) => manual.has(k)) || (r.id === 'buttons' && btnGradOn);
+      const edited = r.keys.some((k) => manual.has(k)) ||
+        (r.id === 'buttons' && btnGradOn) ||
+        (r.id === 'pills' && pillGradOn) ||
+        (r.id === 'stages' && stageGradOn);
       r.resetBtn.hidden = !edited;
     });
   }
   function updateReport() {
     if (!report) return;
     const c = (n) => fromHex(current(n));
-    const W = [1, 1, 1];
     const rows = [
-      ['ink on bg', c('--ink'), c('--bg'), 4.5], ['ink-dim on bg', c('--ink-dim'), c('--bg'), 4.5], ['ink-mute on bg (placeholder)', c('--ink-mute'), c('--bg'), 3],
-      ['white on navy-900 (button)', W, c('--navy-900'), 4.5], ['white on blue-600 (message)', W, c('--blue-600'), 4.5], ['blue-400 on night (icon)', c('--blue-400'), c('--night'), 4.5],
+      ['Primary text on light', c('--col-txt-light'), c('--col-bg-light'), 4.5],
+      ['Secondary text on light', c('--col-txt-light-dim'), c('--col-bg-light'), 4.5],
+      ['Muted text on light', c('--col-txt-light-mute'), c('--col-bg-light'), 3],
+      ['Button text on button', c('--col-btn-txt'), c('--col-btn-bg'), 4.5],
+      ['Primary text on dark', c('--col-txt-dark'), c('--col-bg-dark'), 4.5],
+      ['Accent on dark', c('--col-txt-accent-dark'), c('--col-bg-dark'), 4.5],
     ];
     report.innerHTML = '';
     rows.forEach(([name, a, b, min]) => {
@@ -526,6 +754,8 @@
     Object.keys(state).forEach((k) => delete state[k]);
     manual.clear();
     btnGradOn = false;
+    pillGradOn = false;
+    stageGradOn = false;
     currentAnchorHex = null;
     source = 'Official Querent';
     calTints = null;
@@ -544,11 +774,11 @@
   }
   // Mini palette on each preset: page, highlight, accent, button, partner.
   const strip = (cols) => cols.map((c) => '<i style="background:' + c + '"></i>').join('');
-  const preview = (hx) => { const e = extra, hh = hue; const d = derive(hx); extra = e; hue = hh; return [d['--bg'], d['--blue-300'], d['--blue-600'], d['--navy-900'], d['--cyan-500']]; };
+  const preview = (hx) => { const e = extra, hh = hue; const d = derive(hx); extra = e; hue = hh; return [d['--col-bg-light'], d['--col-bg-shade-3'], d['--col-bg-shade-1'], d['--col-btn-bg'], d['--col-bg-shade-2']]; };
   presets.forEach((b) => {
     const sw = b.querySelector('.q-preset__sw');
     if (b === official) {
-      if (sw) sw.innerHTML = strip([OFFICIAL['--bg'], OFFICIAL['--blue-300'], OFFICIAL['--blue-600'], OFFICIAL['--navy-900'], OFFICIAL['--cyan-500']]);
+      if (sw) sw.innerHTML = strip([OFFICIAL['--col-bg-light'], OFFICIAL['--col-bg-shade-3'], OFFICIAL['--col-bg-shade-1'], OFFICIAL['--col-btn-bg'], OFFICIAL['--col-bg-shade-2']]);
       return;
     }
     const hx = hex(rgb(0.58, 0.19, Number(b.dataset.anchorH)));
@@ -647,7 +877,7 @@
   const nowTypePreset = document.getElementById('now-type-preset');
   const nowShape = document.getElementById('now-shape');
   function updateNow() {
-    if (nowSw) nowSw.innerHTML = strip(['--bg', '--ink', '--blue-600', '--navy-900', '--blue-300', '--cyan-500'].map(current));
+    if (nowSw) nowSw.innerHTML = strip(['--col-bg-light', '--col-txt-light', '--col-bg-shade-1', '--col-btn-bg', '--col-bg-shade-3', '--col-bg-shade-2'].map(current));
     if (nowPal) nowPal.textContent = manual.size && source === 'Official Querent' ? 'Official with edits' : source;
     if (nowLogo) nowLogo.textContent = LOGO_LABELS[logoVariant] || 'Flat mark';
     if (nowOther) {
@@ -929,7 +1159,7 @@
     },
   };
   const OUT = { default: 'Default', accent: 'Accent', highlight: 'Highlight', ink: 'Ink', navy: 'Navy' };
-  const OUTTOK = { accent: '--blue-600', highlight: '--blue-300', ink: '--ink', navy: '--navy-900' };
+  const OUTTOK = { accent: '--col-bg-shade-1', highlight: '--col-bg-shade-3', ink: '--col-txt-light', navy: '--col-btn-bg' };
   const SURF = { default: 'Default', raised: 'Raised', tint: 'Subtle tint', accent: 'Accent', dark: 'Dark' };
   const edge = {};
   let famSel = 'main-card';
@@ -963,13 +1193,10 @@
     shapePresetBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.shapePreset === shapePreset)));
   }
   function surfValue(kind) {
-    if (kind === 'raised') return current('--bg-elev');
-    if (kind === 'tint') {
-      const m = extra.match(/--ds-tint:\s*([^;]+);/);
-      return m ? m[1].trim() : '#E8EEFA';
-    }
-    if (kind === 'accent') return current('--blue-600');
-    if (kind === 'dark') return current('--night');
+    if (kind === 'raised') return current('--col-bg-light-elev');
+    if (kind === 'tint') return current('--col-card-light');
+    if (kind === 'accent') return current('--col-bg-shade-1');
+    if (kind === 'dark') return current('--col-bg-dark');
     return '';
   }
   function emitFacet(v, f, alias, prop, val) {
@@ -1171,45 +1398,19 @@
   };
   function siteVars() {
     const v = {};
-    ['--bg', '--bg-elev', '--bg-elev-2', '--ink', '--ink-dim', '--ink-mute', '--ok', '--warn', '--danger', '--night-2'].forEach((n) => { if (state[n]) v[n] = state[n]; });
-    const map = (from, tos) => { if (state[from]) tos.forEach((t) => { v[t] = state[from]; }); };
-    map('--navy-900', ['--btn-bg', '--btn-line', '--pill-on-bg', '--p-navy-d']);
-    map('--navy-800', ['--btn-dark-bg', '--pill-dark-on-bg', '--p-navy']);
-    map('--blue-700', ['--btn-hover', '--p-blue-d']);
-    map('--btn-ink', ['--btn-ink', '--pill-on-ink']);
-    map('--blue-600', ['--pill-hover-line', '--p-blue']);
-    map('--blue-300', ['--p-sky']);
-    map('--on-night', ['--c-on-night', '--on-night']);
-    map('--on-night-dim', ['--c-slate-400', '--on-night-dim']);
-    map('--on-night-mute', ['--c-slate-500', '--on-night-mute']);
-    map('--card-light', ['--c-panel-light']);
-    map('--card-dark', ['--c-panel-dark-start']);
-    map('--card-dark-grad', ['--c-panel-dark-end']);
-    // Brand colour variables the site uses for fixed colours (hex plus an r g b triplet for translucent uses).
-    const trip = (hx) => { const n = parseInt(hx.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(' '); };
-    const brand = (from, c, r) => { if (state[from]) { v[c] = state[from]; if (r) v[r] = trip(state[from]); } };
-    brand('--night', '--c-night', '--rgb-night');
-    brand('--blue-300', '--c-blue-300', '--rgb-blue-300');
-    brand('--blue-400', '--c-blue-400', '--rgb-blue-400');
-    brand('--blue-600', '--c-blue-600', '--rgb-blue-600');
-    brand('--blue-700', '--c-blue-700', '--rgb-blue-700');
-    brand('--navy-900', '--c-navy-900', '--rgb-navy-900');
-    brand('--navy-800', '--c-navy-800', '--rgb-navy-800');
-    brand('--cyan-500', '--c-cyan-500', '--rgb-cyan-500');
-    brand('--cyan-500', '--c-cyan-300', '--rgb-cyan-300');
-    if (state['--bg']) v['--c-canvas'] = state['--bg'];
-    if (state['--blue-400']) v['--c-va-accent'] = state['--blue-400'];
-    if (state['--blue-600']) v['--c-va-accent-2'] = state['--blue-600'];
+    // Forward every edited semantic role token directly to its isolated site variable (zero primitive cross-bleed).
+    NAMES.forEach((n) => {
+      if (state[n]) v[n] = state[n];
+    });
+    const live = computedOverrides();
+    Object.keys(live).forEach((n) => { v[n] = live[n]; });
     Object.assign(v, edgeVars());
     SITE_TYPE_VARS.forEach((n) => { if (typeVars[n] !== undefined) v[n] = typeVars[n]; });
     if (calTints) Object.assign(v, calTints);
-    if (state['--navy-800']) v['--cal-brand'] = state['--navy-800'];
-    if (state['--navy-900']) v['--cal-brand-emphasis'] = state['--navy-900'];
+    if (state['--col-pill-active-bg']) v['--cal-brand'] = state['--col-pill-active-bg'];
+    if (state['--col-btn-bg']) v['--cal-brand-emphasis'] = state['--col-btn-bg'];
     const comp = parseExtra();
-    [['--on-night', '--c-on-night'], ['--on-night-dim', '--c-slate-400'], ['--on-night-mute', '--c-slate-500'], ['--ds-tint', '--c-panel-light'], ['--panel-dark-start', '--c-panel-dark-start'], ['--panel-dark-end', '--c-panel-dark-end']].forEach(([f, t]) => { if (comp[f] && !v[t]) v[t] = comp[f]; });
-    ['--panel-light', '--panel-light-line', '--panel-dark', '--panel-dark-line', '--field-line', '--pill-line', '--btn-dark-line', '--accent-soft', '--line', '--line-strong'].forEach((n) => { if (comp[n]) v[n] = comp[n]; });
-    const live = computedOverrides();
-    ['--btn-bg', '--btn-dark-bg', '--btn-line', '--btn-hover', '--btn-ink', '--pill-on-ink', '--panel-light', '--panel-light-line', '--panel-dark'].forEach((n) => { if (live[n]) v[n] = live[n]; });
+    ['--field-line', '--btn-dark-line', '--accent-soft', '--line', '--line-strong'].forEach((n) => { if (comp[n] && !v[n]) v[n] = comp[n]; });
     return v;
   }
   function siteFonts() {
@@ -1235,8 +1436,8 @@
     .replace(/@T/g, onDark ? '#ECEEF2' : k);
 
   function syncLogo() {
-    const tweaked = Boolean(state['--blue-700'] || state['--cyan-500'] || state['--night']);
-    const a = current('--blue-700'), c = current('--cyan-500'), k = current('--night');
+    const tweaked = Boolean(state['--col-mark-primary'] || state['--col-mark-secondary'] || state['--col-mark-ring']);
+    const a = current('--col-mark-primary'), c = current('--col-mark-secondary'), k = current('--col-mark-ring');
     const flatUri = tweaked ? 'data:image/svg+xml,' + encodeURIComponent(renderLogoSvg('flat', a, c, k, true)) : null;
     const active = logoVariant !== 'flat' || tweaked;
     const ribbonSvg = renderLogoSvg(logoVariant, a, c, k, true);
@@ -1463,7 +1664,7 @@
       name: String(name || 'Untitled preset').trim().slice(0, 40),
       author: String(author || '').trim().slice(0, 32),
       updatedAt: new Date().toISOString(),
-      swatches: ['--bg', '--ink', '--blue-600', '--navy-900', '--blue-300', '--cyan-500'].map(current),
+      swatches: ['--col-bg-light', '--col-txt-light', '--col-bg-shade-1', '--col-btn-bg', '--col-bg-shade-3', '--col-bg-shade-2'].map(current),
       logo: logoVariant,
       color: {
         source,
@@ -1471,6 +1672,8 @@
         state: colorState,
         manual: Array.from(manual),
         btnGradOn,
+        pillGradOn,
+        stageGradOn,
       },
       typography: {
         preset: typePreset,
@@ -1510,8 +1713,10 @@
       col.manual.forEach((k) => { if (Object.prototype.hasOwnProperty.call(OFFICIAL, k)) manual.add(k); });
     }
     btnGradOn = Boolean(col.btnGradOn);
+    pillGradOn = Boolean(col.pillGradOn);
+    stageGradOn = Boolean(col.stageGradOn);
     source = col.source || p.name || 'Official Querent';
-    unpress(source === 'Official Querent' && !manual.size && !btnGradOn ? official : null);
+    unpress(source === 'Official Querent' && !manual.size && !btnGradOn && !pillGradOn && !stageGradOn ? official : null);
 
     // 3. Typography
     clearTypeState();

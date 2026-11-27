@@ -74,7 +74,28 @@
     '--c-night', '--c-on-night', '--c-slate-400', '--c-slate-500', '--c-blue-300', '--c-blue-400', '--c-blue-600', '--c-blue-700',
     '--c-navy-900', '--c-navy-800', '--c-cyan-500', '--c-cyan-300', '--c-panel-light', '--c-panel-dark-end', '--c-panel-dark-start', '--c-canvas',
     '--c-va-accent', '--c-va-accent-2',
-    '--rgb-blue-600', '--rgb-blue-300', '--rgb-blue-700', '--rgb-cyan-500', '--rgb-navy-800', '--rgb-navy-900', '--rgb-night', '--rgb-blue-400', '--rgb-cyan-300'
+    '--rgb-blue-600', '--rgb-blue-300', '--rgb-blue-700', '--rgb-cyan-500', '--rgb-navy-800', '--rgb-navy-900', '--rgb-night', '--rgb-blue-400', '--rgb-cyan-300',
+    /* Isolated semantic color role tokens */
+    '--col-btn-bg', '--col-btn-dark-bg', '--col-btn-hover', '--col-btn-txt', '--col-btn-line', '--col-btn-dark-line',
+    '--col-bg-light', '--col-bg-light-elev', '--col-bg-light-well', '--col-bg-dark', '--col-bg-dark-elev', '--rgb-bg-dark',
+    '--col-bg-slab-start', '--col-bg-slab-end', '--rgb-bg-slab-end',
+    '--col-bg-dark-grad-start', '--col-bg-dark-grad-mid', '--col-bg-dark-grad-end', '--col-bg-light-wash',
+    '--col-bg-shade-1', '--col-bg-shade-2', '--col-bg-shade-3', '--rgb-bg-shade-1', '--rgb-bg-shade-2', '--rgb-bg-shade-3',
+    '--col-txt-light', '--col-txt-light-dim', '--col-txt-light-mute',
+    '--col-txt-dark', '--col-txt-dark-dim', '--col-txt-dark-mute',
+    '--col-nav-brand', '--col-nav-link', '--col-nav-active',
+    '--col-txt-accent-light', '--col-txt-accent-dark', '--col-txt-accent-dark-soft',
+    '--col-txt-grad-start', '--col-txt-grad-end', '--col-txt-mark', '--rgb-txt-mark',
+    '--col-card-light', '--col-card-light-grad', '--rgb-card-light-grad', '--col-card-light-line',
+    '--col-card-dark', '--col-card-dark-grad', '--col-card-dark-glow', '--rgb-card-dark-glow', '--col-card-dark-line',
+    '--col-pill-bg', '--col-pill-active-bg', '--col-pill-dark-active-bg', '--col-pill-txt', '--col-pill-active-txt',
+    '--col-pill-line', '--col-pill-hover-line', '--rgb-pill-accent',
+    '--col-stage-track', '--col-stage-track-dark', '--col-stage-fill', '--col-stage-fill-dark', '--col-stage-grad',
+    '--col-stage-pulse', '--col-stage-shimmer', '--rgb-stage-shimmer',
+    '--col-shadow-light', '--rgb-shadow-light', '--col-shadow-dark', '--rgb-shadow-dark',
+    '--col-shadow-btn', '--rgb-shadow-btn', '--col-shadow-focus', '--rgb-shadow-focus',
+    '--col-status-ok', '--col-status-warn', '--col-status-err',
+    '--col-mark-primary', '--col-mark-secondary', '--col-mark-ring'
   ];
   // Edge families (radius, edge distance, shadow strength, outline, blur, surface, padding, spacing), icon stroke, typography settings, and Cal calendar colours.
   var FAMS = ['main-card', 'side-card', 'accent-card', 'toast', 'field', 'button', 'chip', 'slab', 'panel', 'card'];
@@ -167,8 +188,12 @@
     }
   }
   function syncMark() {
-    var cs = getComputedStyle(document.documentElement), cols = { a: cs.getPropertyValue('--c-blue-700').trim(), c: cs.getPropertyValue('--c-cyan-500').trim(), k: cs.getPropertyValue('--c-night').trim() };
-    var ok = applied.some(function (n) { return ['--c-blue-700', '--c-cyan-500', '--c-night'].indexOf(n) !== -1; }) && /^#[0-9a-fA-F]{6}$/.test(cols.a) && /^#[0-9a-fA-F]{6}$/.test(cols.c) && /^#[0-9a-fA-F]{6}$/.test(cols.k);
+    var cs = getComputedStyle(document.documentElement);
+    var a = cs.getPropertyValue('--col-mark-primary').trim() || cs.getPropertyValue('--c-blue-700').trim();
+    var c = cs.getPropertyValue('--col-mark-secondary').trim() || cs.getPropertyValue('--c-cyan-500').trim();
+    var k = cs.getPropertyValue('--col-mark-ring').trim() || cs.getPropertyValue('--c-night').trim();
+    var cols = { a: a, c: c, k: k };
+    var ok = applied.some(function (n) { return ['--col-mark-primary', '--col-mark-secondary', '--col-mark-ring'].indexOf(n) !== -1; }) && /^#[0-9a-fA-F]{6}$/.test(cols.a) && /^#[0-9a-fA-F]{6}$/.test(cols.c) && /^#[0-9a-fA-F]{6}$/.test(cols.k);
     swapLogos(ok ? cols : null);
   }
 
