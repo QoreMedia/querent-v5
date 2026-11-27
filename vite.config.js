@@ -11,6 +11,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         booking: resolve(__dirname, 'booking.html'),
         menu: resolve(__dirname, 'menu.html'),
+        va: resolve(__dirname, 'va.html'),
       },
     },
   },

@@ -1,38 +1,50 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-accent="teal">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI-Powered Virtual Assistants — Querent</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>AI-Powered Virtual Assistants | Querent</title>
 <meta name="description" content="Place an AI-supercharged VA in your business. Querent combines trained virtual assistants with custom automations so your team runs faster from day one." />
-<link rel="icon" type="image/png" href="/querent-logo.png" />
+<link rel="icon" type="image/svg+xml" href="/assets/querent-logo-flat.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&amp;family=Source+Sans+3:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
 <script type="text/javascript">
 (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, [L, namespace, ar[2]]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
 Cal("init", "30min", { origin: "https://cal.com" });
-Cal.ns["30min"]("ui", { theme: "dark", styles: { branding: { brandColor: "#7c3aed" } }, hideEventTypeDetails: true, layout: "month_view" });
+Cal.ns["30min"]("ui", { theme: "dark", styles: { branding: { brandColor: "#2563EB" } }, hideEventTypeDetails: true, layout: "month_view" });
 </script>
 <style>
+/* LOCAL-MOD LM-0002: brand colour variables. Values are identical to the literals they replace, so the page looks the same by default.
+   The staging design-system preview can override them to try other palettes (see staging-ds-panel.js). */
+:root {
+  --c-night: #0A0B0E; --c-on-night: #ECEEF2; --c-slate-400: #94A3B8; --c-slate-500: #64748B;
+  --c-blue-300: #93C5FD; --c-blue-400: #60A5FA; --c-blue-600: #2563EB; --c-blue-700: #1D4ED8;
+  --c-navy-900: #0D1B38; --c-navy-800: #152C5B; --c-cyan-500: #06B6D4; --c-cyan-300: #22D3EE;
+  --c-panel-light: #E8EEFA; --c-panel-dark-end: #0B1226; --c-panel-dark-start: #111C38; --c-canvas: #F4F4F2;
+  --rgb-blue-600: 37 99 235; --rgb-blue-300: 147 197 253; --rgb-blue-700: 29 78 216; --rgb-cyan-500: 6 182 212;
+  --rgb-navy-800: 21 44 91; --rgb-navy-900: 13 27 56; --rgb-night: 10 11 14; --rgb-blue-400: 96 165 250; --rgb-cyan-300: 34 211 238;
+  --c-va-accent: var(--c-blue-400); --c-va-accent-2: var(--c-blue-600);
+}
+
 /* ================================================================
    Querent — VA Offer Landing Page
-   Design system: Querent AI (dark, teal accent, Geist)
+   Design system: Querent AI (dark, teal accent, Bricolage Grotesque + Source Sans 3)
    ================================================================ */
 
 /* ---------- Tokens ---------- */
 :root {
-  --bg: #0A0B0E;
+  --bg: var(--c-night);
   --bg-elev: #13151A;
   --bg-elev-2: #1B1E25;
-  --ink: #ECEEF2;
+  --ink: var(--c-on-night);
   --ink-dim: #8A8F99;
   --ink-mute: #5A5F69;
   --line: rgba(255,255,255,0.08);
   --line-strong: rgba(255,255,255,0.16);
-  --accent: oklch(0.72 0.14 185);
-  --accent-2: oklch(0.65 0.12 195);
-  --accent-soft: oklch(0.72 0.14 185 / 0.14);
+  --accent: var(--c-va-accent);
+  --accent-2: var(--c-va-accent-2);
+  --accent-soft: color-mix(in oklab, var(--c-va-accent) 14%, transparent);
   --ok: oklch(0.78 0.16 150);
   --maxw: 1280px;
   --pad: 64px;
@@ -41,15 +53,15 @@ Cal.ns["30min"]("ui", { theme: "dark", styles: { branding: { brandColor: "#7c3ae
   --radius-sm: 8px;
 }
 [data-theme="light"] {
-  --bg: #F4F4F2;
+  --bg: var(--c-canvas);
   --bg-elev: #FFFFFF;
   --bg-elev-2: #F8F8F6;
-  --ink: #0A0B0E;
+  --ink: var(--c-night);
   --ink-dim: #5A5F69;
   --ink-mute: #8A8F99;
   --line: rgba(0,0,0,0.10);
   --line-strong: rgba(0,0,0,0.18);
-  --accent-soft: oklch(0.72 0.14 185 / 0.10);
+  --accent-soft: color-mix(in oklab, var(--c-va-accent) 10%, transparent);
 }
 
 /* ---------- Base ---------- */
@@ -58,13 +70,16 @@ html, body { margin: 0; padding: 0; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-size: 16px;
   line-height: 1.5;
   letter-spacing: -0.005em;
+}
+h1, h2, h3, .h1, .h2, .h3, .title, .why-now-headline, .faq-title, .cta-h2, .proc2-card-title, .stat-num, .value-num, .case-stat-num, .logo-word {
+  font-family: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
 }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; }
@@ -74,7 +89,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 
 /* ---------- Header ---------- */
 .hdr {
-  position: sticky; top: 0; z-index: 50;
+  position: sticky; top: 0; z-index: 60; overflow: visible;
   background: color-mix(in oklab, var(--bg) 80%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -99,9 +114,61 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   background: var(--bg); border-radius: 3px;
 }
 .logo-word { font-size: 18px; }
-.nav { display: flex; gap: 32px; }
-.nav a { color: var(--ink-dim); font-size: 14px; font-weight: 600; transition: color .15s ease; }
-.nav a:hover, .nav a.is-active { color: var(--ink); }
+.nav { display: flex; align-items: center; gap: 32px; }
+.nav > a,
+.nav-trigger {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 0;
+  color: var(--ink-dim); font-size: 14px; font-weight: 600;
+  background: transparent; border: 0; font-family: inherit; line-height: 1.2;
+  cursor: pointer; position: relative;
+  transition: color var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.nav > a:hover, .nav > a.is-active,
+.nav-trigger:hover, .nav-trigger.is-active,
+.nav-item:hover > .nav-trigger, .nav-item:focus-within > .nav-trigger { color: var(--ink); }
+.nav > a.is-active::after,
+.nav-trigger.is-active::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 2px; background: var(--ink); border-radius: 2px;
+}
+.nav-item { position: relative; display: inline-flex; align-items: center; }
+.nav-chev {
+  width: 14px; height: 14px; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform var(--dur-fast, 240ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.nav-item:hover .nav-chev,
+.nav-item:focus-within .nav-chev { transform: rotate(180deg); }
+.nav-dd {
+  position: absolute; top: calc(100% + 8px); left: -12px; min-width: 248px;
+  padding: 8px; border-radius: 16px;
+  background: linear-gradient(165deg, var(--c-panel-dark-start) 0%, var(--c-night) 100%);
+  border: 1px solid rgb(var(--rgb-blue-300) / .16);
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, .72);
+  color: var(--c-on-night);
+  display: flex; flex-direction: column; gap: 2px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translate3d(0, -6px, 0);
+  transition: opacity var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1)), transform var(--dur-fast, 240ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)), visibility 0s linear var(--dur-fast, 240ms);
+  z-index: 70;
+}
+.nav-dd::before { content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px; }
+.nav-item:hover .nav-dd,
+.nav-item:focus-within .nav-dd {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: translate3d(0, 0, 0); transition-delay: 0s;
+}
+.nav-dd a {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 38px; padding: 8px 12px; border-radius: 10px;
+  font-size: 14px; font-weight: 500; color: var(--c-slate-400);
+  white-space: nowrap;
+  transition: background-color var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1)), color var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.nav-dd a:hover, .nav-dd a:focus-visible { background: rgb(var(--rgb-blue-300) / .10); color: var(--c-on-night); }
+.nav-dd a.is-active { background: rgb(var(--rgb-blue-600) / .16); color: var(--c-on-night); }
+.nav-dd-sep { height: 1px; background: rgb(var(--rgb-blue-300) / .12); margin: 4px 8px; }
 .hdr-actions { display: flex; align-items: center; gap: 12px; }
 .theme-toggle {
   width: 36px; height: 36px;
@@ -124,26 +191,52 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 /* ---------- Buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
-  padding: 12px 20px;
-  border-radius: 10px;
+  padding: var(--pad-button, 12px 20px);
+  border-radius: var(--r-btn, 10px);
   font-size: 14px; font-weight: 500;
-  border: 1px solid transparent;
+  border: var(--bw-button, 1px) solid transparent;
   transition: all 0.15s ease;
   white-space: nowrap;
   gap: 8px;
 }
-.btn-lg { padding: 16px 28px; font-size: 16px; border-radius: 12px; }
+.btn-lg { padding: 16px 28px; font-size: 16px; border-radius: var(--r-btn, 12px); }
 .btn-primary {
-  background: var(--accent); color: #0A0B0E;
-  border-color: var(--accent);
-  box-shadow: 0 8px 24px -8px var(--accent);
+  background: var(--accent); color: var(--c-night);
+  border-color: var(--bc-button, var(--accent));
+  box-shadow: 0 calc(8px * var(--shk-button, 1)) calc(24px * var(--shk-button, 1)) calc(-8px * var(--shk-button, 1)) var(--accent);
 }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 32px -8px var(--accent); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 calc(12px * var(--shk-button, 1)) calc(32px * var(--shk-button, 1)) calc(-8px * var(--shk-button, 1)) var(--accent); }
 .btn-ghost {
   background: transparent; color: var(--ink);
-  border-color: var(--line-strong);
+  border-color: var(--bc-button, var(--line-strong));
 }
 .btn-ghost:hover { border-color: var(--ink); }
+
+/* ---------- CTA icons (LM-0002; spec: design-system/spec.json ctaIcon) ----------
+   One inline Lucide-style set: stroke currentColor, 16-18px, aria-hidden. Place icon as first
+   (calendar, mail, arrow-left) or last (arrow-right, arrow-down) child of .btn / .footer-cta / .cta-link.
+   Hover/focus nudge uses the shared --ease-soft / --dur-fast tokens; transform only. */
+.btn, .footer-cta, .cta-link { gap: 8px; }
+.btn-sm { gap: 6px; }
+.cta-link { display: inline-flex; align-items: center; }
+.cta-ico {
+  display: block; flex: none;
+  width: clamp(16px, 1.2em, 18px); height: clamp(16px, 1.2em, 18px);
+  fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.footer-cta .cta-ico, .cta-link .cta-ico { stroke-width: 2; }
+.cta-ico--cal { translate: 0 -0.5px; }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--right { transform: translate3d(3px, 0, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--left { transform: translate3d(-3px, 0, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--down { transform: translate3d(0, 2px, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--cal { transform: translate3d(0, -1.5px, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--mail { transform: translate3d(0, -1px, 0) scale(1.06); }
+@media (prefers-reduced-motion: reduce) {
+  .cta-ico, .nav-dd, .nav-chev { transition: none !important; }
+  .nav-item:hover .nav-dd, .nav-item:focus-within .nav-dd { transform: none; }
+  :is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico { transform: none; }
+}
 
 /* ---------- Layout scaffolding ---------- */
 .wrap {
@@ -152,16 +245,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   padding: 0 var(--pad);
 }
 .section { margin-top: var(--gap-section); }
-
-.eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: 'Geist Mono', monospace;
-  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 20px;
-}
-.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-mute); display: inline-block; }
-.dot-live { background: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 25%, transparent); }
 
 .h1 {
   font-size: clamp(42px, 5.6vw, 78px);
@@ -192,17 +275,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   margin: 0 auto;
   padding: 100px var(--pad) 60px;
 }
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--accent-soft);
-  border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
-  color: var(--accent);
-  font-family: 'Geist Mono', monospace;
-  font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase;
-  padding: 6px 12px; border-radius: 100px;
-  margin-bottom: 32px;
-}
-.hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: var(--gap-button, 12px); }
 
 /* ---------- Stats strip ---------- */
 .stats-strip {
@@ -210,10 +283,11 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: var(--bw-panel, 1px) solid var(--bc-panel, var(--line));
+  border-radius: var(--r-panel, var(--radius));
   overflow: hidden;
   margin-top: 72px;
+  box-shadow: 0 calc(24px * var(--shk-panel, 0)) calc(56px * var(--shk-panel, 0)) calc(-28px * var(--shk-panel, 0)) rgba(0,0,0,0.45);
 }
 .stat-item {
   background: var(--bg-elev);
@@ -231,20 +305,20 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 .steps-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  gap: var(--gap-card, 24px);
   margin-top: 48px;
 }
 .step-card {
   background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 32px 28px;
+  border: var(--bw-card, 1px) solid var(--bc-card, var(--line));
+  border-radius: var(--r-card, var(--radius));
+  padding: var(--pad-card, 32px 28px);
   display: flex; flex-direction: column; gap: 16px;
   transition: border-color 0.2s ease;
+  box-shadow: 0 calc(18px * var(--shk-card, 0)) calc(40px * var(--shk-card, 0)) calc(-24px * var(--shk-card, 0)) rgba(0,0,0,0.45);
 }
-.step-card:hover { border-color: var(--line-strong); }
 .step-num {
-  font-family: 'Geist Mono', monospace;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase;
   color: var(--accent);
   background: var(--accent-soft);
@@ -264,14 +338,15 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 .offer-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: var(--gap-card, 24px);
   margin-top: 48px;
 }
 .offer-card {
   background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 36px;
+  border: var(--bw-card, 1px) solid var(--bc-card, var(--line));
+  border-radius: var(--r-card, var(--radius));
+  padding: var(--pad-card, 36px);
+  box-shadow: 0 calc(18px * var(--shk-card, 0)) calc(40px * var(--shk-card, 0)) calc(-24px * var(--shk-card, 0)) rgba(0,0,0,0.45);
 }
 .offer-card.highlight {
   border-color: color-mix(in oklab, var(--accent) 40%, transparent);
@@ -279,7 +354,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 }
 .offer-tag {
   display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'Geist Mono', monospace;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
   padding: 4px 10px; border-radius: 4px;
   margin-bottom: 20px;
@@ -309,20 +384,20 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 .usecase-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: var(--gap-card, 20px);
   margin-top: 48px;
 }
 .usecase-card {
   background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 28px;
+  border: var(--bw-card, 1px) solid var(--bc-card, var(--line));
+  border-radius: var(--r-card, var(--radius));
+  padding: var(--pad-card, 28px);
   transition: border-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 calc(18px * var(--shk-card, 0)) calc(40px * var(--shk-card, 0)) calc(-24px * var(--shk-card, 0)) rgba(0,0,0,0.45);
 }
-.usecase-card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
 .usecase-icon { font-size: 28px; margin-bottom: 16px; }
 .usecase-role {
-  font-family: 'Geist Mono', monospace;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--accent); margin-bottom: 8px;
 }
@@ -333,8 +408,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   grid-template-columns: 1fr 1fr;
   gap: 2px;
   background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: var(--bw-panel, 1px) solid var(--bc-panel, var(--line));
+  border-radius: var(--r-panel, var(--radius));
   overflow: hidden;
   margin-top: 48px;
 }
@@ -353,7 +428,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 .diff-row > div:last-child { font-size: 14px; }
 .diff-header > div {
   background: var(--bg-elev-2) !important;
-  font-family: 'Geist Mono', monospace;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--ink-dim);
   padding: 16px 28px;
@@ -365,22 +440,23 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 /* ---------- CTA banner ---------- */
 .cta-banner {
   background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 72px 64px;
+  border: var(--bw-panel, 1px) solid var(--bc-panel, var(--line));
+  border-radius: var(--r-panel, var(--radius));
+  padding: var(--pad-panel, 72px 64px);
   text-align: center;
   margin-top: var(--gap-section);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 calc(28px * var(--shk-panel, 0)) calc(64px * var(--shk-panel, 0)) calc(-32px * var(--shk-panel, 0)) rgba(0,0,0,0.5);
 }
 .cta-banner::before {
   content: "";
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 50% -20%, oklch(0.72 0.14 185 / 0.15) 0%, transparent 65%);
+  background: radial-gradient(ellipse at 50% -20%, color-mix(in oklab, var(--c-va-accent) 15%, transparent) 0%, transparent 65%);
   pointer-events: none;
 }
 .cta-banner-inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
-.cta-banner-ctas { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.cta-banner-ctas { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--gap-button, 12px); margin-top: 32px; }
 
 /* ---------- Footer ---------- */
 footer {
@@ -407,12 +483,373 @@ footer a:hover { color: var(--ink); }
   .cta-banner { padding: 48px 32px; }
   .nav { gap: 20px; }
 }
+@media (max-width: 768px) {
+  :root {
+    --m-pad-x: clamp(12px, 4vw, 20px);
+    --m-pad-y: clamp(20px, 3.4svh, 36px);
+    --m-gap: clamp(12px, 2.2svh, 22px);
+    --m-h1: clamp(1.75rem, 6.2vw + 0.5rem, 2.6rem);
+    --m-h2: clamp(1.4rem, 5vw + 0.4rem, 2.15rem);
+    --m-body: clamp(0.92rem, 0.85rem + 0.35vw, 1.05rem);
+    --m-lh-head: 1.08;
+    --m-lh-body: 1.5;
+    --pad: var(--m-pad-x);
+    --gap-section: clamp(32px, 5.5svh, 52px);
+  }
+  html, body { overflow-x: clip; }
+  body { font-size: var(--m-body); line-height: var(--m-lh-body); }
+  .btn:not(.btn-ico-m), .footer-cta {
+    white-space: normal; overflow-wrap: anywhere; text-wrap: balance; text-align: center;
+  }
+  .hdr-inner { padding-left: max(var(--m-pad-x), env(safe-area-inset-left)); padding-right: max(var(--m-pad-x), env(safe-area-inset-right)); gap: 12px; }
+  .hero-wrap { padding: var(--m-pad-y) var(--m-pad-x) 24px; }
+  .h1 { font-size: var(--m-h1); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; margin-bottom: 14px; }
+  .h2 { font-size: var(--m-h2); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; margin-bottom: 12px; }
+  .h3 { font-size: clamp(1.05rem, 3.6vw + 0.25rem, 1.25rem); overflow-wrap: anywhere; text-wrap: balance; }
+  .lede, .lede-sm { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; margin-bottom: 20px; }
+  .stats-strip { margin-top: 28px; }
+  .stat-item { padding: clamp(16px, 4vw, 22px); }
+  .stat-num { font-size: clamp(1.75rem, 6vw + 0.3rem, 2.4rem); }
+  .stat-label, .offer-list li, .diff-row > div { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
+  .steps-grid, .offer-grid, .usecase-grid, .diff-grid { margin-top: 24px; gap: var(--m-gap); }
+  .step-card, .offer-card, .usecase-card { padding: clamp(16px, 4vw, 22px) clamp(14px, 4vw, 18px); }
+  .cta-banner { padding: clamp(24px, 5vw, 32px) clamp(14px, 4vw, 18px); margin-top: var(--gap-section); }
+  .cta-banner-ctas { margin-top: 22px; }
+  footer { margin-top: var(--gap-section); padding: 24px var(--m-pad-x) calc(24px + env(safe-area-inset-bottom)); flex-wrap: wrap; gap: 12px; }
+  .nav { display: none; }
+  /* LM-0002 mobile: tap targets >= 44px */
+  .hdr .btn-ico-m { font-size: 0; gap: 0; width: 44px; height: 44px; min-height: 44px; padding: 0; flex: none; }
+  .hdr .btn-ico-m .cta-ico { width: 20px; height: 20px; }
+  .logo, .hdr .btn, .theme-toggle { min-height: 44px; }
+  .theme-toggle { min-width: 44px; }
+}
+@media (max-width: 768px) and (max-height: 700px) {
+  .hero-wrap { padding: 16px var(--m-pad-x) 18px; }
+  .stats-strip { margin-top: 18px; }
+}
+@media (max-width: 768px) and (min-height: 860px) {
+  .hero-wrap, .section, .cta-banner { min-height: 0; }
+}
 @media (max-width: 600px) {
   .steps-grid { grid-template-columns: 1fr; }
   .usecase-grid { grid-template-columns: 1fr; }
-  .hero-wrap { padding-top: 64px; }
-  .h1 { font-size: clamp(36px, 9vw, 52px); }
-  .nav { display: none; }
+}
+@media (max-width: 360px) {
+  .hero-ctas .btn, .cta-banner-ctas .btn { width: 100%; }
+  .diff-row > div, .diff-header > div { padding: 16px 14px; }
+}
+
+/* LOCAL-MOD LM-0002: AI Virtual Assistants follows the site design language and the design-system variables */
+:root {
+  --bg: var(--c-canvas); --bg-elev: #FFFFFF; --bg-elev-2: #EAEAE6; --ink: var(--c-night); --ink-dim: #5A5F69; --ink-mute: #8A8F99;
+  --line: rgb(var(--rgb-night) / .10); --line-strong: rgb(var(--rgb-night) / .18);
+  --accent: var(--c-blue-600); --accent-2: var(--c-navy-800); --accent-soft: rgb(var(--rgb-blue-600) / .10);
+  --btn-bg: var(--c-navy-900); --btn-line: var(--c-navy-900); --btn-hover: var(--c-blue-700);
+  --panel-light: var(--c-panel-light); --panel-light-line: rgb(var(--rgb-blue-600) / .16);
+  --panel-dark: linear-gradient(160deg, var(--c-panel-dark-start), var(--c-panel-dark-end)); --panel-dark-line: rgb(var(--rgb-blue-300) / .16);
+  --r-band: 40px; --r-panel: 30px; --r-card: 22px; --r-btn: 999px;
+  --maxw: 1280px; --pad: clamp(16px, 5vw, 64px); --gap-section: clamp(40px, 4.5vw, 72px);
+}
+body { background: var(--bg); color: var(--ink); }
+.hdr { background: var(--c-night); color: var(--c-on-night); border-bottom: 0; --ink: var(--c-on-night); --ink-dim: var(--c-slate-400); --line: rgb(var(--rgb-blue-300) / .14); }
+.hdr .nav-dd { background: var(--c-night); }
+.wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: var(--pad); }
+.btn { border-radius: var(--r-btn); border-width: var(--bw-button, 1px); }
+.btn-primary { background: var(--surf-button, var(--btn-bg)); border-color: var(--bc-button, var(--btn-line)); color: #fff; }
+.btn-primary:hover { background: var(--btn-hover); }
+.btn-ghost { background: transparent; color: inherit; border-color: var(--bc-button, var(--line-strong)); }
+.h1 { font-size: clamp(2.2rem, 6vw, 4.4rem); line-height: 1.02; font-weight: 800; letter-spacing: -.03em; max-width: 16ch; margin: 0 0 20px; }
+.h2 { font-size: clamp(1.6rem, 3.6vw, 2.8rem); line-height: 1.08; font-weight: 700; letter-spacing: -.025em; margin: 0 0 16px; }
+.h3 { font-size: 1.2rem; font-weight: 700; margin: 0 0 8px; }
+.lede, .lede-sm { color: var(--ink-dim); max-width: 60ch; margin: 0; }
+.lede { font-size: clamp(1.05rem, 1.6vw, 1.25rem); }
+.hero-wrap { padding-block: clamp(40px, 7vw, 96px) 0; }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin: 32px 0; }
+.stats-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--gap-card, 16px); background: var(--surf-slab, var(--panel-dark)); border: 0; border-radius: var(--r-band); padding: clamp(20px, 3vw, 40px); margin: 0; color: var(--c-on-night); }
+.stat-item { border: 0; padding: 0; background: transparent; }
+.stat-num { font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 800; color: var(--c-on-night); }
+.stat-num span { color: var(--c-blue-300); }
+.stat-label { color: var(--c-slate-400); }
+.section { margin-top: 0; padding-block: var(--gap-section) 0; }
+.steps-grid, .usecase-grid, .offer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: var(--gap-card, 16px); margin-top: 32px; border: 0; background: none; }
+.offer-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); }
+.step-card, .usecase-card, .offer-card { background: var(--surf-main-card, var(--panel-light)); border: var(--bw-card, 1px) solid var(--bc-card, var(--panel-light-line)); border-radius: var(--r-card); padding: var(--pad-card, 28px); box-shadow: 0 calc(24px * var(--shk-card, 0)) calc(60px * var(--shk-card, 0)) calc(-36px * var(--shk-card, 0)) rgb(var(--rgb-navy-900) / .45); }
+.offer-card.highlight { background: var(--panel-dark); border-color: var(--panel-dark-line); color: var(--c-on-night); }
+.offer-card.highlight .lede-sm { color: var(--c-slate-400); }
+.offer-list { list-style: disc; padding-left: 18px; margin: 20px 0 0; display: grid; gap: 8px; }
+.offer-list li { border: 0; padding: 0; }
+.offer-list li::before { content: none; }
+.usecase-role { color: var(--accent); font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.diff-grid { display: block; margin-top: 32px; border: var(--bw-panel, 1px) solid var(--bc-panel, var(--panel-light-line)); border-radius: var(--r-panel); overflow: hidden; background: var(--bg-elev); }
+.diff-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+.diff-row:last-child { border-bottom: 0; }
+.diff-row > div { padding: clamp(12px, 2vw, 20px); color: var(--ink-dim); }
+.diff-row > div + div { color: var(--ink); background: var(--accent-soft); font-weight: 600; }
+.diff-header > div { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; color: var(--ink); }
+.cta-banner { margin-block: var(--gap-section); background: var(--panel-light); border: var(--bw-panel, 1px) solid var(--bc-panel, var(--panel-light-line)); border-radius: var(--r-panel); padding: clamp(28px, 5vw, 64px); text-align: center; }
+.cta-banner::before, .cta-banner::after { content: none; }
+.cta-banner .lede-sm { margin: 0 auto; }
+.cta-banner-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 28px; }
+.footer { display: block; max-width: none; margin: 0; padding: 0; border: 0; background: var(--c-night); color: var(--c-on-night); border-radius: var(--r-band) var(--r-band) 0 0; font-size: 14px; }
+.footer-inner { max-width: var(--maxw); margin: 0 auto; padding: 56px var(--pad) 0; container-type: inline-size; }
+.footer-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr)) minmax(0, 1.3fr); gap: clamp(24px, 3.5cqi, 48px); }
+.footer-tag, .footer-col a, .footer-contact li, .footer-legal span, .footer-bottom { color: var(--c-slate-400); }
+.footer-col ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.footer-col a { overflow-wrap: anywhere; }
+.footer-contact a { color: var(--c-on-night); }
+.footer .logo, .footer a.footer-cta { color: var(--c-on-night); }
+.footer-contact li { display: flex; gap: 12px; align-items: flex-start; }
+.footer-txt { display: flex; flex-direction: column; min-width: 0; overflow-wrap: anywhere; }
+.footer-lbl { font-size: 11px; color: var(--c-slate-500); }
+.footer-ico svg { width: 18px; height: 18px; }
+.footer-h { font-size: 13px; margin: 0 0 16px; }
+.footer-cta { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: var(--r-btn); background: var(--c-navy-800); border: 1px solid rgb(var(--rgb-blue-300) / .32); }
+.footer-cta .cta-ico { width: 16px; height: 16px; }
+.footer-rule { height: 1px; background: rgb(var(--rgb-blue-300) / .14); margin-top: 48px; }
+.footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 24px 0 32px; }
+.footer-legal { display: flex; gap: 24px; }
+@container (max-width: 960px) { .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .footer-brand { grid-column: 1 / -1; } }
+@container (max-width: 620px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .footer-grid > :last-child { grid-column: 1 / -1; } }
+@media (max-width: 600px) { .diff-row { grid-template-columns: minmax(0, 1fr); } }
+/* LOCAL-MOD LM-0002: two-column hero so the first screen has no empty half */
+.va-hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: stretch; }
+.va-hero .hero-ctas { margin-bottom: 0; }
+.hero-wrap { padding-top: clamp(32px, 4vw, 56px); }
+@media (max-width: 860px) { .va-hero { grid-template-columns: minmax(0, 1fr); } }
+/* LOCAL-MOD LM-0002: readable list on the dark card, even card rows, sentence-case labels */
+.offer-card.highlight .offer-list li, .offer-card.highlight .h3 { color: var(--c-on-night); }
+.usecase-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 960px) { .usecase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .usecase-grid { grid-template-columns: minmax(0, 1fr); } }
+.usecase-role, .diff-header > div { text-transform: none; letter-spacing: 0; font-size: 15px; }
+/* LOCAL-MOD LM-0002: stats fill the hero's right column */
+.va-hero .stats-strip { grid-template-columns: minmax(0, 1fr); align-content: center; margin: 0; }
+@media (max-width: 860px) { .va-hero .stats-strip { grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); } }
+.footer-ico { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex: none; border-radius: 999px; background: rgb(var(--rgb-blue-600) / .14); border: 1px solid rgb(var(--rgb-blue-300) / .18); }
+/* LOCAL-MOD LM-0002: one header button style across pages */
+@media (min-width: 769px) {
+  .hdr .btn-primary { background: var(--c-navy-800); border-color: rgb(var(--rgb-blue-300) / .32); box-shadow: none; border-radius: var(--r-btn, 999px); font-size: 13px; padding: 8px 14px; min-height: 37px; gap: 6px; }
+  .hdr .btn-primary:hover { background: var(--c-blue-700); }
+}
+
+/* ==== LOCAL-MOD LM-0002: assistants page motion and colour accents ==== */
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-soft: cubic-bezier(0.22, 1, 0.36, 1); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 240ms; --dur-base: 560ms; --dur-slow: 900ms; --stagger: 90ms;
+}
+.app { overflow-x: clip; }
+
+/* hero: soft drifting light, fades out before any edge */
+.hero-wrap { position: relative; isolation: isolate; }
+.va-hero-bg { position: absolute; z-index: -1; top: 0; bottom: -96px; left: 50%; width: 100vw; transform: translateX(-50%); overflow: hidden; pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent); mask-image: linear-gradient(180deg, #000 62%, transparent); }
+.va-hero-bg span { position: absolute; border-radius: 50%; aspect-ratio: 1; }
+.va-hero-bg span:first-child { width: max(48vw, 440px); left: -12%; top: -46%; background: radial-gradient(closest-side, rgb(var(--rgb-blue-600) / .17), rgb(var(--rgb-blue-600) / .07) 55%, transparent); }
+.va-hero-bg span:last-child { width: max(36vw, 340px); right: -8%; top: -24%; background: radial-gradient(closest-side, rgb(var(--rgb-cyan-500) / .16), rgb(var(--rgb-cyan-500) / .06) 55%, transparent); }
+
+/* headline accent: same navy word and underline as the home headline */
+.h1 .va-line { display: block; }
+.h1 em.va-mark { position: relative; display: inline-block; color: var(--c-navy-800); font-style: normal; }
+.h1 em.va-mark::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 6px; border-radius: 4px; opacity: .3;
+  background: linear-gradient(90deg, var(--c-navy-800), var(--c-blue-600) 70%, var(--c-cyan-500)); transform-origin: left center; }
+
+/* dark surfaces get one quiet blue light */
+.va-hero .stats-strip, .offer-card.highlight {
+  background: radial-gradient(ellipse 85% 65% at 100% 0%, rgb(var(--rgb-blue-600) / .38), transparent 70%), radial-gradient(ellipse 60% 50% at 0% 100%, rgb(var(--rgb-cyan-500) / .14), transparent 70%), var(--surf-slab, var(--panel-dark));
+}
+
+/* accents */
+.app .offer-list li { display: list-item; }
+.offer-list li::marker { color: var(--c-blue-600); }
+.offer-card.highlight .offer-list li::marker { color: var(--c-blue-300); }
+.diff-header > div + div { color: var(--c-blue-700); }
+.diff-row > div + div { position: relative; isolation: isolate; background: transparent; }
+.diff-row > div + div::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--accent-soft); transform-origin: left center; }
+.cta-banner { position: relative; isolation: isolate; overflow: hidden; }
+.cta-banner::before { content: ""; position: absolute; z-index: -1; left: 50%; top: -65%; width: min(900px, 120%); aspect-ratio: 1; translate: -50% 0; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgb(var(--rgb-blue-600) / .16), rgb(var(--rgb-cyan-500) / .06) 55%, transparent); }
+
+/* buttons: navy lift instead of the old blue glow */
+.app .btn-primary:not(.hdr *) { box-shadow: 0 calc(12px * var(--shk-button, 1)) calc(24px * var(--shk-button, 1)) calc(-14px * var(--shk-button, 1)) rgb(var(--rgb-navy-900) / .6); }
+.app .btn { transition: translate var(--dur-fast) var(--ease-soft), background-color var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft), box-shadow var(--dur-fast) var(--ease-soft); }
+.app .btn:hover { translate: 0 -2px; transform: none; }
+
+/* info cards are not interactive: no hover lift/glow, so they don't read as buttons */
+.step-card, .usecase-card, .offer-card { cursor: default; }
+.step-card:hover, .usecase-card:hover, .offer-card:hover { translate: none; transform: none; border-color: var(--bc-card, var(--panel-light-line)); }
+.offer-card.highlight:hover { border-color: var(--panel-dark-line); }
+
+@media (prefers-reduced-motion: reduce) { .step-card, .usecase-card, .offer-card, .usecase-card .h3, .app .btn { transition: none; } }
+/* header button never glows; full-width hero buttons on phones */
+.app .hdr .btn-primary { box-shadow: none; }
+@media (max-width: 480px) { .va-hero-copy .hero-ctas { display: grid; gap: 12px; } .va-hero-copy .hero-ctas .btn { justify-content: center; } }
+
+/* ---- motion: transform and opacity only, and only when the gate allowed it ---- */
+@keyframes vaRise { from { opacity: 0; transform: translate3d(0, 18px, 0); } to { opacity: 1; transform: none; } }
+@keyframes vaFromLeft { from { opacity: 0; transform: translate3d(-28px, 0, 0); } to { opacity: 1; transform: none; } }
+@keyframes vaFromRight { from { opacity: 0; transform: translate3d(28px, 0, 0); } to { opacity: 1; transform: none; } }
+@keyframes vaDraw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes vaDriftA { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(7vw, 6%, 0) scale(1.12); } }
+@keyframes vaDriftB { from { transform: translate3d(0, 0, 0) scale(1.08); } to { transform: translate3d(-6vw, 10%, 0) scale(.94); } }
+@keyframes vaBreathe { from { scale: 1; } to { scale: 1.14; } }
+
+html.va-motion .va-hero-bg span:first-child { animation: vaDriftA 26s var(--ease-in-out) infinite alternate; }
+html.va-motion .va-hero-bg span:last-child { animation: vaDriftB 32s var(--ease-in-out) infinite alternate; }
+html.va-motion .hero-wrap.is-away .va-hero-bg span { animation-play-state: paused; }
+html.va-motion .cta-banner::before { animation: vaBreathe 11s var(--ease-in-out) infinite alternate; }
+
+/* first screen: one cascade on load */
+html.va-motion .h1 .va-line, html.va-motion .va-hero-copy .lede, html.va-motion .va-hero-copy .hero-ctas,
+html.va-motion .va-hero .stats-strip, html.va-motion .va-hero .stat-item { animation: vaRise var(--dur-slow) var(--ease-out) both; }
+html.va-motion .h1 .va-line:nth-child(2) { animation-delay: calc(1 * var(--stagger)); }
+html.va-motion .va-hero-copy .lede { animation-delay: calc(2 * var(--stagger)); }
+html.va-motion .va-hero-copy .hero-ctas { animation-delay: calc(3 * var(--stagger)); }
+html.va-motion .va-hero .stats-strip { animation-delay: calc(2 * var(--stagger)); }
+html.va-motion .va-hero .stat-item:nth-child(1) { animation-delay: calc(4 * var(--stagger)); }
+html.va-motion .va-hero .stat-item:nth-child(2) { animation-delay: calc(5.5 * var(--stagger)); }
+html.va-motion .va-hero .stat-item:nth-child(3) { animation-delay: calc(7 * var(--stagger)); }
+html.va-motion .h1 em.va-mark::after { animation: vaDraw 700ms var(--ease-soft) calc(7 * var(--stagger)) both; }
+
+/* further down: revealed as it scrolls into view */
+html.va-motion :is(.section > .h2, .section > .lede, .steps-grid > *, .offer-grid > *, .usecase-grid > *, .diff-row, .cta-banner):not(.is-in) { opacity: 0; }
+html.va-motion :is(.section > .h2, .section > .lede, .steps-grid > *, .usecase-grid > *, .diff-row, .cta-banner).is-in { animation: vaRise var(--dur-base) var(--ease-out) both; animation-delay: calc(var(--d, 0ms) + var(--i, 0) * var(--stagger)); }
+html.va-motion .offer-grid > .is-in:first-child { animation: vaFromLeft var(--dur-slow) var(--ease-out) both; }
+html.va-motion .offer-grid > .is-in:last-child { animation: vaFromRight var(--dur-slow) var(--ease-out) var(--stagger) both; }
+html.va-motion .offer-grid > .is-in .offer-list li { animation: vaRise var(--dur-base) var(--ease-out) both; animation-delay: calc(240ms + var(--n, 0) * 60ms); }
+html.va-motion .diff-row.is-in > div + div::before { animation: vaDraw var(--dur-slow) var(--ease-soft) both; animation-delay: calc(180ms + var(--i, 0) * var(--stagger)); }
+html.va-motion .diff-row:not(.is-in) > div + div::before { transform: scaleX(0); }
+@media (max-width: 860px) {
+  html.va-motion .offer-grid > .is-in:first-child, html.va-motion .offer-grid > .is-in:last-child { animation-name: vaRise; }
+}
+</style>
+<script>
+/* LOCAL-MOD LM-0002: assistants page motion gate (skipped for reduced motion) */
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var root = document.documentElement;
+  root.classList.add('va-motion');
+  setTimeout(function () { if (!window.__vaMotion) root.classList.remove('va-motion'); }, 2500);
+})();
+</script>
+<style id="v05-light-header">
+/* v0.5: header colour-matches the page canvas instead of the dark ribbon (solid tint + blur, not transparent) */
+.hdr {
+  background: rgb(244 244 242 / 0.88); color: var(--c-night);
+  border-bottom: 1px solid rgb(21 44 91 / 0.08);
+  box-shadow: 0 8px 24px -22px rgb(13 27 56 / 0.35);
+  --ink: var(--c-night); --ink-dim: #5A5F69; --line: rgb(21 44 91 / 0.10);
+  --btn-bg: var(--c-navy-900); --btn-line: var(--c-navy-900);
+}
+.hdr .logo, .hdr .logo-word { color: var(--c-navy-900); }
+.hdr .nav > a, .hdr .nav-trigger { color: #5A6275; }
+.hdr .nav > a:hover, .hdr .nav > a.is-active,
+.hdr .nav-trigger:hover, .hdr .nav-trigger.is-active,
+.hdr .nav-item:hover > .nav-trigger, .hdr .nav-item:focus-within > .nav-trigger { color: var(--c-navy-900); }
+.hdr .nav > a.is-active::after, .hdr .nav-trigger.is-active::after { background: var(--c-navy-900); }
+.hdr .nav-dd {
+  background: #FFFFFF; color: var(--c-night);
+  border: 1px solid rgb(21 44 91 / 0.10);
+  box-shadow: 0 24px 48px -20px rgb(13 27 56 / 0.28);
+}
+.hdr .nav-dd a { color: #4B5363; }
+.hdr .nav-dd a:hover, .hdr .nav-dd a:focus-visible { background: rgb(37 99 235 / 0.07); color: var(--c-navy-900); }
+.hdr .nav-dd a.is-active { background: rgb(37 99 235 / 0.11); color: var(--c-navy-900); }
+.hdr .nav-dd-sep { background: rgb(21 44 91 / 0.08); }
+.hdr .hdr-menu { color: var(--c-navy-900); }
+.hdr .m-nav { background: #F4F4F2; border-bottom: 1px solid rgb(21 44 91 / 0.10); }
+.hdr .m-nav-grp { color: #7A8192; border-top-color: rgb(21 44 91 / 0.08); }
+.hdr .m-nav a { color: #2B3345; border-bottom-color: rgb(21 44 91 / 0.06); }
+.hdr .m-nav a:hover, .hdr .m-nav a:focus-visible { color: var(--c-navy-900); }
+</style>
+<style id="v05-va">
+/* v0.5 VA page: two offer streams */
+.section > .lede { margin-top: 4px; max-width: 62ch; font-size: 17px; line-height: 1.6; }
+#offer > .h2, #offer > .lede { text-align: center; margin-inline: auto; }
+#offer > .h2 { text-wrap: balance; }
+#offer .opt-base { justify-content: center; }
+
+.opt-base {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 28px;
+  padding: 12px 18px; border-radius: 18px; background: rgb(255 255 255 / 0.66);
+  border: 1px solid rgb(21 44 91 / 0.08);
+}
+.opt-base-lbl {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.02em; color: #FFFFFF;
+  background: var(--c-navy-800); padding: 5px 10px; border-radius: 999px;
+}
+.opt-base ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.opt-base li { display: inline-flex; align-items: center; gap: 7px; font-size: 14.5px; font-weight: 600; color: var(--ink); }
+.opt-base svg, .opt-chips svg { width: 15px; height: 15px; fill: none; stroke: var(--c-blue-600); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+.opt-grid { margin-top: 16px; align-items: stretch; }
+.opt-card { display: flex; flex-direction: column; gap: 0; padding: clamp(22px, 2.6vw, 34px); }
+.opt-card .h3 { font-size: clamp(1.3rem, 1.8vw, 1.6rem); letter-spacing: -0.02em; margin: 10px 0 8px; }
+.opt-card > .lede-sm { font-size: 15.5px; }
+.opt-head { display: flex; align-items: center; gap: 10px; }
+.opt-num {
+  font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 13px; font-weight: 700;
+  padding: 5px 11px; border-radius: 999px; color: var(--c-blue-700); background: rgb(var(--rgb-blue-600) / 0.10);
+}
+.opt-kicker { font-size: 13px; font-weight: 600; color: var(--ink-dim); }
+.offer-card.highlight .opt-num { color: #FFFFFF; background: rgb(var(--rgb-blue-300) / 0.18); }
+.offer-card.highlight .opt-kicker { color: var(--c-slate-400); }
+
+.opt-visual { margin: 18px 0 2px; }
+.opt-chat { display: grid; gap: 8px; padding: 12px; border-radius: 16px; background: #FFFFFF; border: 1px solid rgb(21 44 91 / 0.08); }
+.opt-msg { display: grid; grid-template-columns: 1fr auto; column-gap: 10px; row-gap: 2px; padding: 9px 12px; border-radius: 12px; max-width: 88%; }
+.opt-msg b { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: var(--ink); }
+.opt-msg b img { display: block; }
+.opt-msg span { grid-column: 1 / -1; font-size: 14px; color: var(--ink); }
+.opt-msg i { grid-row: 1; grid-column: 2; font-style: normal; font-size: 11px; color: var(--ink-mute, #8A8F99); font-variant-numeric: tabular-nums; }
+.opt-msg--you { justify-self: end; background: rgb(21 44 91 / 0.05); border-bottom-right-radius: 4px; }
+.opt-msg--q { justify-self: start; background: rgb(var(--rgb-blue-600) / 0.09); border-bottom-left-radius: 4px; }
+
+.opt-chips { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.opt-chips li { font-size: 12.5px; font-weight: 600; padding: 6px 11px; border-radius: 999px; color: var(--c-navy-800); background: rgb(var(--rgb-blue-600) / 0.07); border: 1px solid rgb(var(--rgb-blue-600) / 0.16); }
+
+.opt-split { padding: 14px; border-radius: 16px; background: rgb(255 255 255 / 0.05); border: 1px solid rgb(var(--rgb-blue-300) / 0.16); }
+.opt-split-bar { display: flex; gap: 4px; }
+.opt-split-bar span {
+  flex: 0 0 calc(var(--w) - 3px); padding: 9px 10px; border-radius: 10px; font-size: 12.5px; font-weight: 700; color: #FFFFFF;
+  background: rgb(var(--rgb-blue-300) / 0.16);
+}
+.opt-split-bar span:last-child { background: linear-gradient(120deg, var(--c-blue-600), var(--c-cyan-500)); }
+.opt-split p { margin: 10px 0 0; font-size: 13px; color: var(--c-slate-400); }
+
+.opt-card .offer-list { margin-top: 18px; }
+.opt-fit { margin: 18px 0 0; font-size: 14.5px; color: var(--ink-dim); }
+.opt-fit b { color: var(--ink); }
+.offer-card.highlight .opt-fit { color: var(--c-slate-400); }
+.offer-card.highlight .opt-fit b { color: var(--c-on-night); }
+.opt-note { margin: 6px 0 0; font-size: 12px; color: var(--ink-mute, #8A8F99); }
+.opt-cta { margin-top: auto; align-self: flex-start; }
+.opt-card .opt-fit { margin-bottom: 22px; }
+.offer-card.highlight .btn-primary { background: #FFFFFF; color: var(--c-navy-900); border-color: #FFFFFF; }
+
+.step-num { display: inline-block; margin-bottom: 10px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: var(--c-blue-600); font-variant-numeric: tabular-nums; }
+.step-card--fork .lede-sm + .lede-sm { margin-top: 8px; }
+.fork-tag { display: inline-block; margin-right: 6px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 700; color: var(--c-blue-700); background: rgb(var(--rgb-blue-600) / 0.10); }
+.fork-tag--dark { color: #FFFFFF; background: var(--c-navy-800); }
+
+.diff-grid--3 .diff-row { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr); }
+.diff-grid--3 .diff-row > div { font-size: 15px; }
+.diff-grid--3 .diff-row > div:first-child { color: var(--ink); font-weight: 600; }
+.diff-grid--3 .diff-header > div + div { color: var(--c-blue-700); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (max-width: 900px) {
+  .diff-grid--3 .diff-row > div:first-child { display: block; }
+}
+@media (max-width: 700px) {
+  .diff-grid--3 .diff-header { display: none; }
+  .diff-grid--3 .diff-row { grid-template-columns: minmax(0, 1fr); }
+  .diff-grid--3 .diff-row > div:first-child { padding-bottom: 4px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700; }
+  .diff-grid--3 [data-opt] { display: flex; flex-direction: column; gap: 2px; }
+  .diff-grid--3 [data-opt]::after { content: attr(data-opt); order: -1; font-size: 12px; font-weight: 700; color: var(--c-blue-700); }
+  .opt-base { border-radius: 16px; }
+  .opt-msg { max-width: 94%; }
+  .opt-cta { align-self: stretch; justify-content: center; }
 }
 </style>
 </head>
@@ -423,26 +860,44 @@ footer a:hover { color: var(--ink); }
 <header class="hdr">
   <div class="hdr-inner">
     <a href="/index.html" class="logo">
-      <div class="logo-mark"></div>
+      <img src="/assets/querent-logo-flat.svg" alt="" width="28" height="28">
       <span class="logo-word">Querent</span>
     </a>
-    <nav class="nav">
-      <a href="/index.html">Home</a>
-      <a href="/menu.html">Solutions</a>
-      <a href="/va.html" class="is-active">AI VAs</a>
-      <a href="/booking.html">Book a Call</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <div class="nav-item">
+        <button type="button" class="nav-trigger" aria-haspopup="true">Company<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="nav-dd" role="menu" aria-label="Company">
+          <a href="index.html#why-now" role="menuitem">Why Now</a>
+          <a href="index.html#process" role="menuitem">Process</a>
+          <a href="index.html#faq" role="menuitem">FAQ</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="menu.html" class="nav-trigger" aria-haspopup="true">Services<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
+        <div class="nav-dd" role="menu" aria-label="Services">
+          <a href="menu.html#leadgen" role="menuitem">Lead Gen, Outbound / Research</a>
+          <a href="menu.html#workflow" role="menuitem">Workflow Automation</a>
+          <a href="menu.html#concierge" role="menuitem">AI Concierge</a>
+          <a href="menu.html#internal" role="menuitem">Internal Ops Agents</a>
+          <a href="menu.html#consult" role="menuitem">Strategy &amp; Advisory</a>
+        </div>
+      </div>
+        <div class="nav-item">
+          <a href="va.html" class="nav-trigger is-active" aria-haspopup="true">AI Virtual Assistants<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
+          <div class="nav-dd" role="menu" aria-label="AI Virtual Assistants">
+            <a href="#how-it-works" role="menuitem">How It Works</a>
+            <a href="#offer" role="menuitem">Two Options</a>
+            <a href="#use-cases" role="menuitem">Use Cases</a>
+            <a href="#compare" role="menuitem">Compare</a>
+          </div>
+        </div>
     </nav>
     <div class="hdr-actions">
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-        <svg class="theme-toggle-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        <svg class="theme-toggle-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
-      <a href="/booking.html"
-         data-cal-link="benquerent/30min"
-         data-cal-namespace="30min"
-         data-cal-config='{"layout":"month_view"}'
-         class="btn btn-primary">
-        Book a call
+      <a href="/booking.html?service=va"
+         class="btn btn-primary btn-ico-m" aria-label="Book a Call">
+        <svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+        Book a Call
       </a>
     </div>
   </div>
@@ -450,191 +905,197 @@ footer a:hover { color: var(--ink); }
 
 <!-- ── Hero ── -->
 <section class="hero-wrap wrap">
-  <div class="hero-badge">
-    <span class="dot dot-live"></span>
-    New offer — VA + Automation bundle
-  </div>
-  <h1 class="h1" style="max-width:900px">
-    Your next hire is<br><em>AI-supercharged</em>
+  <div class="va-hero-bg" aria-hidden="true"><span></span><span></span></div>
+  <div class="va-hero">
+  <div class="va-hero-copy">
+  <h1 class="h1">
+    <span class="va-line">Your next hire is</span>
+    <span class="va-line"><em class="va-mark">AI-supercharged</em></span>
   </h1>
   <p class="lede">
-    Querent places trained virtual assistants in your business — and wires them with custom automations from day one. Less hand-holding. More output.
+    We place trained virtual assistants in your business, and wire them with agents and automations we curate for you from day one. Alternatively, we can source new hires, or train someone on your team.
   </p>
   <div class="hero-ctas">
-    <a href="/booking.html"
-       data-cal-link="benquerent/30min"
-       data-cal-namespace="30min"
-       data-cal-config='{"layout":"month_view"}'
-       class="btn btn-primary btn-lg">
-      Get your AI VA
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M3 8a.5.5 0 0 1 .5-.5h7.793L9.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L11.293 8.5H3.5A.5.5 0 0 1 3 8z"/></svg>
-    </a>
-    <a href="#how-it-works" class="btn btn-ghost btn-lg">See how it works</a>
+    <a href="#offer" class="btn btn-primary btn-lg">Compare the Two Options<svg class="cta-ico cta-ico--down" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></a>
+    <a href="/booking.html?service=va" class="btn btn-ghost btn-lg"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Strategy Call</a>
+  </div>
   </div>
 
   <!-- Stats -->
   <div class="stats-strip">
     <div class="stat-item">
-      <div class="stat-num">2<span>x</span></div>
-      <div class="stat-label">Output vs. a standard VA hire</div>
+      <div class="stat-num">24<span>/7</span></div>
+      <div class="stat-label">Support in Slack, Discord, WhatsApp or your team's chat app</div>
     </div>
     <div class="stat-item">
       <div class="stat-num">72<span>hr</span></div>
-      <div class="stat-label">Average time to placement</div>
+      <div class="stat-label">Average time to place a curated AI VA</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num">10<span>+</span></div>
-      <div class="stat-label">Automations built into every placement</div>
+      <div class="stat-num">39<span>+</span></div>
+      <div class="stat-label">Automations built into every Agent system</div>
     </div>
+  </div>
+  </div>
+</section>
+
+<!-- ── Two options (v0.5) ── -->
+<section class="section wrap" id="offer">
+  <h2 class="h2">One system. Two ways to run it.</h2>
+  <p class="lede">Every engagement starts with an autonomous system built around how your team works. Then you choose who runs it day to day.</p>
+
+  <div class="opt-base" aria-label="Included in both options">
+    <span class="opt-base-lbl">Both include</span>
+    <ul>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Autonomous system built for your workflows</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Querent instruction, support and training</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Monitoring, fixes and tuning</li>
+    </ul>
+  </div>
+
+  <div class="offer-grid opt-grid">
+    <article class="offer-card opt-card" id="option-support">
+      <div class="opt-head">
+        <span class="opt-num">Option 1</span>
+        <span class="opt-kicker">Fully managed</span>
+      </div>
+      <h3 class="h3">Autonomous System + 24/7 Support</h3>
+      <p class="lede-sm">We build the system and support it around the clock, right inside the chat app your team already uses.</p>
+      <div class="opt-visual opt-chat" aria-hidden="true">
+        <div class="opt-msg opt-msg--you"><b>You</b><span>Can intake also flag VIP leads?</span><i>2:14 AM</i></div>
+        <div class="opt-msg opt-msg--q"><b><img src="/assets/querent-logo-flat.svg" alt="" width="14" height="14">Querent</b><span>On it. Live in tonight's deploy.</span><i>2:16 AM</i></div>
+      </div>
+      <ul class="opt-chips" aria-label="Where support happens"><li>Slack</li><li>Discord</li><li>WhatsApp</li><li>Teams</li><li>Your chat app*</li></ul>
+      <p class="opt-note">*Any chat app with an available API.</p>
+      <ul class="offer-list">
+        <li>Autonomous agents and workflows built for your ops</li>
+        <li>24/7 support in your team chat</li>
+        <li>New requests handled in the same thread</li>
+        <li>No new hire to manage</li>
+      </ul>
+      <p class="opt-fit"><b>Best for</b> lean teams that want it handled end to end.</p>
+      <a href="/booking.html?service=va" class="btn btn-ghost opt-cta"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Call About Option 1</a>
+    </article>
+
+    <article class="offer-card highlight opt-card" id="option-va">
+      <div class="opt-head">
+        <span class="opt-num">Option 2</span>
+        <span class="opt-kicker">System + a person</span>
+      </div>
+      <h3 class="h3">Autonomous System + Curated AI VA</h3>
+      <p class="lede-sm">We build the system, then place a curated AI VA on your team who keeps it running and keeps building on it.</p>
+      <div class="opt-visual opt-split" aria-hidden="true">
+        <div class="opt-split-bar"><span style="--w:30%">Triage</span><span style="--w:30%">Maintain</span><span style="--w:40%">Build</span></div>
+        <p>Your VA's time splits across triage, maintenance and development hours.</p>
+      </div>
+      <ul class="offer-list">
+        <li>A curated, AI-trained VA placed on your team</li>
+        <li>Triage and maintenance, with Querent instruction, support and training</li>
+        <li>Development hours to build new automations</li>
+        <li>Replacement guarantee if it's not the right fit</li>
+      </ul>
+      <p class="opt-fit"><b>Best for</b> teams that want a dedicated person and a system that keeps growing.</p>
+      <a href="/booking.html?service=va" class="btn btn-primary opt-cta"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Call About Option 2</a>
+    </article>
   </div>
 </section>
 
 <!-- ── How it works ── -->
 <section class="section wrap" id="how-it-works">
-  <div class="eyebrow"><span class="dot"></span> How it works</div>
-  <h2 class="h2">From intake to <em>in your Slack</em> in days</h2>
-  <p class="lede lede-sm">No long recruiting cycles. We match, train, and wire up your VA with the tools your business already runs on.</p>
+  <h2 class="h2">From intake to onboarding in a few simple steps</h2>
 
   <div class="steps-grid">
     <div class="step-card">
-      <div class="step-num">Step 01</div>
-      <div class="step-icon">🗺️</div>
+      <span class="step-num">01</span>
       <h3 class="h3">Discovery</h3>
-      <p class="lede-sm">We map your ops — the tasks, tools, and friction points that eat your team's time every week.</p>
+      <p class="lede-sm">We map your ops: the tasks, tools and friction points that eat your team's time every week.</p>
     </div>
     <div class="step-card">
-      <div class="step-num">Step 02</div>
-      <div class="step-icon">🤖</div>
-      <h3 class="h3">Automation build</h3>
-      <p class="lede-sm">Before your VA starts, we build the automations they'll work alongside — CRM updates, inbox routing, scheduling, reporting.</p>
+      <span class="step-num">02</span>
+      <h3 class="h3">System build</h3>
+      <p class="lede-sm">We build the autonomous system around your stack: agents, workflows, CRM updates, inbox routing, reporting.</p>
+    </div>
+    <div class="step-card step-card--fork">
+      <span class="step-num">03</span>
+      <h3 class="h3">Go live</h3>
+      <p class="lede-sm"><b class="fork-tag">Option 1</b> We connect 24/7 support in your team's chat app.</p>
+      <p class="lede-sm"><b class="fork-tag fork-tag--dark">Option 2</b> We place and train your curated AI VA.</p>
     </div>
     <div class="step-card">
-      <div class="step-num">Step 03</div>
-      <div class="step-icon">🎯</div>
-      <h3 class="h3">VA placement</h3>
-      <p class="lede-sm">We match and place a trained VA — already fluent in AI tools — into your workflows with minimal onboarding from your side.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-num">Step 04</div>
-      <div class="step-icon">📈</div>
-      <h3 class="h3">Ongoing support</h3>
-      <p class="lede-sm">We stay in the loop. As your business scales, we add automations and upskill your VA to match.</p>
+      <span class="step-num">04</span>
+      <h3 class="h3">Keep building</h3>
+      <p class="lede-sm">As you scale, we add automations, or your VA puts development hours into what's next.</p>
     </div>
   </div>
 </section>
 
-<!-- ── What's included ── -->
-<section class="section wrap" id="offer">
-  <div class="eyebrow"><span class="dot"></span> What's included</div>
-  <h2 class="h2">The full bundle — <em>VA + automations</em></h2>
+<!-- ── Compare the options ── -->
+<section class="section wrap" id="compare">
+  <h2 class="h2">Which option fits?</h2>
 
-  <div class="offer-grid">
-    <!-- VA side -->
-    <div class="offer-card highlight">
-      <div class="offer-tag offer-tag-va">Virtual Assistant</div>
-      <h3 class="h3">An AI-trained human in your corner</h3>
-      <p class="lede-sm">Every VA we place is trained on AI tools before they land in your business. They don't just execute tasks — they leverage automation to do more of them.</p>
-      <ul class="offer-list">
-        <li>Pre-screened, AI-tool fluent candidates</li>
-        <li>Trained on your specific stack before day one</li>
-        <li>Ongoing AI learning — your VA levels up as the tools do</li>
-        <li>Dedicated point of contact at Querent</li>
-        <li>Replacement guarantee if it's not the right fit</li>
-      </ul>
+  <div class="diff-grid diff-grid--3" role="table" aria-label="Option 1 compared with Option 2">
+    <div class="diff-row diff-header" role="row">
+      <div role="columnheader"><span class="sr-only">Compare</span></div>
+      <div role="columnheader">Option 1 · 24/7 Support</div>
+      <div role="columnheader">Option 2 · Curated AI VA</div>
     </div>
-
-    <!-- Automation side -->
-    <div class="offer-card">
-      <div class="offer-tag offer-tag-auto">Automations</div>
-      <h3 class="h3">Custom workflows, built for your ops</h3>
-      <p class="lede-sm">We identify the repetitive work and build automations that run quietly in the background — so your VA focuses on the things only humans can do.</p>
-      <ul class="offer-list">
-        <li>CRM data entry and lead routing</li>
-        <li>Email + calendar management workflows</li>
-        <li>Intake forms to project management tools</li>
-        <li>Reporting dashboards and weekly digests</li>
-        <li>Slack/Teams notification pipelines</li>
-        <li>Custom request — if it's repetitive, we'll automate it</li>
-      </ul>
+    <div class="diff-row" role="row">
+      <div role="rowheader">Who runs it day to day</div>
+      <div role="cell" data-opt="Option 1">Querent, in your team chat</div>
+      <div role="cell" data-opt="Option 2">Your AI VA, backed by Querent</div>
+    </div>
+    <div class="diff-row" role="row">
+      <div role="rowheader">Where you get help</div>
+      <div role="cell" data-opt="Option 1">24/7 in Slack, Discord, WhatsApp or your chat app</div>
+      <div role="cell" data-opt="Option 2">Your VA, plus Querent support and training</div>
+    </div>
+    <div class="diff-row" role="row">
+      <div role="rowheader">New automations</div>
+      <div role="cell" data-opt="Option 1">On request, in the same thread</div>
+      <div role="cell" data-opt="Option 2">Built continuously with development hours</div>
+    </div>
+    <div class="diff-row" role="row">
+      <div role="rowheader">Headcount</div>
+      <div role="cell" data-opt="Option 1">No new hire</div>
+      <div role="cell" data-opt="Option 2">A curated VA on your team</div>
     </div>
   </div>
 </section>
 
 <!-- ── Use cases ── -->
 <section class="section wrap" id="use-cases">
-  <div class="eyebrow"><span class="dot"></span> Use cases</div>
-  <h2 class="h2">Works across every <em>type of business</em></h2>
+  <h2 class="h2">Works across every type of business</h2>
 
   <div class="usecase-grid">
     <div class="usecase-card">
-      <div class="usecase-icon">🏗️</div>
-      <div class="usecase-role">Real estate / construction</div>
-      <h3 class="h3">Deal tracking + comms</h3>
-      <p class="lede-sm">VA manages your pipeline, follows up with leads, and logs activity — while automations sync your CRM and calendar automatically.</p>
+      <div class="usecase-role">Sales teams / B2B services</div>
+      <h3 class="h3">Lead Generation</h3>
+      <p class="lede-sm">Your VA researches prospects, builds lists and runs follow-ups. Automations enrich every lead and log each touch in your CRM.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-icon">🏥</div>
-      <div class="usecase-role">Healthcare / med-spa</div>
-      <h3 class="h3">Patient intake + scheduling</h3>
-      <p class="lede-sm">Automate appointment confirmations, reminders, and intake forms. Your VA handles the exceptions and relationship work.</p>
+      <div class="usecase-role">E-commerce / SaaS / DTC</div>
+      <h3 class="h3">Funnel Optimization</h3>
+      <p class="lede-sm">Your VA keeps landing pages, forms and email sequences tuned. Automations flag drop-offs and send conversion numbers in a weekly digest.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-icon">📊</div>
-      <div class="usecase-role">Agencies / consulting</div>
-      <h3 class="h3">Client ops + reporting</h3>
-      <p class="lede-sm">Your VA owns client communication and status updates. Automations pull data into reports — no manual pulling.</p>
+      <div class="usecase-role">Agencies / consulting / professional services</div>
+      <h3 class="h3">Client Ops + Reporting</h3>
+      <p class="lede-sm">Your VA owns client communication, proposals and status updates. Automations pull the data into reports.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-icon">🛒</div>
-      <div class="usecase-role">E-commerce</div>
-      <h3 class="h3">Order ops + customer support</h3>
-      <p class="lede-sm">Automate order status, refund logic, and FAQ responses. VA steps in for escalations and reviews.</p>
+      <div class="usecase-role">Healthcare / med-spa / real estate</div>
+      <h3 class="h3">Intake + Scheduling</h3>
+      <p class="lede-sm">Automations handle confirmations, reminders and intake forms, and keep your calendar and CRM in sync. Your VA handles the exceptions and relationship work.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-icon">💼</div>
-      <div class="usecase-role">Professional services</div>
-      <h3 class="h3">Admin + business development</h3>
-      <p class="lede-sm">Research, outreach, scheduling, proposal follow-up — all handled by a VA running on automated workflows.</p>
+      <div class="usecase-role">E-commerce / retail</div>
+      <h3 class="h3">Order Ops + Customer Support</h3>
+      <p class="lede-sm">Automate order status, refund logic and FAQ responses. Your VA steps in for escalations and reviews.</p>
     </div>
     <div class="usecase-card">
-      <div class="usecase-icon">🚀</div>
       <div class="usecase-role">Startups / founders</div>
-      <h3 class="h3">Everything you don't have time for</h3>
-      <p class="lede-sm">From inbox zero to launch coordination — a Querent VA is your first ops hire, without the overhead.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ── Why different ── -->
-<section class="section wrap" id="compare">
-  <div class="eyebrow"><span class="dot"></span> Why Querent VAs</div>
-  <h2 class="h2">Not just a hire. A <em>system</em>.</h2>
-  <p class="lede lede-sm">Most VA agencies drop someone in your Slack and call it done. We build the infrastructure around them first.</p>
-
-  <div class="diff-grid">
-    <div class="diff-row diff-header">
-      <div>Standard VA agency</div>
-      <div>Querent VA + Automations</div>
-    </div>
-    <div class="diff-row">
-      <div><span class="cross">✗</span>VA placed, then you figure out onboarding</div>
-      <div><span class="check">✓</span>Workflows built before your VA starts</div>
-    </div>
-    <div class="diff-row">
-      <div><span class="cross">✗</span>Generic training, no AI tool fluency</div>
-      <div><span class="check">✓</span>VA trained on AI tools specific to your stack</div>
-    </div>
-    <div class="diff-row">
-      <div><span class="cross">✗</span>Manual tasks eat the VA's hours</div>
-      <div><span class="check">✓</span>Automations handle the repetitive work</div>
-    </div>
-    <div class="diff-row">
-      <div><span class="cross">✗</span>No ongoing support after placement</div>
-      <div><span class="check">✓</span>Querent stays in the loop — add automations as you scale</div>
-    </div>
-    <div class="diff-row">
-      <div><span class="cross">✗</span>You manage performance and upskilling</div>
-      <div><span class="check">✓</span>Continuous AI learning — your VA levels up automatically</div>
+      <h3 class="h3">Everything Else</h3>
+      <p class="lede-sm">From inbox zero to launch coordination, a Querent VA is your first ops hire, without the overhead.</p>
     </div>
   </div>
 </section>
@@ -643,43 +1104,97 @@ footer a:hover { color: var(--ink); }
 <div class="wrap">
   <div class="cta-banner">
     <div class="cta-banner-inner">
-      <div class="eyebrow" style="justify-content:center"><span class="dot dot-live"></span> Get started</div>
-      <h2 class="h2">Ready to place your<br><em>AI-supercharged VA?</em></h2>
-      <p class="lede-sm" style="text-align:center;max-width:440px;margin:12px auto 0">Book a 30-minute call. We'll map your ops, identify automation wins, and match you with the right person.</p>
+      <h2 class="h2">What will you name<br>your AI Agent Assistant?</h2>
+      <p class="lede-sm">A 30-minute call to find the low-hanging fruit on automation wins for your team. Then we decide together whether Querent runs it 24/7, or we find the right person to delegate it to.</p>
       <div class="cta-banner-ctas">
-        <a href="/booking.html"
-           data-cal-link="benquerent/30min"
-           data-cal-namespace="30min"
-           data-cal-config='{"layout":"month_view"}'
+        <a href="/booking.html?service=va"
            class="btn btn-primary btn-lg">
-          Book a free strategy call
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M3 8a.5.5 0 0 1 .5-.5h7.793L9.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L11.293 8.5H3.5A.5.5 0 0 1 3 8z"/></svg>
+          <svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+          Book a Free Strategy Call
         </a>
-        <a href="/menu.html" class="btn btn-ghost btn-lg">See all services</a>
+        <a href="/menu.html" class="btn btn-ghost btn-lg">See All Services<svg class="cta-ico cta-ico--right" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ── Footer ── -->
-<footer class="wrap">
-  <span>© 2026 Querent AI. All rights reserved.</span>
-  <nav style="display:flex;gap:24px">
-    <a href="/index.html">Home</a>
-    <a href="/menu.html">Solutions</a>
-    <a href="/va.html">AI VAs</a>
-    <a href="/booking.html">Book a Call</a>
-  </nav>
-</footer>
+<footer class="footer" id="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo" href="index.html#top"><img src="/assets/querent-logo-flat.svg" alt="" style="width:28px;height:28px;display:block;"><span class="logo-word">Querent</span></a>
+          <p class="footer-tag">AI automations for scaling founders and teams. Workflows, agents, marketing and operations that give your team their time back.</p>
+          <a class="footer-cta" href="booking.html"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Audit</a>
+        </div>
+        <nav class="footer-col" aria-label="Services">
+          <h3 class="footer-h">Services</h3>
+          <ul>
+            <li><a href="menu.html">Full Menu of Services</a></li>
+            <li><a href="menu.html#leadgen">Lead Gen, Outbound / Research</a></li>
+            <li><a href="menu.html#workflow">Workflow Automation</a></li>
+            <li><a href="menu.html#concierge">AI Concierge</a></li>
+            <li><a href="menu.html#internal">Internal Ops Agents</a></li>
+            <li><a href="menu.html#consult">Strategy &amp; Advisory</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Explore">
+          <h3 class="footer-h">Explore</h3>
+          <ul>
+            <li><a href="index.html#top">Home</a></li>
+            <li><a href="index.html#why-now">Why Now</a></li>
+            <li><a href="index.html#services">Solutions</a></li>
+            <li><a href="index.html#process">Process</a></li>
+            <li><a href="index.html#faq">FAQ</a></li>
+          </ul>
+        </nav>
+        <div class="footer-col">
+          <h3 class="footer-h">Contact</h3>
+          <ul class="footer-contact">
+            <li><span class="footer-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span><span class="footer-txt"><span class="footer-lbl">Email</span><a href="mailto:hello@querent.ai">hello@querent.ai</a></span></li>
+            <li><span class="footer-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><span class="footer-txt"><span class="footer-lbl">Coverage</span><span>Americas · APAC · Global Remote</span></span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-rule"></div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Querent Labs, Inc. All rights reserved.</span>
+        <span class="footer-legal"><span>Privacy</span><span>Terms</span></span>
+      </div>
+    </div>
+  </footer>
 
 </div><!-- .app -->
 
 <script>
-// Theme toggle
-const html = document.documentElement;
-document.getElementById('themeToggle').addEventListener('click', () => {
-  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
-});
+/* LOCAL-MOD LM-0002: reveal sections as they scroll into view; pause the hero light off screen */
+(function () {
+  var root = document.documentElement;
+  if (!root.classList.contains('va-motion')) return;
+  window.__vaMotion = true;
+  var items = [].slice.call(document.querySelectorAll('.section > .h2, .section > .lede, .steps-grid > *, .offer-grid > *, .usecase-grid > *, .diff-row, .cta-banner'));
+  items.forEach(function (el) {
+    var staggered = el.matches('.steps-grid > *, .usecase-grid > *, .diff-row');
+    el.style.setProperty('--i', String(staggered ? [].indexOf.call(el.parentElement.children, el) : 0));
+  });
+  document.querySelectorAll('.offer-list').forEach(function (list) {
+    [].forEach.call(list.children, function (li, n) { li.style.setProperty('--n', String(n)); });
+  });
+  var onLoad = true; // sections already on screen wait for the hero cascade
+  var io = new IntersectionObserver(function (entries) {
+    var wait = onLoad ? '620ms' : '0ms';
+    onLoad = false;
+    entries.forEach(function (e) {
+      if (!e.isIntersecting && e.boundingClientRect.bottom > 0) return;
+      e.target.style.setProperty('--d', wait);
+      e.target.classList.add('is-in');
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -8% 0px' });
+  items.forEach(function (el) { io.observe(el); });
+  var hero = document.querySelector('.hero-wrap');
+  if (hero) new IntersectionObserver(function (es) { hero.classList.toggle('is-away', !es[0].isIntersecting); }).observe(hero);
+})();
 </script>
 </body>
 </html>

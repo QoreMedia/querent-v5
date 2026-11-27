@@ -1,294 +1,721 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-accent="violet" data-wireframe="on">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Book a Free Audit — Querent</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Book a Free Audit | Querent</title>
+<link rel="icon" type="image/svg+xml" href="/assets/querent-logo-flat.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&amp;family=Source+Sans+3:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
 <style>
-/* ---------- Tokens ---------- */
+/* LOCAL-MOD LM-0002: brand colour variables. Values are identical to the literals they replace, so the page looks the same by default.
+   The staging design-system preview can override them to try other palettes (see staging-ds-panel.js). */
 :root {
-  --bg: #0A0B0E;
-  --bg-elev: #13151A;
-  --bg-elev-2: #1B1E25;
-  --ink: #ECEEF2;
-  --ink-dim: #8A8F99;
-  --ink-mute: #5A5F69;
-  --line: rgba(255,255,255,0.08);
-  --line-strong: rgba(255,255,255,0.16);
-  --accent: oklch(0.65 0.22 295);
-  --accent-2: oklch(0.72 0.18 250);
-  --accent-soft: oklch(0.65 0.22 295 / 0.14);
-  --maxw: 1280px;
-  --pad: 64px;
-  --radius: 14px;
-}
-[data-theme="light"] {
-  --bg: #F4F4F2; --bg-elev: #FFFFFF; --bg-elev-2: #F8F8F6;
-  --ink: #0A0B0E; --ink-dim: #5A5F69; --ink-mute: #8A8F99;
-  --line: rgba(0,0,0,0.10); --line-strong: rgba(0,0,0,0.18);
-  --accent-soft: oklch(0.65 0.22 295 / 0.10);
+  --c-night: #0A0B0E; --c-on-night: #ECEEF2; --c-slate-400: #94A3B8; --c-slate-500: #64748B;
+  --c-blue-300: #93C5FD; --c-blue-400: #60A5FA; --c-blue-600: #2563EB; --c-blue-700: #1D4ED8;
+  --c-navy-900: #0D1B38; --c-navy-800: #152C5B; --c-cyan-500: #06B6D4; --c-cyan-300: #22D3EE;
+  --c-panel-light: #E8EEFA; --c-panel-dark-end: #0B1226; --c-panel-dark-start: #111C38; --c-canvas: #F4F4F2;
+  --rgb-blue-600: 37 99 235; --rgb-blue-300: 147 197 253; --rgb-blue-700: 29 78 216; --rgb-cyan-500: 6 182 212;
+  --rgb-navy-800: 21 44 91; --rgb-navy-900: 13 27 56; --rgb-night: 10 11 14; --rgb-blue-400: 96 165 250; --rgb-cyan-300: 34 211 238;
 }
 
+/* booking page refinement. Light-dominant, deep navy accent, shared motion tokens with index.html. */
+:root {
+  --bg: var(--c-canvas);
+  --bg-elev: #FFFFFF;
+  --ink: var(--c-night);
+  --ink-dim: #5A5F69;
+  --ink-mute: #8A8F99;
+  --line: rgb(var(--rgb-night) / 0.10);
+  --line-strong: rgb(var(--rgb-night) / 0.18);
+  /* Blue family: navy (primary accent) -> brand blue -> tints. No purple, no teal. */
+  --navy-900: var(--c-navy-900);
+  --navy-700: var(--c-navy-800);
+  --blue-600: var(--c-blue-700);
+  --blue-300: var(--c-blue-300);
+  --tint-100: #E6EDF9;
+  --tint-50: #F1F5FC;
+  --maxw: 1280px;
+  --pad: 64px;
+  --radius: 20px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 240ms;
+  --dur-base: 560ms;
+  --dur-slow: 900ms;
+  --stagger: 90ms;
+}
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
-  background: var(--bg); color: var(--ink);
-  font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  background:
+    radial-gradient(ellipse 55% 40% at 8% 0%, rgb(var(--rgb-blue-700) / 0.07), transparent 70%),
+    radial-gradient(ellipse 45% 35% at 96% 30%, rgb(var(--rgb-navy-800) / 0.06), transparent 70%),
+    var(--bg);
+  color: var(--ink);
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-feature-settings: "ss01","cv11";
   -webkit-font-smoothing: antialiased;
   font-size: 16px; line-height: 1.5; letter-spacing: -0.005em;
 }
-.mono { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
-.dim { color: var(--ink-dim); }
+h1, h2, h3, .h1, .h2, .h3, .title, .why-now-headline, .faq-title, .cta-h2, .proc2-card-title, .stat-num, .value-num, .case-stat-num, .logo-word {
+  font-family: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+}
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--navy-700); outline-offset: 3px; border-radius: 6px; }
+/* LOCAL-MOD LM-0002: on short screens the footer stays at the bottom, with no strip under it */
+.app { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.app > main { flex: 1 0 auto; }
 
-body::before {
-  content: "";
-  position: fixed; inset: 0;
-  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 80px 80px;
-  opacity: 0.35; pointer-events: none; z-index: 0;
-  mask-image: radial-gradient(ellipse at top, black 0%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse at top, black 0%, transparent 70%);
-}
-[data-wireframe="off"] body::before { display: none; }
-.app { position: relative; z-index: 1; }
-
-/* ---------- Header ---------- */
+/* ---------- Header (dark ribbon, as index.html) ---------- */
 .hdr {
-  position: sticky; top: 0; z-index: 50;
-  background: color-mix(in oklab, var(--bg) 80%, transparent);
+  position: sticky; top: 0; z-index: 60; overflow: visible;
+  background: rgb(var(--rgb-night) / 0.92); color: var(--c-on-night);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
 }
-.hdr-inner {
-  max-width: var(--maxw); margin: 0 auto;
-  padding: 16px var(--pad);
-  display: flex; align-items: center; justify-content: space-between; gap: 32px;
-}
-.logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.02em; }
+.hdr-inner { max-width: var(--maxw); margin: 0 auto; padding: 10px var(--pad); display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+.logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.02em; color: var(--c-on-night); }
 .logo-word { font-size: 18px; }
-.nav { display: flex; gap: 32px; }
-.nav a { color: var(--ink-dim); font-size: 14px; transition: color .15s ease; }
-.nav a:hover { color: var(--ink); }
-.hdr-actions { display: flex; align-items: center; gap: 12px; }
-.theme-toggle {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: transparent; border: 1px solid var(--line-strong);
-  color: var(--ink-dim); display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.2s ease; position: relative;
+.nav { display: flex; align-items: center; gap: 28px; }
+.nav > a, .nav-trigger {
+  color: #8A8F99; font-size: 14px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 5px;
+  min-height: 44px; padding: 6px 4px;
+  background: none; border: 0; transition: color .15s ease;
 }
-.theme-toggle:hover { color: var(--ink); border-color: var(--ink-dim); }
-.theme-toggle svg { position: absolute; transition: opacity 0.2s ease, transform 0.3s ease; }
-[data-theme="dark"] .theme-toggle-sun  { opacity: 1; transform: rotate(0) scale(1); }
-[data-theme="dark"] .theme-toggle-moon { opacity: 0; transform: rotate(-90deg) scale(0.6); }
-[data-theme="light"] .theme-toggle-sun  { opacity: 0; transform: rotate(90deg) scale(0.6); }
-[data-theme="light"] .theme-toggle-moon { opacity: 1; transform: rotate(0) scale(1); }
-
-.btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; border: 1px solid transparent; transition: all 0.15s ease; white-space: nowrap; }
-.btn-sm { padding: 8px 14px; font-size: 13px; }
-.btn-primary { background: var(--accent); color: #0A0B0E; border-color: var(--accent); box-shadow: 0 8px 24px -8px var(--accent); }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 32px -8px var(--accent); }
-.btn-ghost { background: transparent; color: var(--ink); border-color: var(--line-strong); }
-.btn-ghost:hover { border-color: var(--ink); }
-
-/* ---------- Page layout ---------- */
-.page { max-width: var(--maxw); margin: 0 auto; padding: 56px var(--pad) 96px; display: flex; flex-direction: column; gap: 40px; }
-
-/* ---------- Pitch row ---------- */
-.pitch-row { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
-.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 16px; }
-.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-mute); display: inline-block; }
-.dot-live { background: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 25%, transparent); }
-.h1 { font-size: clamp(28px, 3vw, 42px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 600; margin: 0 0 12px; }
-.h1 em { font-style: normal; color: var(--accent); }
-.lede { font-size: 15px; line-height: 1.6; color: var(--ink-dim); margin: 0; }
-.detail-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
-.detail-item { display: flex; align-items: flex-start; gap: 12px; }
-.detail-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--accent-soft); border: 1px solid color-mix(in oklab, var(--accent) 30%, transparent); display: flex; align-items: center; justify-content: center; color: var(--accent); flex-shrink: 0; }
-.detail-text h4 { font-size: 13px; font-weight: 500; margin: 0 0 2px; }
-.detail-text p { font-size: 12px; color: var(--ink-dim); margin: 0; }
-
-/* ---------- Booking selector ---------- */
-.book-selector {
-  display: flex; gap: 12px; margin-bottom: 20px;
+.nav > a:hover, .nav-trigger:hover,
+.nav-item:hover > .nav-trigger,
+.nav-item:focus-within > .nav-trigger,
+.nav-item.is-open > .nav-trigger { color: var(--c-on-night); }
+.nav-item { position: relative; display: flex; align-items: center; }
+.nav-caret { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 180ms var(--ease-soft); opacity: 0.8; }
+.nav-item:hover .nav-caret,
+.nav-item:focus-within .nav-caret,
+.nav-item.is-open .nav-caret { transform: rotate(180deg); opacity: 1; }
+/* padding-top provides a hover bridge so the pointer never loses hover */
+.nav-dd {
+  position: absolute; top: 100%; left: -10px; padding-top: 8px;
+  min-width: 236px; z-index: 60;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translate3d(0, 6px, 0);
+  transition: opacity 180ms var(--ease-soft), transform 180ms var(--ease-soft), visibility 0s linear 180ms;
 }
+.nav-item:hover > .nav-dd,
+.nav-item:focus-within > .nav-dd,
+.nav-item.is-open > .nav-dd {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+  transition: opacity 180ms var(--ease-soft), transform 180ms var(--ease-soft), visibility 0s;
+}
+.nav-dd-panel {
+  background: rgb(var(--rgb-night) / 0.96);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 22px 44px -14px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.nav-dd-panel a {
+  display: flex; align-items: center; min-height: 44px; padding: 8px 12px;
+  border-radius: 9px; font-size: 13.5px; font-weight: 500;
+  color: var(--c-slate-400); white-space: nowrap;
+  transition: background 140ms ease, color 140ms ease;
+}
+.nav-dd-panel a:hover, .nav-dd-panel a:focus-visible {
+  background: rgba(255,255,255,0.08); color: var(--c-on-night);
+}
+.hdr :focus-visible, .footer :focus-visible { outline-color: var(--c-blue-400); }
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: var(--pad-button, 8px 14px); border-radius: var(--r-btn, 999px); font-size: 13px; font-weight: 600; border: var(--bw-button, 1px) solid var(--bc-button, rgba(255,255,255,0.22)); color: var(--c-on-night); background: transparent; transition: background .15s ease, border-color .15s ease; white-space: nowrap; }
+.btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.4); }
+
+/* ---------- CTA icons (LM-0002; spec: design-system/spec.json ctaIcon) ----------
+   One inline Lucide-style set: stroke currentColor, 16-18px, aria-hidden. Place icon as first
+   (calendar, mail, arrow-left) or last (arrow-right, arrow-down) child of .btn / .footer-cta / .cta-link.
+   Hover/focus nudge uses the shared --ease-soft / --dur-fast tokens; transform only. */
+.btn, .footer-cta, .cta-link { gap: 8px; }
+.btn-sm { gap: 6px; }
+.cta-link { display: inline-flex; align-items: center; }
+.cta-ico {
+  display: block; flex: none;
+  width: clamp(16px, 1.2em, 18px); height: clamp(16px, 1.2em, 18px);
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.footer-cta .cta-ico, .cta-link .cta-ico { stroke-width: 2; }
+.cta-ico--cal { translate: 0 -0.5px; }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--right { transform: translate3d(3px, 0, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--left { transform: translate3d(-3px, 0, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--down { transform: translate3d(0, 2px, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--cal { transform: translate3d(0, -1.5px, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--mail { transform: translate3d(0, -1px, 0) scale(1.06); }
+@media (prefers-reduced-motion: reduce) {
+  .cta-ico { transition: none; }
+  :is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico { transform: none; }
+}
+
+/* ---------- Entrance cascade (fade + rise, transform/opacity only) ---------- */
+@keyframes bkIn { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
+.rise { animation: bkIn var(--dur-slow) var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * var(--stagger) + 60ms); }
+
+/* ---------- Layout: one 12-col grid, shared left edge ---------- */
+.page { max-width: var(--maxw); margin: 0 auto; padding: 72px var(--pad) 96px; }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px; row-gap: 40px; align-items: start; }
+.intro { grid-column: 1 / span 6; position: sticky; top: 92px; min-width: 0; }
+.panel { grid-column: 8 / span 5; min-width: 0; }
+/* Card is deliberately narrow (<768px): Cal.com then renders its compact layout, month calendar first, slots after a date is tapped. */
+.book-card { max-width: 480px; }
+.h1 { font-size: clamp(36px, 4.2vw, 60px); line-height: 1.02; letter-spacing: -0.035em; font-weight: 700; margin: 0 0 20px; color: var(--ink); }
+.h1 em { font-style: normal; color: var(--navy-700); display: block; }
+.lede { font-size: 17px; line-height: 1.6; color: var(--ink-dim); margin: 0 0 36px; max-width: 46ch; }
+
+/* info rows */
+.detail-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+.detail-item { display: grid; grid-template-columns: 44px 1fr; column-gap: 16px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.detail-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--navy-700); color: #E6EDF9; display: flex; align-items: center; justify-content: center; }
+.detail-icon svg { width: 20px; height: 20px; }
+.detail-text h4 { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 2px; color: var(--ink); }
+.detail-text p { font-size: 14px; line-height: 1.45; color: var(--ink-dim); margin: 0; }
+
+/* ---------- Booking card: service + hosts + date picker in ONE fixed card (LM-0002) ---------- */
+.book-card {
+  background: #FFFFFF; border: var(--bw-card, 1px) solid var(--bc-card, var(--line)); border-radius: var(--r-card, var(--radius));
+  overflow: hidden; width: 100%; position: relative;
+  box-shadow: 0 calc(28px * var(--shk-card, 1)) calc(56px * var(--shk-card, 1)) calc(-36px * var(--shk-card, 1)) rgb(var(--rgb-navy-900) / 0.35);
+}
+/* LOCAL-MOD LM-0002: quiet header. The host is chosen on the calendar step; later steps show the choices as a plain trail. */
+.book-top { padding: var(--pad-card, 14px 20px); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: var(--gap-card, 10px); }
+.book-service { margin: 0; font-size: 14px; color: var(--ink-dim); }
+.book-service strong { color: var(--ink); font-weight: 600; letter-spacing: -0.01em; }
+.book-head { position: relative; height: 50px; }
+.book-selector, .book-trail {
+  position: absolute; left: 0; top: 0; height: 50px; display: flex; align-items: center; white-space: nowrap;
+  transition: opacity 240ms var(--ease-soft) 60ms, transform 360ms var(--ease-out), visibility 0s;
+}
+.book-selector { gap: 2px; padding: 3px; border-radius: 13px; background: rgb(var(--rgb-night) / 0.05); }
+.book-trail { right: 0; gap: 10px; }
+.book-head[data-view="date"] .book-trail,
+.book-head:not([data-view="date"]) .book-selector {
+  opacity: 0; visibility: hidden; transform: translate3d(0, 8px, 0);
+  transition: opacity 160ms var(--ease-soft), transform 360ms var(--ease-out), visibility 0s linear 240ms;
+}
+.book-head:not([data-view="date"]) .book-selector { transform: translate3d(0, -8px, 0); }
 .book-tab {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 20px; border-radius: var(--radius);
-  background: var(--bg-elev); border: 1px solid var(--line);
-  cursor: pointer; transition: all 0.18s ease; flex: 1;
+  min-height: 44px; padding: var(--pad-chip, 0 18px); border-radius: var(--r-chip, 10px);
+  border: var(--bw-chip, 0) solid var(--bc-chip, transparent); background: transparent; color: var(--ink-dim);
+  font-size: 14px; font-weight: 600;
+  transition: background var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft), box-shadow var(--dur-fast) var(--ease-soft);
 }
-.book-tab:hover { border-color: var(--line-strong); }
-.book-tab.active { border-color: var(--accent); background: var(--accent-soft); }
-.book-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  object-fit: cover; flex-shrink: 0;
-  border: 2px solid var(--line-strong);
-  background: var(--bg-elev-2);
+.book-tab:hover { color: var(--ink); }
+.book-tab:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 2px; }
+.book-tab.active { background: var(--bg-elev); color: var(--ink); box-shadow: 0 1px 3px rgb(var(--rgb-night) / 0.14); }
+.trail-btn {
+  min-height: 44px; padding: 0 2px; border: 0; background: none; color: var(--ink);
+  font-size: 16px; font-weight: 700; letter-spacing: -0.01em;
+  text-decoration: underline; text-decoration-color: rgb(var(--rgb-night) / 0.35); text-decoration-thickness: 1px; text-underline-offset: 5px;
+  transition: text-decoration-color 160ms var(--ease-soft), transform 140ms var(--ease-soft);
 }
-.book-tab.active .book-avatar { border-color: var(--accent); }
-.book-tab-info { text-align: left; }
-.book-tab-name { font-size: 14px; font-weight: 500; color: var(--ink); display: block; }
-.book-tab-role { font-size: 12px; color: var(--ink-dim); display: block; }
+.trail-btn:hover { text-decoration-color: currentColor; }
+.trail-btn:active { transform: scale(0.97); }
+.trail-btn[hidden], .trail-sep[hidden] { display: none; }
+.trail-sep { color: var(--ink-mute); font-size: 15px; }
+/* LOCAL-MOD LM-0002: one fixed-height card. Date, time and details are steps that push across it. */
+.book-body { position: relative; min-width: 0; height: var(--bk-body-h, clamp(468px, calc(100svh - 270px), 540px)); overflow: hidden; }
+.bk-view {
+  position: absolute; inset: 0; display: flex; flex-direction: column; min-width: 0; min-height: 0;
+  padding: 18px 24px 20px;
+  opacity: 0; visibility: hidden; transform: translate3d(56px, 0, 0);
+  transition: opacity 200ms var(--ease-soft), transform 420ms var(--ease-out), visibility 0s linear 420ms;
+}
+.bk-view.is-past { transform: translate3d(-56px, 0, 0); }
+.bk-view.is-on {
+  opacity: 1; visibility: visible; transform: none;
+  transition: opacity 320ms var(--ease-soft) 80ms, transform 480ms var(--ease-out), visibility 0s;
+}
+.bk-view--form { padding: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.is-hidden { opacity: 0 !important; } /* opacity, not visibility, so the target can take focus mid-flight */
 
-@media (max-width: 520px) {
-  .book-selector { flex-direction: column; }
+/* step 1: date */
+.cal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.cal-month-title { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.015em; color: var(--ink); }
+.cal-month-nav { display: flex; align-items: center; gap: 6px; }
+.cal-nav-btn {
+  width: 44px; height: 44px; min-width: 44px; min-height: 44px;
+  border-radius: 10px; border: 0; background: transparent; color: var(--ink);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background var(--dur-fast) var(--ease-soft), transform 140ms var(--ease-soft);
 }
+.cal-nav-btn:hover:not(:disabled) { background: rgb(var(--rgb-night) / 0.06); }
+.cal-nav-btn:active:not(:disabled) { transform: scale(0.94); }
+.cal-nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+.cal-nav-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cal-weekdays { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-bottom: 6px; text-align: center; }
+.cal-weekdays span { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--ink-mute); padding: 4px 0; }
+.cal-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.cal-pad { min-height: 44px; }
+.cal-day {
+  position: relative; width: 100%; min-height: 44px; padding: 0;
+  border-radius: 10px; border: 0;
+  background: rgb(var(--rgb-night) / 0.045); color: var(--ink);
+  font-size: 14px; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 160ms var(--ease-soft), color 160ms var(--ease-soft), transform 140ms var(--ease-soft);
+}
+.cal-day:hover:not(:disabled) { background: rgb(var(--rgb-night) / 0.1); }
+.cal-day:active:not(:disabled) { transform: scale(0.92); }
+.cal-day:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 2px; }
+.cal-day.is-today::after {
+  content: ""; position: absolute; bottom: 6px; left: 50%; width: 4px; height: 4px;
+  border-radius: 50%; transform: translateX(-50%); background: currentColor;
+}
+.cal-day.is-selected, .cal-day.is-selected:hover { background: var(--navy-700); color: #FFFFFF; font-weight: 700; }
+.cal-day:disabled { background: transparent; color: var(--ink-mute); opacity: 0.42; font-weight: 500; cursor: not-allowed; }
+.cal-days.is-loading .cal-day { background: rgb(var(--rgb-night) / 0.08); color: transparent; opacity: 1; animation: bkPulse 900ms ease-in-out infinite alternate; }
+.cal-days.is-loading .cal-day::after { display: none; }
+.cal-prompt {
+  margin: auto 0 0; padding-top: 14px; border-top: 1px solid var(--line);
+  font-size: 13.5px; color: var(--ink-dim); text-align: center;
+}
+.cal-prompt:empty { border-top-color: transparent; }
+.cal-prompt a, .cal-retry { color: var(--navy-700); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.cal-retry { background: none; border: 0; min-height: 32px; padding: 0 4px; }
 
-/* ---------- Calendar rectangle ---------- */
-.cal-wrap {
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: hidden;
-  min-height: 640px;
-  width: 100%;
-  position: relative;
-}
-#cal-booking iframe { border: none !important; }
-.cal-wrap::after {
-  content: "";
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 40px;
-  background: var(--bg-elev);
-  pointer-events: none;
-  z-index: 2;
-}
+/* the picked date travels between its calendar cell and the trail */
+.bk-fly { position: absolute; z-index: 4; display: flex; align-items: center; justify-content: center; overflow: hidden; pointer-events: none; border-radius: 10px; font-weight: 700; white-space: nowrap; }
 
-/* ---------- Footer ---------- */
-.footer-bar {
-  max-width: var(--maxw); margin: 0 auto;
-  padding: 24px var(--pad);
-  border-top: 1px solid var(--line);
-  display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 12px;
+/* step 2: time */
+.slot-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex: none; margin-bottom: 6px; }
+.slot-tz { margin: 0; font-size: 13px; color: var(--ink-mute); }
+.fmt-toggle { display: inline-flex; gap: 4px; }
+.fmt-btn { min-width: 40px; min-height: 44px; padding: 0 6px; border: 0; background: none; font-size: 13px; font-weight: 600; color: var(--ink-mute); transition: color 150ms ease; }
+.fmt-btn:hover { color: var(--ink); }
+.fmt-btn.active { color: var(--ink); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.slot-grid {
+  flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 44px; align-content: start; gap: 6px; overflow-y: auto; padding: 2px;
+  scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent;
 }
+.slot-btn {
+  min-height: 44px; padding: 0 4px; border: 0; border-radius: 10px;
+  background: rgb(var(--rgb-night) / 0.045); color: var(--ink);
+  font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 150ms var(--ease-soft), color 150ms var(--ease-soft), transform 140ms var(--ease-soft);
+}
+.slot-grid.is-entering .slot-btn { animation: bkSlotIn 360ms var(--ease-out) backwards; animation-delay: calc(90ms + var(--i, 0) * 24ms); }
+@keyframes bkSlotIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.slot-btn:hover { background: rgb(var(--rgb-night) / 0.1); }
+.slot-btn:active { transform: scale(0.96); }
+.slot-btn.is-selected { background: var(--navy-700); color: #FFFFFF; }
+.slot-status { margin: 6px 0; font-size: 13.5px; color: var(--ink-dim); text-align: center; grid-column: 1 / -1; padding: 12px 0; }
 
+/* step 3: details (Cal.com form) with a ghost of the form while it loads */
+.cal-wrap { position: relative; flex: 1; min-height: 0; min-width: 0; max-width: 100%; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+#cal-booking { width: 100%; min-width: 0 !important; max-width: 100% !important; min-height: 100%; }
+#cal-booking cal-inline, #cal-booking iframe { border: none !important; min-width: 0 !important; max-width: 100% !important; }
+.bk-ghost, .bk-fail { position: absolute; inset: 0; z-index: 3; background: #FFFFFF; }
+.bk-ghost { display: flex; flex-direction: column; gap: 18px; padding: 22px 24px 24px; transition: opacity 320ms var(--ease-soft), visibility 0s; }
+.bk-ghost.is-done { opacity: 0; visibility: hidden; transition: opacity 320ms var(--ease-soft), visibility 0s linear 320ms; }
+.gh { display: block; flex: none; border-radius: 8px; background: linear-gradient(100deg, rgb(var(--rgb-night) / 0.045) 20%, rgb(var(--rgb-night) / 0.1) 45%, rgb(var(--rgb-night) / 0.045) 70%) 0 0 / 240% 100%; animation: bkShimmer 1.5s linear infinite; }
+.gh-field { display: flex; flex-direction: column; gap: 8px; }
+.gh-title { width: 46%; height: 18px; }
+.gh-label { width: 22%; height: 10px; border-radius: 5px; }
+.gh-input { width: 100%; height: 42px; border-radius: 10px; }
+.gh-area { width: 100%; height: 76px; border-radius: 10px; }
+.gh-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: auto; }
+.gh-btn { width: 104px; height: 40px; border-radius: var(--r-btn, 999px); }
+.bk-fail { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px; text-align: center; color: var(--ink-dim); z-index: 4; }
+.bk-fail[hidden] { display: none; }
+.bk-fail p { margin: 0; max-width: 30ch; }
+.bk-fail a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: var(--r-btn, 999px); background: var(--navy-700); color: #FFFFFF; font-weight: 600; }
+@keyframes bkShimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+@keyframes bkPulse { from { opacity: 0.45; } to { opacity: 1; } }
+
+/* ---------- Footer (dark, as index.html footer) ---------- */
+.footer {
+  background:
+    radial-gradient(ellipse 50% 90% at 88% 0%, rgb(var(--rgb-blue-700) / 0.22), transparent 70%),
+    var(--c-night);
+  color: var(--c-on-night); border-top: 1px solid rgb(var(--rgb-blue-300) / 0.14);
+}
+.footer-inner { max-width: var(--maxw); margin: 0 auto; padding: 28px var(--pad); display: flex; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap; }
+.footer-links { display: flex; gap: 28px; font-size: 14px; flex-wrap: wrap; }
+.footer-links a { color: var(--c-slate-400); transition: color .15s ease; }
+.footer-links a:hover { color: var(--c-on-night); }
+.footer-copy { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--pad) 24px; font-size: 13px; color: var(--c-slate-500); }
+
+@media (max-width: 980px) {
+  .grid { grid-template-columns: minmax(0, 1fr); column-gap: 0; }
+  .intro, .panel { grid-column: 1 / -1; position: static; }
+  .book-card { margin: 0 auto; }
+  .page { padding-top: 48px; }
+}
 @media (max-width: 768px) {
-  :root { --pad: 24px; }
-  .pitch-row { grid-template-columns: 1fr; gap: 28px; }
+  :root {
+    --m-pad-x: clamp(12px, 4vw, 20px);
+    --m-pad-y: clamp(20px, 3.4svh, 36px);
+    --m-gap: clamp(12px, 2.2svh, 22px);
+    --m-h1: clamp(1.75rem, 6.2vw + 0.5rem, 2.6rem);
+    --m-h2: clamp(1.4rem, 5vw + 0.4rem, 2.15rem);
+    --m-body: clamp(0.92rem, 0.85rem + 0.35vw, 1.05rem);
+    --m-lh-head: 1.08;
+    --m-lh-body: 1.5;
+    --pad: var(--m-pad-x);
+  }
+  html, body { overflow-x: clip; }
+  body { font-size: var(--m-body); line-height: var(--m-lh-body); }
+  .btn:not(.btn-ico-m), .footer-cta {
+    white-space: normal; overflow-wrap: anywhere; text-wrap: balance; text-align: center;
+  }
+  .hdr-inner { padding-left: max(var(--m-pad-x), env(safe-area-inset-left)); padding-right: max(var(--m-pad-x), env(safe-area-inset-right)); gap: 12px; }
   .nav { display: none; }
+  .page { padding: var(--m-pad-y) var(--m-pad-x); }
+  .h1 { font-size: var(--m-h1); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; margin-bottom: 14px; }
+  .lede { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; margin-bottom: 20px; }
+  .detail-item { padding: 14px 0; }
+  .detail-text h4 { font-size: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem); overflow-wrap: anywhere; }
+  .detail-text p, .book-service, .cal-prompt { font-size: clamp(0.86rem, 0.82rem + 0.25vw, 0.95rem); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
+  .book-tab { font-size: clamp(0.85rem, 0.82rem + 0.2vw, 0.94rem); }
+  .cal-month-title { font-size: clamp(0.95rem, 0.9rem + 0.3vw, 1.08rem); }
+  .grid { row-gap: var(--m-gap); }
+  .book-card { max-width: 100%; }
+  .footer-inner { padding: 24px var(--m-pad-x); gap: 16px; }
+  .footer-links { gap: 4px 20px; }
+  .footer-copy { padding: 0 var(--m-pad-x) calc(24px + env(safe-area-inset-bottom)); }
+  /* LM-0002 mobile: tap targets >= 44px */
+  .hdr .btn-ico-m { font-size: 0; gap: 0; width: 44px; height: 44px; min-height: 44px; padding: 0; flex: none; }
+  .hdr .btn-ico-m .cta-ico { width: 20px; height: 20px; }
+  .logo, .hdr .btn, .footer-cta { min-height: 44px; }
+  .footer-links a { display: inline-flex; align-items: center; min-height: 44px; }
 }
+@media (max-width: 768px) {
+  .book-body { height: var(--bk-body-h, clamp(468px, calc(100svh - 220px), 520px)); }
+}
+@media (max-width: 768px) and (max-height: 700px) {
+  .page { padding: 14px var(--m-pad-x) 20px; }
+}
+@media (max-width: 768px) and (min-height: 860px) {
+  .page { min-height: 0; }
+}
+@media (max-width: 520px) {
+  .book-top { padding: 12px 14px; }
+  .bk-view { padding: 16px 14px 18px; }
+  .bk-view--form { padding: 0; }
+  .cal-weekdays, .cal-days { gap: 2px; }
+  .book-selector { right: 0; }
+  .book-tab { flex: 1; min-width: 0; }
+  .trail-btn { font-size: 15px; }
+}
+@media (max-width: 360px) {
+  .book-top { padding: 10px 12px; }
+  .bk-view { padding: 12px 10px 14px; }
+  .bk-view--form { padding: 0; }
+  .book-trail { gap: 7px; }
+  .cal-day { min-width: 0; min-height: 40px; font-size: 0.85rem; }
+  .cal-pad { min-height: 40px; }
+  .cal-weekdays span { font-size: 0.65rem; }
+  .slot-btn { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise, .gh, .cal-days.is-loading .cal-day, .slot-grid.is-entering .slot-btn { animation: none; }
+  .book-tab, .book-selector, .book-trail, .trail-btn, .nav-dd, .nav-caret, .bk-view, .bk-ghost, .cal-day, .slot-btn, .cal-nav-btn { transition: none !important; }
+  .book-selector, .book-trail, .trail-btn, .nav-dd, .bk-view, .cal-day, .slot-btn, .cal-nav-btn { transform: none !important; }
+}
+/* LOCAL-MOD LM-0002: footer adapts at every width */
+.footer-inner, .footer-copy { padding-inline: clamp(16px, 5vw, var(--pad)); }
+.footer-links { gap: 8px clamp(16px, 3vw, 28px); min-width: 0; }
+.footer-links a { overflow-wrap: anywhere; }
+</style>
+<style id="v05-light-header">
+/* v0.5: header colour-matches the page canvas instead of the dark ribbon (solid tint + blur, not transparent) */
+.hdr {
+  background: rgb(244 244 242 / 0.88); color: var(--c-night);
+  border-bottom: 1px solid rgb(21 44 91 / 0.08);
+  box-shadow: 0 8px 24px -22px rgb(13 27 56 / 0.35);
+  --ink: var(--c-night); --ink-dim: #5A5F69; --line: rgb(21 44 91 / 0.10);
+  --btn-bg: var(--c-navy-900); --btn-line: var(--c-navy-900);
+}
+.hdr .logo, .hdr .logo-word { color: var(--c-navy-900); }
+.hdr .nav > a, .hdr .nav-trigger { color: #5A6275; }
+.hdr .nav > a:hover, .hdr .nav > a.is-active,
+.hdr .nav-trigger:hover, .hdr .nav-trigger.is-active,
+.hdr .nav-item:hover > .nav-trigger, .hdr .nav-item:focus-within > .nav-trigger { color: var(--c-navy-900); }
+.hdr .nav > a.is-active::after, .hdr .nav-trigger.is-active::after { background: var(--c-navy-900); }
+.hdr .nav-dd {
+  background: #FFFFFF; color: var(--c-night);
+  border: 1px solid rgb(21 44 91 / 0.10);
+  box-shadow: 0 24px 48px -20px rgb(13 27 56 / 0.28);
+}
+.hdr .nav-dd a { color: #4B5363; }
+.hdr .nav-dd a:hover, .hdr .nav-dd a:focus-visible { background: rgb(37 99 235 / 0.07); color: var(--c-navy-900); }
+.hdr .nav-dd a.is-active { background: rgb(37 99 235 / 0.11); color: var(--c-navy-900); }
+.hdr .nav-dd-sep { background: rgb(21 44 91 / 0.08); }
+.hdr .hdr-menu { color: var(--c-navy-900); }
+.hdr .m-nav { background: #F4F4F2; border-bottom: 1px solid rgb(21 44 91 / 0.10); }
+.hdr .m-nav-grp { color: #7A8192; border-top-color: rgb(21 44 91 / 0.08); }
+.hdr .m-nav a { color: #2B3345; border-bottom-color: rgb(21 44 91 / 0.06); }
+.hdr .m-nav a:hover, .hdr .m-nav a:focus-visible { color: var(--c-navy-900); }
+</style>
+<style id="v05-booking">
+/* v0.5 booking: tighter, a little snazzier, still minimal */
+.hdr .btn { color: var(--c-navy-900); border-color: rgb(21 44 91 / 0.16); background: transparent; }
+.hdr .btn:hover { background: rgb(21 44 91 / 0.06); border-color: rgb(21 44 91 / 0.28); }
+.hdr .nav-dd-panel { background: #FFFFFF; border-color: rgb(21 44 91 / 0.10); box-shadow: 0 24px 48px -20px rgb(13 27 56 / 0.28); }
+.hdr .nav-dd-panel a { color: #4B5363; }
+.hdr .nav-dd-panel a:hover, .hdr .nav-dd-panel a:focus-visible { background: rgb(37 99 235 / 0.07); color: var(--c-navy-900); }
+
+.page { padding-top: 56px; padding-bottom: 72px; }
+.grid { align-items: center; }
+.intro { top: 96px; }
+.h1 { margin-bottom: 16px; }
+.h1 em { background: linear-gradient(92deg, var(--navy-700) 10%, #2563EB 95%); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: 0.06em; }
+.lede { margin-bottom: 18px; max-width: 44ch; }
+
+.bk-get { list-style: none; margin: 0 0 28px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.bk-get[hidden] { display: none; }
+.bk-get li {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px 7px 9px; border-radius: 999px;
+  font-size: 13px; font-weight: 600; color: var(--navy-700);
+  background: rgb(37 99 235 / 0.07); border: 1px solid rgb(37 99 235 / 0.16);
+}
+.bk-get svg { width: 14px; height: 14px; fill: none; stroke: #2563EB; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* details: three compact tiles instead of tall rows */
+.detail-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; border-top: 0; }
+.detail-item {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+  padding: 14px 14px 16px; border: 1px solid rgb(21 44 91 / 0.08); border-radius: 16px;
+  background: rgb(255 255 255 / 0.6); box-shadow: 0 10px 24px -22px rgb(13 27 56 / 0.4);
+}
+.detail-icon { width: 34px; height: 34px; border-radius: 10px; background: rgb(37 99 235 / 0.10); color: var(--navy-700); }
+.detail-icon svg { width: 18px; height: 18px; }
+.detail-text h4 { font-size: 14.5px; margin-bottom: 3px; }
+.detail-text p { font-size: 13px; line-height: 1.4; }
+
+/* card */
+.book-card {
+  border-radius: 22px; border: 1px solid rgb(21 44 91 / 0.08);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 30px 60px -34px rgb(13 27 56 / 0.42), 0 0 0 6px rgb(37 99 235 / 0.04);
+}
+.book-card::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; z-index: 2;
+  background: linear-gradient(90deg, transparent, #2563EB 30%, #06B6D4 70%, transparent); opacity: 0.55;
+}
+.book-top { padding: 14px 18px; }
+.book-body { height: var(--bk-body-h, clamp(420px, calc(100svh - 300px), 476px)); }
+.book-tab { display: inline-flex; align-items: center; gap: 8px; padding: 0 16px 0 8px; }
+.book-tab::before {
+  content: attr(data-initials); display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.02em; color: #FFFFFF;
+  background: linear-gradient(140deg, #8A93A6, #5A6275); transition: background var(--dur-fast) var(--ease-soft);
+}
+.book-tab.active::before { background: linear-gradient(140deg, #2563EB, var(--navy-700)); }
+.cal-month-title { font-size: 17px; }
+.cal-weekdays span { font-size: 10.5px; letter-spacing: 0.08em; }
+.cal-day:not(:disabled) { background: rgb(37 99 235 / 0.08); color: var(--navy-700); font-weight: 700; }
+.cal-day:hover:not(:disabled) { background: rgb(37 99 235 / 0.16); }
+.cal-day.is-selected, .cal-day.is-selected:hover { background: var(--navy-700); color: #FFFFFF; box-shadow: 0 8px 18px -10px rgb(13 27 56 / 0.7); }
+.slot-btn { background: rgb(37 99 235 / 0.07); color: var(--navy-700); }
+.slot-btn:hover { background: rgb(37 99 235 / 0.15); }
+
+@media (max-width: 980px) {
+  .grid { align-items: start; }
+}
+@media (max-width: 768px) {
+  .page { padding-top: var(--m-pad-y); }
+  .bk-get { margin-bottom: 18px; }
+  .detail-list { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .detail-item { flex-direction: row; align-items: center; gap: 12px; padding: 10px 12px; }
+  .detail-text h4 { margin: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .book-tab::before { transition: none; } }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- Header -->
   <header class="hdr">
     <div class="hdr-inner">
       <a class="logo" href="index.html">
-        <img src="/querent-logo.png" alt="Querent" style="width:26px;height:26px;display:block;">
+        <img src="/assets/querent-logo-flat.svg" alt="Querent" style="width:28px;height:28px;display:block;">
         <span class="logo-word">Querent</span>
       </a>
-      <nav class="nav">
+      <nav class="nav" aria-label="Primary">
         <a href="index.html">Home</a>
-        <a href="menu.html">Solutions</a>
-        <a href="index.html#case">Case Studies</a>
-        <a href="index.html#process">Process</a>
-        <a href="index.html#faq">FAQ</a>
+        <div class="nav-item">
+          <button type="button" class="nav-trigger" aria-expanded="false" aria-haspopup="true">Company<svg class="nav-caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="nav-dd">
+            <div class="nav-dd-panel">
+              <a href="index.html#why-now">Why Now</a>
+              <a href="index.html#process">Process</a>
+              <a href="index.html#faq">FAQ</a>
+            </div>
+          </div>
+        </div>
+        <div class="nav-item">
+          <button type="button" class="nav-trigger" aria-expanded="false" aria-haspopup="true">Services<svg class="nav-caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="nav-dd">
+            <div class="nav-dd-panel">
+              <a href="menu.html#leadgen">Lead Gen, Outbound / Research</a>
+              <a href="menu.html#workflow">Workflow Automation</a>
+              <a href="menu.html#concierge">AI Concierge</a>
+              <a href="menu.html#internal">Internal Ops Agents</a>
+              <a href="menu.html#consult">Strategy &amp; Advisory</a>
+            </div>
+          </div>
+        </div>
+        <div class="nav-item">
+          <button type="button" class="nav-trigger" aria-expanded="false" aria-haspopup="true">AI Virtual Assistants<svg class="nav-caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="nav-dd">
+            <div class="nav-dd-panel">
+              <a href="va.html#how-it-works">How It Works</a>
+              <a href="va.html#offer">Two Options</a>
+              <a href="va.html#use-cases">Use Cases</a>
+              <a href="va.html#compare">Compare</a>
+            </div>
+          </div>
+        </div>
       </nav>
       <div class="hdr-actions">
-        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-          <svg class="theme-toggle-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-          <svg class="theme-toggle-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        </button>
-        <a href="index.html" class="btn btn-ghost btn-sm">← Back</a>
+        <a href="index.html" class="btn btn-ico-m" aria-label="Back"><svg class="cta-ico cta-ico--left" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Back</a>
       </div>
     </div>
   </header>
 
   <main>
     <div class="page">
+      <div class="grid">
 
-      <!-- Pitch row: headline left, details right -->
-      <div class="pitch-row">
-        <div>
-          <h1 class="h1">Book a free<br><em>automation audit.</em></h1>
-          <p class="lede">We'll map your top 3 AI‑automatable workflows, model the ROI, and send you a written brief whether you hire us or not... No obligations at all!</p>
-        </div>
-        <ul class="detail-list">
-          <li class="detail-item">
-            <div class="detail-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            </div>
-            <div class="detail-text">
-              <h4>30-minute session</h4>
-              <p>Focused, no-fluff. We come prepared with research on your business.</p>
-            </div>
-          </li>
-          <li class="detail-item">
-            <div class="detail-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l-4 4l6 6l4-16l-18 7l4 2l2 6l3-4"/></svg>
-            </div>
-            <div class="detail-text">
-              <h4>Google Meet</h4>
-              <p>Link sent on confirmation. Screen-share ready.</p>
-            </div>
-          </li>
-          <li class="detail-item">
-            <div class="detail-icon">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            </div>
-            <div class="detail-text">
-              <h4>Written brief included</h4>
-              <p>You leave with a workflow audit doc — yours to keep regardless.</p>
-            </div>
-          </li>
-        </ul>
-      </div>
+        <section class="intro">
+          <div class="intro-copy"><h1 class="h1 rise" style="--i:1"><span id="ttl-a">Book a free</span><em id="ttl-b">automation audit.</em></h1>
+          <p class="lede rise" id="lede" style="--i:2">We map how your team works, find the top 3 workflows worth handing to AI, and model the ROI on each.</p>
+          <ul class="bk-get rise" id="bk-get" style="--i:2" aria-label="You leave with">
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Workflow inventory</li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>ROI scorecard</li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Build vs. buy call</li>
+          </ul></div>
+          <ul class="detail-list">
+            <li class="detail-item rise" style="--i:3">
+              <div class="detail-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="detail-text">
+                <h4>30 minutes</h4>
+                <p>We come prepared with research on your business.</p>
+              </div>
+            </li>
+            <li class="detail-item rise" style="--i:4">
+              <div class="detail-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+              </div>
+              <div class="detail-text">
+                <h4>Google Meet</h4>
+                <p>Link sent the moment you book.</p>
+              </div>
+            </li>
+            <li class="detail-item rise" style="--i:5">
+              <div class="detail-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </div>
+              <div class="detail-text">
+                <h4>Written brief</h4>
+                <p>Yours to keep, whether or not you hire us.</p>
+              </div>
+            </li>
+          </ul>
+        </section>
 
-      <!-- Team selector -->
-      <div class="book-selector">
-        <button class="book-tab active" data-cal="benquerent/30min" onclick="switchCal(this)">
-          <div class="book-avatar" style="display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--accent-soft);">B</div>
-          <div class="book-tab-info">
-            <span class="book-tab-name">Ben Tsan</span>
-            <span class="book-tab-role">Co-Founder &amp; Ops</span>
+        <section class="panel" aria-label="Book a time">
+          <div class="book-card rise" style="--i:3">
+            <div class="book-top">
+              <p class="book-service">Booking: <strong id="svc-name">Free automation audit</strong></p>
+              <div class="book-head" id="book-head" data-view="date">
+                <div class="book-selector" id="book-selector" role="group" aria-label="Host">
+                  <button type="button" class="book-tab active" data-host="ben" data-initials="BT" aria-pressed="true" onclick="switchCal(this)">Ben Tsan</button>
+                  <button type="button" class="book-tab" data-host="josh" data-initials="JL" aria-pressed="false" onclick="switchCal(this)">Josh Li</button>
+                </div>
+                <nav class="book-trail" id="book-trail" aria-label="Your selection" inert>
+                  <button type="button" class="trail-btn" id="trail-host"></button>
+                  <span class="trail-sep" aria-hidden="true">/</span>
+                  <button type="button" class="trail-btn" id="trail-date"></button>
+                  <span class="trail-sep" id="trail-time-sep" aria-hidden="true" hidden>/</span>
+                  <button type="button" class="trail-btn" id="trail-time" hidden></button>
+                </nav>
+              </div>
+            </div>
+            <div class="book-body" id="book-body">
+              <div class="bk-view bk-view--date is-on" id="view-date">
+                <div class="cal-head">
+                  <h2 class="cal-month-title" id="cal-month-label"></h2>
+                  <div class="cal-month-nav">
+                    <button type="button" class="cal-nav-btn" id="cal-prev" aria-label="Previous month">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 18-6-6 6-6"/></svg>
+                    </button>
+                    <button type="button" class="cal-nav-btn" id="cal-next" aria-label="Next month">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="cal-weekdays" aria-hidden="true">
+                  <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+                </div>
+                <div class="cal-days" id="cal-days" role="grid" aria-label="Available dates"></div>
+                <p class="cal-prompt" id="cal-prompt" aria-live="polite"></p>
+              </div>
+              <div class="bk-view bk-view--time" id="view-time" inert>
+                <div class="slot-meta">
+                  <p class="slot-tz" id="slot-tz"></p>
+                  <div class="fmt-toggle" role="group" aria-label="Time format">
+                    <button type="button" class="fmt-btn active" data-fmt="12h" aria-pressed="true">12h</button>
+                    <button type="button" class="fmt-btn" data-fmt="24h" aria-pressed="false">24h</button>
+                  </div>
+                </div>
+                <div class="slot-grid" id="slot-grid" role="group" aria-label="Available times"></div>
+              </div>
+              <div class="bk-view bk-view--form" id="view-form" inert>
+                <div class="cal-wrap" id="cal-wrap">
+                  <div id="cal-booking"></div>
+                  <div class="bk-ghost" id="bk-ghost" aria-hidden="true">
+                    <span class="gh gh-title"></span>
+                    <span class="gh-field"><span class="gh gh-label"></span><span class="gh gh-input"></span></span>
+                    <span class="gh-field"><span class="gh gh-label"></span><span class="gh gh-input"></span></span>
+                    <span class="gh-field"><span class="gh gh-label"></span><span class="gh gh-area"></span></span>
+                    <span class="gh-actions"><span class="gh gh-btn"></span><span class="gh gh-btn"></span></span>
+                  </div>
+                  <div class="bk-fail" id="bk-fail" hidden>
+                    <p>The booking form did not load.</p>
+                    <a id="bk-fail-link" href="https://cal.com/" target="_blank" rel="noopener">Open It on Cal.com</a>
+                  </div>
+                </div>
+              </div>
+              <p class="sr-only" id="bk-status" role="status"></p>
+            </div>
           </div>
-        </button>
-        <button class="book-tab" data-cal="joshuali/30min" onclick="switchCal(this)">
-          <div class="book-avatar" style="display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--accent-soft);">J</div>
-          <div class="book-tab-info">
-            <span class="book-tab-name">Josh Li</span>
-            <span class="book-tab-role">Co-Founder &amp; Strategy</span>
-          </div>
-        </button>
-      </div>
+        </section>
 
-      <!-- Full-width calendar rectangle -->
-      <div class="cal-wrap">
-        <div id="cal-booking" style="width:100%;min-height:640px;"></div>
       </div>
-
     </div>
   </main>
 
-  <footer>
-    <div class="footer-bar mono dim">
-      <span>© 2026 Querent Labs, Inc.</span>
-      <a href="index.html" style="color:var(--ink-mute);">← Back to querent.ai</a>
+  <footer class="footer">
+    <div class="footer-inner">
+      <a class="logo" href="index.html"><img src="/assets/querent-logo-flat.svg" alt="" style="width:28px;height:28px;display:block;"><span class="logo-word">Querent</span></a>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Services</a>
+        <a href="index.html#process">Process</a>
+        <a href="index.html#faq">FAQ</a>
+        <a href="mailto:hello@querent.ai">hello@querent.ai</a>
+      </nav>
     </div>
+    <div class="footer-copy">&copy; 2026 Querent Labs, Inc.</div>
   </footer>
 
 </div>
-
-<script>
-// Theme toggle
-var html = document.documentElement;
-try { var s = localStorage.getItem('querent-theme'); if (s === 'light' || s === 'dark') html.dataset.theme = s; } catch(e) {}
-document.getElementById('theme-toggle').addEventListener('click', function() {
-  var next = html.dataset.theme === 'dark' ? 'light' : 'dark';
-  html.dataset.theme = next;
-  try { localStorage.setItem('querent-theme', next); } catch(e) {}
-});
-</script>
 
 <!-- Cal.com inline booking embed -->
 <script type="text/javascript">
@@ -304,30 +731,513 @@ document.getElementById('theme-toggle').addEventListener('click', function() {
 })(window, "https://app.cal.com/embed/embed.js", "init");
 Cal("init", { origin: "https://cal.com" });
 
-function loadCal(calLink) {
-  var el = document.getElementById("cal-booking");
-  el.innerHTML = "";
+/* Cal embed themed to the page: light theme, deep brand navy as brand colour + Cal CSS variables. */
+var NAVY = "#152C5B";
+/* Hosts: Cal.com usernames. NOTE: "joshuali" returned 404 on cal.com (checked 2026-11-26); put the real username here. */
+var HOSTS = { ben: "benquerent/30min", josh: "joshuali/30min" };
+/* Services carried in from CTAs via booking.html?service=<slug>. Default = free automation audit. */
+var SERVICES = {
+  audit:     { name: "Free automation audit",                  ttlA: "Book a free", ttlB: "automation audit." },
+  concierge: { name: "AI Concierge Services",                  ttlA: "Book a",      ttlB: "scoping call." },
+  workflow:  { name: "Workflow Automation",                    ttlA: "Book a",      ttlB: "scoping call." },
+  leadgen:   { name: "Lead Gen, Outbound / Research",          ttlA: "Book a",      ttlB: "scoping call." },
+  internal:  { name: "Internal Ops Agents",                    ttlA: "Book a",      ttlB: "scoping call." },
+  consult:   { name: "Operations Strategy & Advisory",         ttlA: "Book a",      ttlB: "scoping call." },
+  va:        { name: "AI Virtual Assistants",                  ttlA: "Book a free", ttlB: "strategy call." }
+};
+var slug = "audit";
+try { var q = (new URLSearchParams(location.search).get("service") || "").toLowerCase(); if (Object.prototype.hasOwnProperty.call(SERVICES, q)) slug = q; } catch (e) {}
+var SVC = SERVICES[slug];
+document.getElementById("svc-name").textContent = SVC.name;
+if (slug === "audit") document.querySelector(".book-service").style.display = "none"; // the page heading already says it
+if (slug !== "audit") { var bkGet = document.getElementById("bk-get"); if (bkGet) bkGet.hidden = true; } // audit deliverables only
+document.getElementById("ttl-a").textContent = SVC.ttlA;
+document.getElementById("ttl-b").textContent = SVC.ttlB;
+document.title = SVC.ttlA + " " + SVC.ttlB.replace(".", "") + " | Querent";
+if (slug !== "audit") document.getElementById("lede").textContent = "30 minutes to scope " + SVC.name + ": what we would build, the timeline and the investment.";
+
+var state = {
+  host: "ben",
+  viewYear: new Date().getFullYear(),
+  viewMonth: new Date().getMonth(),
+  selectedDate: null,
+  selectedSlot: null,
+  timeFormat: "12h",
+  view: "date",
+  months: {}   // "host|YYYY-MM" -> { status: loading | ok | missing | error, days: { "YYYY-MM-DD": [slot] } }
+};
+var HOST_NAMES = { ben: "Ben Tsan", josh: "Josh Li" };
+var reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+var bodyEl = document.getElementById("book-body");
+var views = { date: document.getElementById("view-date"), time: document.getElementById("view-time"), form: document.getElementById("view-form") };
+var monthLabelEl = document.getElementById("cal-month-label");
+var prevBtn = document.getElementById("cal-prev");
+var nextBtn = document.getElementById("cal-next");
+var daysEl = document.getElementById("cal-days");
+var promptEl = document.getElementById("cal-prompt");
+var cardEl = document.querySelector(".book-card");
+var headEl = document.getElementById("book-head");
+var selectorEl = document.getElementById("book-selector");
+var trailEl = document.getElementById("book-trail");
+var trailHostBtn = document.getElementById("trail-host");
+var trailDateBtn = document.getElementById("trail-date");
+var trailTimeBtn = document.getElementById("trail-time");
+var trailTimeSep = document.getElementById("trail-time-sep");
+var tzEl = document.getElementById("slot-tz");
+var slotGridEl = document.getElementById("slot-grid");
+var calWrapEl = document.getElementById("cal-wrap");
+var calEl = document.getElementById("cal-booking");
+var ghostEl = document.getElementById("bk-ghost");
+var failEl = document.getElementById("bk-fail");
+var failLinkEl = document.getElementById("bk-fail-link");
+var statusEl = document.getElementById("bk-status");
+
+function pad2(n) { return n < 10 ? "0" + n : String(n); }
+function toDateStr(y, m, d) { return y + "-" + pad2(m + 1) + "-" + pad2(d); }
+function parseDateStr(dateStr) {
+  var parts = dateStr.split("-").map(Number);
+  return new Date(parts[0], parts[1] - 1, parts[2]);
+}
+function getTimeZone() {
+  try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch (e) { return "UTC"; }
+}
+function getTzLabel() {
+  try {
+    var parts = new Intl.DateTimeFormat("en-US", { timeZoneName: "short" }).formatToParts(new Date());
+    var tz = parts.find(function (p) { return p.type === "timeZoneName"; });
+    return tz ? tz.value : "";
+  } catch (e) { return ""; }
+}
+function formatDateHeading(dateStr) {
+  var d = parseDateStr(dateStr);
+  return new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(d);
+}
+function formatSlotTime(slotObj, fmt) {
+  var d = slotObj.dateObj;
+  var h = d.getHours();
+  var m = d.getMinutes();
+  if (fmt === "24h") return pad2(h) + ":" + pad2(m);
+  var suffix = h >= 12 ? "PM" : "AM";
+  var h12 = h % 12 || 12;
+  return h12 + ":" + pad2(m) + " " + suffix;
+}
+
+/* ----- availability: read from Cal.com one month at a time; nothing is shown that Cal did not return ----- */
+function monthKey(host, y, m) { return host + "|" + y + "-" + pad2(m + 1); }
+function groupByDay(data) {
+  var out = {}, now = Date.now();
+  Object.keys(data || {}).forEach(function (k) {
+    (data[k] || []).forEach(function (item) {
+      var raw = typeof item === "string" ? item : item && (item.start || item.time);
+      var d = raw ? new Date(raw) : null;
+      if (!d || isNaN(d.getTime()) || d.getTime() <= now) return;
+      var day = toDateStr(d.getFullYear(), d.getMonth(), d.getDate());
+      (out[day] = out[day] || []).push({ dateObj: d, iso: d.toISOString() });
+    });
+  });
+  Object.keys(out).forEach(function (day) { out[day].sort(function (x, y) { return x.dateObj - y.dateObj; }); });
+  return out;
+}
+function loadMonth(host, y, m) {
+  var key = monthKey(host, y, m);
+  var hit = state.months[key];
+  if (hit && hit.status !== "error") return hit.promise;
+  var entry = state.months[key] = { status: "loading", days: {} };
+  var start = new Date(y, m, 1), end = new Date(y, m + 1, 0, 23, 59, 59, 999), now = new Date();
+  if (start < now) start = now;
+  if (end <= now) { entry.status = "ok"; entry.promise = Promise.resolve(entry); return entry.promise; }
+  var parts = HOSTS[host].split("/");
+  var url = "https://api.cal.com/v2/slots?username=" + encodeURIComponent(parts[0]) +
+    "&eventTypeSlug=" + encodeURIComponent(parts[1] || "30min") +
+    "&start=" + encodeURIComponent(start.toISOString()) + "&end=" + encodeURIComponent(end.toISOString()) +
+    "&timeZone=" + encodeURIComponent(getTimeZone());
+  var ctrl = new AbortController();
+  var timer = setTimeout(function () { ctrl.abort(); }, 8000);
+  entry.promise = fetch(url, { signal: ctrl.signal, headers: { "cal-api-version": "2024-09-04" } })
+    .then(function (res) {
+      if (res.status === 404) { entry.status = "missing"; return null; }
+      if (!res.ok) throw new Error("cal_slots_" + res.status);
+      return res.json();
+    })
+    .then(function (json) {
+      if (json) { entry.days = groupByDay(json.data); entry.status = "ok"; }
+    })
+    .catch(function () { entry.status = "error"; })
+    .then(function () { clearTimeout(timer); return entry; });
+  return entry.promise;
+}
+
+/* ----- step 1: date ----- */
+function renderPrompt(entry) {
+  var name = HOST_NAMES[state.host];
+  promptEl.textContent = "";
+  if (!entry || entry.status === "loading") { promptEl.textContent = "Checking " + name.split(" ")[0] + "’s calendar"; return; }
+  if (entry.status === "missing") {
+    promptEl.appendChild(document.createTextNode(name + "’s calendar is not available online. "));
+    var mail = document.createElement("a");
+    mail.href = "mailto:hello@querent.ai";
+    mail.textContent = "Email us";
+    promptEl.appendChild(mail);
+    return;
+  }
+  if (entry.status === "error") {
+    promptEl.appendChild(document.createTextNode("The calendar did not load. "));
+    var retry = document.createElement("button");
+    retry.type = "button";
+    retry.className = "cal-retry";
+    retry.textContent = "Try again";
+    retry.addEventListener("click", showMonth);
+    promptEl.appendChild(retry);
+    return;
+  }
+  if (!Object.keys(entry.days).length) promptEl.textContent = "No open times left this month. Try the next one.";
+}
+
+function renderCalendar() {
+  var now = new Date();
+  var curY = now.getFullYear();
+  var curM = now.getMonth();
+  var todayStr = toDateStr(curY, curM, now.getDate());
+  var firstOfMonth = new Date(state.viewYear, state.viewMonth, 1);
+  var entry = state.months[monthKey(state.host, state.viewYear, state.viewMonth)];
+  var loading = !entry || entry.status === "loading";
+  monthLabelEl.textContent = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(firstOfMonth);
+  prevBtn.disabled = (state.viewYear < curY) || (state.viewYear === curY && state.viewMonth <= curM);
+  daysEl.classList.toggle("is-loading", loading);
+  daysEl.setAttribute("aria-busy", loading ? "true" : "false");
+
+  var firstDow = firstOfMonth.getDay();
+  var daysInMonth = new Date(state.viewYear, state.viewMonth + 1, 0).getDate();
+  daysEl.innerHTML = "";
+  var frag = document.createDocumentFragment();
+  for (var i = 0; i < firstDow; i++) {
+    var pad = document.createElement("span");
+    pad.className = "cal-pad";
+    pad.setAttribute("aria-hidden", "true");
+    frag.appendChild(pad);
+  }
+  for (var day = 1; day <= daysInMonth; day++) {
+    var dateStr = toDateStr(state.viewYear, state.viewMonth, day);
+    var count = entry && entry.days[dateStr] ? entry.days[dateStr].length : 0;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "cal-day";
+    if (dateStr === todayStr) btn.classList.add("is-today");
+    if (dateStr === state.selectedDate) btn.classList.add("is-selected");
+    btn.dataset.date = dateStr;
+    btn.textContent = String(day);
+    btn.disabled = !count;
+    btn.setAttribute("aria-pressed", dateStr === state.selectedDate ? "true" : "false");
+    btn.setAttribute("aria-label", new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }).format(new Date(state.viewYear, state.viewMonth, day)) + (count ? ", " + count + " times" : ", unavailable"));
+    if (count) {
+      btn.addEventListener("click", (function (ds, el) {
+        return function () { selectDate(ds, el); };
+      })(dateStr, btn));
+    }
+    frag.appendChild(btn);
+  }
+  daysEl.appendChild(frag);
+  renderPrompt(entry);
+}
+
+function showMonth() {
+  var host = state.host, y = state.viewYear, m = state.viewMonth;
+  var pending = loadMonth(host, y, m);
+  renderCalendar();
+  return pending.then(function (entry) {
+    if (host === state.host && y === state.viewYear && m === state.viewMonth) renderCalendar();
+    return entry;
+  });
+}
+
+/* ----- moving between steps ----- */
+function goTo(name) {
+  var order = ["date", "time", "form"], at = order.indexOf(name);
+  order.forEach(function (v, i) {
+    var el = views[v];
+    el.classList.toggle("is-on", i === at);
+    el.classList.toggle("is-past", i < at);
+    el.inert = i !== at;
+  });
+  headEl.dataset.view = name;
+  selectorEl.inert = name !== "date";
+  trailEl.inert = name === "date";
+  trailTimeBtn.hidden = trailTimeSep.hidden = name !== "form";
+  state.view = name;
+}
+function focusSoon(el) {
+  if (el) el.focus({ preventScroll: true });
+}
+/* position inside the card, ignoring any slide transform that is still running */
+function layoutBox(el) {
+  var x = 0, y = 0, n = el;
+  while (n && n !== cardEl) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+  return { left: x + "px", top: y + "px", width: el.offsetWidth + "px", height: el.offsetHeight + "px" };
+}
+/* the picked date travels from its calendar tile into the trail, and back */
+function flyDate(fromEl, toEl, fromText, toText, toTile) {
+  if (reduceMotion || !fromEl || !toEl || !cardEl.animate) return;
+  var css = getComputedStyle(cardEl);
+  var tile = { backgroundColor: css.getPropertyValue("--navy-700").trim(), color: "#FFFFFF", fontSize: "14px" };
+  var word = { backgroundColor: "transparent", color: css.getPropertyValue("--ink").trim(), fontSize: "16px" };
+  var from = Object.assign(layoutBox(fromEl), toTile ? word : tile);
+  var to = Object.assign(layoutBox(toEl), toTile ? tile : word);
+  var fly = document.createElement("span");
+  fly.className = "bk-fly";
+  fly.setAttribute("aria-hidden", "true");
+  fly.textContent = fromText;
+  cardEl.appendChild(fly);
+  fromEl.classList.add("is-hidden");
+  toEl.classList.add("is-hidden");
+  var swap = setTimeout(function () { fly.textContent = toText; }, 140);
+  var finished = false;
+  function done() {
+    if (finished) return;
+    finished = true;
+    clearTimeout(swap);
+    fromEl.classList.remove("is-hidden");
+    toEl.classList.remove("is-hidden");
+    fly.remove();
+  }
+  fly.animate([from, to], { duration: 460, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "both" }).onfinish = done;
+  setTimeout(done, 700);
+}
+
+/* ----- step 2: time ----- */
+function renderSlots(slots, entering) {
+  slotGridEl.innerHTML = "";
+  slotGridEl.classList.toggle("is-entering", !!entering);
+  if (!slots.length) {
+    var empty = document.createElement("p");
+    empty.className = "slot-status";
+    empty.textContent = "No times left for this date. Please pick another day.";
+    slotGridEl.appendChild(empty);
+    return;
+  }
+  var frag = document.createDocumentFragment();
+  slots.forEach(function (slotObj, i) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "slot-btn";
+    btn.style.setProperty("--i", Math.min(i, 10));
+    var isChosen = state.selectedSlot && state.selectedSlot.iso === slotObj.iso;
+    if (isChosen) btn.classList.add("is-selected");
+    btn.setAttribute("aria-pressed", isChosen ? "true" : "false");
+    btn.textContent = formatSlotTime(slotObj, state.timeFormat);
+    btn.addEventListener("click", function () { selectSlot(slotObj, btn); });
+    frag.appendChild(btn);
+  });
+  slotGridEl.appendChild(frag);
+}
+function slotsFor(dateStr) {
+  var d = parseDateStr(dateStr);
+  var entry = state.months[monthKey(state.host, d.getFullYear(), d.getMonth())];
+  return (entry && entry.days[dateStr]) || [];
+}
+function setTrail(dateStr) {
+  var host = HOST_NAMES[state.host];
+  trailHostBtn.textContent = host.split(" ")[0];
+  trailHostBtn.setAttribute("aria-label", "Host: " + host + ". Change host");
+  trailDateBtn.textContent = formatDateHeading(dateStr);
+  trailDateBtn.setAttribute("aria-label", "Date: " + trailDateBtn.textContent + ". Change date");
+}
+function fillTimeView(dateStr) {
+  setTrail(dateStr);
+  tzEl.textContent = getTzLabel();
+  renderSlots(slotsFor(dateStr), true);
+  slotGridEl.scrollTop = 0;
+}
+function selectDate(dateStr, cell) {
+  state.selectedDate = dateStr;
+  state.selectedSlot = null;
+  Array.prototype.forEach.call(daysEl.querySelectorAll(".cal-day"), function (d) {
+    var on = d.dataset.date === dateStr;
+    d.classList.toggle("is-selected", on);
+    d.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  fillTimeView(dateStr);
+  goTo("time");
+  flyDate(cell, trailDateBtn, cell ? cell.textContent : "", trailDateBtn.textContent, false);
+  statusEl.textContent = slotsFor(dateStr).length + " times on " + formatDateHeading(dateStr);
+  focusSoon(slotGridEl.querySelector(".slot-btn") || trailDateBtn);
+}
+/* back to the calendar from either later step; toHost puts focus on the host choice */
+function backToDates(toHost) {
+  leaveForm();
+  var cell = state.selectedDate && daysEl.querySelector('.cal-day[data-date="' + state.selectedDate + '"]');
+  if (cell) flyDate(trailDateBtn, cell, trailDateBtn.textContent, cell.textContent, true);
+  goTo("date");
+  focusSoon(toHost ? selectorEl.querySelector(".book-tab.active") : cell || prevBtn);
+}
+
+/* ----- step 3: details ----- */
+var calRun = 0, calTimer = null, slotTimer = null;
+function selectSlot(slotObj, btn) {
+  state.selectedSlot = slotObj;
+  Array.prototype.forEach.call(slotGridEl.querySelectorAll(".slot-btn"), function (b) {
+    b.classList.toggle("is-selected", b === btn);
+    b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+  });
+  slotGridEl.classList.remove("is-entering");
+  clearTimeout(slotTimer);
+  slotTimer = setTimeout(function () {
+    trailTimeBtn.textContent = formatSlotTime(slotObj, state.timeFormat);
+    trailTimeBtn.setAttribute("aria-label", "Time: " + trailTimeBtn.textContent + ". Change time");
+    goTo("form");
+    loadCal(HOSTS[state.host], state.selectedDate, slotObj);
+    focusSoon(trailTimeBtn);
+  }, reduceMotion ? 0 : 160);
+}
+function dropCal() {
+  calRun += 1;
+  clearTimeout(calTimer);
+  clearTimeout(slotTimer);
+}
+/* cancel anything pending and, when leaving the form, clear the frame after it has slid away */
+function leaveForm() {
+  var wasForm = state.view === "form";
+  dropCal();
+  if (!wasForm) return;
+  var run = calRun;
+  setTimeout(function () { if (run === calRun) calEl.innerHTML = ""; }, 480);
+}
+function returnToTimes() {
+  leaveForm();
+  goTo("time");
+  focusSoon(slotGridEl.querySelector(".slot-btn.is-selected") || trailDateBtn);
+}
+function calReady() {
+  clearTimeout(calTimer);
+  var run = calRun;
+  /* a short hold lets the form finish painting under the ghost before it fades */
+  setTimeout(function () {
+    if (run !== calRun || state.view !== "form" || !failEl.hidden) return;
+    ghostEl.classList.add("is-done");
+    statusEl.textContent = "Booking form ready";
+  }, 350);
+}
+function calFailed() {
+  clearTimeout(calTimer);
+  if (state.view !== "form") return;
+  ghostEl.classList.add("is-done");
+  failEl.hidden = false;
+  failLinkEl.href = "https://cal.com/" + HOSTS[state.host];
+  statusEl.textContent = "The booking form did not load";
+}
+
+function loadCal(calLink, dateStr, slotObj) {
+  var run = ++calRun;
+  clearTimeout(calTimer);
+  ghostEl.classList.remove("is-done");
+  failEl.hidden = true;
+  calWrapEl.scrollTop = 0;
+  calEl.innerHTML = "";
+  calTimer = setTimeout(function () { if (run === calRun) calFailed(); }, 12000);
+  var cfg = {
+    layout: "month_view",
+    hideBranding: true,
+    theme: "light",
+    notes: "Service: " + SVC.name,
+    "metadata[service]": slug
+  };
+  if (dateStr) {
+    cfg.month = dateStr.slice(0, 7);
+    cfg.date = dateStr;
+  }
+  if (slotObj && slotObj.iso) {
+    cfg.slot = slotObj.iso;
+  }
   Cal("inline", {
     elementOrSelector: "#cal-booking",
     calLink: calLink,
-    config: { layout: "month_view", hideBranding: true }
+    /* config keys become booking-form prefill: notes -> "Additional notes", metadata[service] -> stored on the booking */
+    config: cfg
   });
   Cal("ui", {
-    theme: "dark",
-    styles: { branding: { brandColor: "#7c3aed" } },
+    theme: "light",
+    styles: { branding: { brandColor: NAVY } },
+    cssVarsPerTheme: {
+      light: { "cal-brand": NAVY, "cal-brand-emphasis": "#0D1B38", "cal-brand-text": "#FFFFFF", "cal-bg": "#FFFFFF", "cal-bg-muted": "#F1F5FC", "cal-bg-emphasis": "#E6EDF9", "cal-border": "#D5DEEE", "cal-border-emphasis": "#B8C6E0", "cal-text": "#0A0B0E", "cal-text-emphasis": "#0A0B0E", "cal-text-muted": "#5A5F69" },
+      dark: { "cal-brand": NAVY }
+    },
     hideEventTypeDetails: true,
     hideBranding: true,
     layout: "month_view"
   });
 }
+/* the ghost stays until Cal.com reports the form is drawn */
+Cal("on", { action: "bookerReady", callback: calReady });
+Cal("on", { action: "linkReady", callback: function () { var run = calRun; setTimeout(function () { if (run === calRun) calReady(); }, 900); } });
+Cal("on", { action: "linkFailed", callback: calFailed });
 
 function switchCal(btn) {
-  document.querySelectorAll(".book-tab").forEach(function(t) { t.classList.remove("active"); });
+  document.querySelectorAll(".book-tab").forEach(function (t) { t.classList.remove("active"); t.setAttribute("aria-pressed", "false"); });
   btn.classList.add("active");
-  loadCal(btn.dataset.cal);
+  btn.setAttribute("aria-pressed", "true");
+  if (state.host === btn.dataset.host) return;
+  state.host = btn.dataset.host;
+  state.selectedDate = null;
+  state.selectedSlot = null;
+  showMonth();
 }
 
-loadCal("benquerent/30min");
+prevBtn.addEventListener("click", function () {
+  if (prevBtn.disabled) return;
+  if (state.viewMonth === 0) { state.viewYear -= 1; state.viewMonth = 11; }
+  else { state.viewMonth -= 1; }
+  showMonth();
+});
+nextBtn.addEventListener("click", function () {
+  if (state.viewMonth === 11) { state.viewYear += 1; state.viewMonth = 0; }
+  else { state.viewMonth += 1; }
+  showMonth();
+});
+document.querySelectorAll(".fmt-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    state.timeFormat = btn.dataset.fmt;
+    document.querySelectorAll(".fmt-btn").forEach(function (b) {
+      var active = b === btn;
+      b.classList.toggle("active", active);
+      b.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+    if (state.selectedDate) renderSlots(slotsFor(state.selectedDate), false);
+  });
+});
+trailHostBtn.addEventListener("click", function () { backToDates(true); });
+trailDateBtn.addEventListener("click", function () { backToDates(false); });
+trailTimeBtn.addEventListener("click", returnToTimes);
+
+/* Top ribbon dropdown keyboard/click support alongside hover + focus-within */
+(function () {
+  var items = document.querySelectorAll(".nav-item");
+  function closeAll(except) {
+    items.forEach(function (item) {
+      if (item !== except) {
+        item.classList.remove("is-open");
+        var tr = item.querySelector(".nav-trigger");
+        if (tr) tr.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+  items.forEach(function (item) {
+    var tr = item.querySelector(".nav-trigger");
+    if (!tr) return;
+    tr.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var open = !item.classList.contains("is-open");
+      closeAll(item);
+      item.classList.toggle("is-open", open);
+      tr.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
+  document.addEventListener("click", function () { closeAll(null); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeAll(null);
+  });
+})();
+
+showMonth();
 </script>
 </body>
 </html>

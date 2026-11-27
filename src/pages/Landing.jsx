@@ -1,4 +1,4 @@
-import { ArrowRight, MessageSquare, AudioLines, BarChart3, Sparkles, Layers, Bot, Lock } from 'lucide-react';
+import { ArrowRight, AudioLines, BarChart3, Sparkles, Bot, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import './Landing.css';
 

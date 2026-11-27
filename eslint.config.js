@@ -35,4 +35,6 @@ export default [
       ],
     },
   },
+  // LOCAL-MOD LM-0002: serverless functions and the Vite config run in Node
+  { files: ['api/**/*.js', 'vite.config.js'], languageOptions: { globals: globals.node } },
 ]

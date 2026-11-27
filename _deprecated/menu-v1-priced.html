@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-accent="blue">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex, nofollow" />
+<!-- DEPRECATED (archived 2026-11-26): services page v1 with per-offer pricing. Kept for reference only; not part of the Vite build, so it is never served. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Menu of Services | Querent</title>
+<link rel="icon" type="image/svg+xml" href="/assets/querent-logo-flat.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&amp;family=Source+Sans+3:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+<style>
+/* LOCAL-MOD LM-0002: brand colour variables. Values are identical to the literals they replace, so the page looks the same by default.
+   The staging design-system preview can override them to try other palettes (see staging-ds-panel.js). */
+:root {
+  --c-night: #0A0B0E; --c-on-night: #ECEEF2; --c-slate-400: #94A3B8; --c-slate-500: #64748B;
+  --c-blue-300: #93C5FD; --c-blue-400: #60A5FA; --c-blue-600: #2563EB; --c-blue-700: #1D4ED8;
+  --c-navy-900: #0D1B38; --c-navy-800: #152C5B; --c-cyan-500: #06B6D4; --c-cyan-300: #22D3EE;
+  --c-panel-light: #E8EEFA; --c-panel-dark-end: #0B1226; --c-panel-dark-start: #111C38; --c-canvas: #F4F4F2;
+  --rgb-blue-600: 37 99 235; --rgb-blue-300: 147 197 253; --rgb-blue-700: 29 78 216; --rgb-cyan-500: 6 182 212;
+  --rgb-navy-800: 21 44 91; --rgb-navy-900: 13 27 56; --rgb-night: 10 11 14; --rgb-blue-400: 96 165 250; --rgb-cyan-300: 34 211 238;
+}
+
+/* ==================================================================
+   Querent — Menu of Services (LM-0002 revamp, 2026-11-26)
+   Dark header + footer, light body with drifting light variance,
+   one disclosure per service, one inline-SVG motif per service.
+   Motion: shared tokens, transform/opacity only (SVG dash flow aside),
+   full static fallback under prefers-reduced-motion.
+   ================================================================== */
+
+:root {
+  --bg: var(--c-canvas);
+  --bg-elev: #FFFFFF;
+  --ink: var(--c-night);
+  --ink-dim: #5A5F69;
+  --ink-mute: #8A8F99;
+  --line: rgba(0,0,0,0.10);
+  --line-strong: rgba(0,0,0,0.18);
+  --night: var(--c-night);
+  --on-night: var(--c-on-night);
+  --on-night-dim: var(--c-slate-400);
+  --hairline-night: rgb(var(--rgb-blue-300) / 0.16);
+  --blue: var(--c-blue-600);
+  --blue-700: var(--c-blue-700);
+  --blue-400: var(--c-blue-400);
+  --blue-300: var(--c-blue-300);
+  --cyan: var(--c-cyan-500);
+  --navy-900: var(--c-navy-900);
+  --navy-800: var(--c-navy-800);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 240ms;
+  --dur-base: 560ms;
+  --dur-slow: 900ms;
+  --stagger: 90ms;
+  --maxw: 1280px;
+  --pad: 64px;
+  --hdr-h: 68px;
+  --r-panel: 24px;
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: clip; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  overflow-x: clip;
+}
+h1, h2, h3, .h1, .h2, .h3, .title, .why-now-headline, .faq-title, .cta-h2, .proc2-card-title, .stat-num, .value-num, .case-stat-num, .logo-word {
+  font-family: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+}
+.mono { font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.dim { color: var(--ink-dim); }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; color: inherit; }
+em { font-style: normal; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 6px; }
+.app { position: relative; z-index: 1; }
+
+/* ---------- Ambient light variance (fixed, transform/opacity only) ---------- */
+.ambient { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.amb { position: absolute; inset: 0; opacity: 0; transition: opacity 1400ms var(--ease-soft); }
+body[data-active="hero"] .amb-hero,
+body[data-active="concierge"] .amb-concierge,
+body[data-active="workflow"] .amb-workflow,
+body[data-active="leadgen"] .amb-leadgen,
+body[data-active="internal"] .amb-internal,
+body[data-active="consult"] .amb-consult,
+body[data-active="cta"] .amb-consult { opacity: 1; }
+.blob {
+  position: absolute; width: max(56vmax, 520px); height: max(56vmax, 520px); border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgb(var(--c) / var(--a)) 0%, rgb(var(--c) / 0) 66%);
+  will-change: transform;
+  animation: drift var(--t, 42s) var(--ease-in-out) infinite alternate;
+}
+.blob.b1 { left: -14%; top: -18%; }
+.blob.b2 { right: -18%; bottom: -22%; --t: 54s; animation-direction: alternate-reverse; background: radial-gradient(circle at 50% 50%, rgb(var(--rgb-navy-800) / 0.12) 0%, rgb(var(--rgb-navy-800) / 0) 66%); }
+@keyframes drift { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(9vw, 7vh, 0) scale(1.14); } }
+.amb-hero      { --c: var(--rgb-blue-600);  --a: 0.20; }
+.amb-concierge { --c: var(--rgb-blue-600);  --a: 0.20; }
+.amb-workflow  { --c: var(--rgb-cyan-500);  --a: 0.17; }
+.amb-leadgen   { --c: var(--rgb-cyan-500);  --a: 0.20; }
+.amb-internal  { --c: var(--rgb-navy-800);   --a: 0.14; }
+.amb-consult   { --c: var(--rgb-blue-400); --a: 0.22; }
+
+/* ---------- Header (dark) ---------- */
+.hdr {
+  position: sticky; top: 0; z-index: 60; overflow: visible;
+  background: var(--night);
+  border-bottom: 1px solid var(--hairline-night);
+  color: var(--on-night);
+}
+.hdr-inner {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: 0 var(--pad); height: var(--hdr-h);
+  display: flex; align-items: center; justify-content: space-between; gap: 32px;
+}
+.logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.02em; }
+.logo-word { font-size: 18px; }
+.nav { display: flex; align-items: center; gap: 32px; }
+.nav > a,
+.nav-trigger {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 0;
+  color: var(--on-night-dim); font-size: 14px; font-weight: 600;
+  background: transparent; border: 0; font-family: inherit; line-height: 1.2;
+  position: relative;
+  transition: color var(--dur-fast) var(--ease-soft);
+}
+.nav > a:hover, .nav > a.is-active,
+.nav-trigger:hover, .nav-trigger.is-active,
+.nav-item:hover > .nav-trigger, .nav-item:focus-within > .nav-trigger { color: #fff; }
+.nav > a.is-active::after,
+.nav-trigger.is-active::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 2px; background: var(--on-night); border-radius: 2px;
+}
+.nav-item { position: relative; display: inline-flex; align-items: center; }
+.nav-chev {
+  width: 14px; height: 14px; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.nav-item:hover .nav-chev,
+.nav-item:focus-within .nav-chev { transform: rotate(180deg); }
+.nav-dd {
+  position: absolute; top: calc(100% + 8px); left: -12px; min-width: 248px;
+  padding: 8px; border-radius: 16px;
+  background: linear-gradient(165deg, var(--c-panel-dark-start) 0%, var(--c-night) 100%);
+  border: 1px solid rgb(var(--rgb-blue-300) / .16);
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, .72);
+  color: var(--on-night);
+  display: flex; flex-direction: column; gap: 2px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translate3d(0, -6px, 0);
+  transition: opacity var(--dur-fast) var(--ease-soft), transform var(--dur-fast) var(--ease-out), visibility 0s linear var(--dur-fast);
+  z-index: 70;
+}
+.nav-dd::before { content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px; }
+.nav-item:hover .nav-dd,
+.nav-item:focus-within .nav-dd {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: translate3d(0, 0, 0); transition-delay: 0s;
+}
+.nav-dd a {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 38px; padding: 8px 12px; border-radius: 10px;
+  font-size: 14px; font-weight: 500; color: var(--on-night-dim);
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft);
+}
+.nav-dd a:hover, .nav-dd a:focus-visible { background: rgb(var(--rgb-blue-300) / .10); color: #fff; }
+.nav-dd a.is-active { background: rgb(var(--rgb-blue-600) / .16); color: #fff; }
+.nav-dd-sep { height: 1px; background: rgb(var(--rgb-blue-300) / .12); margin: 4px 8px; }
+.hdr-actions { display: flex; align-items: center; gap: 12px; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; padding: var(--pad-button, 12px 20px); border-radius: var(--r-btn, 999px);
+  font-size: 14px; font-weight: 500; border: var(--bw-button, 1px) solid transparent;
+  transition: transform var(--dur-fast) var(--ease-soft), background-color var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft), box-shadow var(--dur-fast) var(--ease-soft);
+  white-space: nowrap; max-width: 100%;
+}
+.btn-sm { padding: 8px 16px; font-size: 13px; }
+.btn-block { width: 100%; padding: 14px 20px; }
+.btn-primary { background: var(--navy-900); color: #fff; border-color: var(--bc-button, var(--navy-900)); box-shadow: 0 calc(10px * var(--shk-button, 1)) calc(26px * var(--shk-button, 1)) calc(-12px * var(--shk-button, 1)) rgb(var(--rgb-navy-900) / .55); }
+.btn-primary:hover { background: var(--blue-700); border-color: var(--blue-700); transform: translateY(-1px); }
+.hdr .btn-primary { background: var(--navy-800); border-color: rgb(var(--rgb-blue-300) / .32); box-shadow: none; }
+.hdr .btn-primary:hover { background: var(--blue-700); }
+.btn-ghost { background: rgba(255,255,255,.6); color: var(--ink); border-color: var(--bc-button, var(--line-strong)); }
+.btn-ghost:hover { border-color: var(--ink); background: #fff; }
+
+/* ---------- CTA icons (LM-0002; spec: design-system/spec.json ctaIcon) ----------
+   One inline Lucide-style set: stroke currentColor, 16-18px, aria-hidden. Place icon as first
+   (calendar, mail, arrow-left) or last (arrow-right, arrow-down) child of .btn / .footer-cta / .cta-link.
+   Hover/focus nudge uses the shared --ease-soft / --dur-fast tokens; transform only. */
+.btn, .footer-cta, .cta-link { gap: 8px; }
+.btn-sm { gap: 6px; }
+.cta-link { display: inline-flex; align-items: center; }
+.cta-ico {
+  display: block; flex: none;
+  width: clamp(16px, 1.2em, 18px); height: clamp(16px, 1.2em, 18px);
+  fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.footer-cta .cta-ico, .cta-link .cta-ico { stroke-width: 2; }
+.cta-ico--cal { translate: 0 -0.5px; }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--right { transform: translate3d(3px, 0, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--left { transform: translate3d(-3px, 0, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--down { transform: translate3d(0, 2px, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--cal { transform: translate3d(0, -1.5px, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--mail { transform: translate3d(0, -1px, 0) scale(1.06); }
+@media (prefers-reduced-motion: reduce) {
+  .cta-ico { transition: none; }
+  :is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico { transform: none; }
+}
+
+/* ---------- Typography ---------- */
+.h1 { font-size: clamp(42px, 6.2vw, 92px); line-height: 0.98; letter-spacing: -0.045em; font-weight: 700; margin: 0 0 24px; }
+.h2 { font-size: clamp(32px, 3.8vw, 56px); line-height: 1.04; letter-spacing: -0.035em; font-weight: 700; margin: 0 0 14px; }
+.lede { font-size: 19px; line-height: 1.5; color: var(--ink-dim); max-width: 540px; margin: 0 0 32px; }
+.lede-sm { font-size: 16px; max-width: 480px; }
+
+/* ---------- Reveal (JS adds html.js; static without it) ---------- */
+.js .rv { opacity: 0; translate: 0 26px; transition: opacity var(--dur-slow) var(--ease-out), translate var(--dur-slow) var(--ease-out); transition-delay: calc(var(--d, 0) * var(--stagger)); }
+.js .rv.in { opacity: 1; translate: 0 0; }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; max-width: var(--maxw); margin: 0 auto; padding: 88px var(--pad) 72px; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; }
+.hero-copy { min-width: 0; }
+.hero-cta { display: flex; gap: var(--gap-button, 12px); flex-wrap: wrap; margin-top: 8px; }
+.hero-vis { width: 100%; max-width: 440px; justify-self: end; }
+.hero-vis svg { display: block; width: 100%; height: auto; overflow: visible; }
+.layer { animation: layerIn var(--dur-slow) var(--ease-out) backwards, layerIdle 7s var(--ease-in-out) infinite alternate; animation-delay: calc(var(--k) * 110ms), calc(var(--k) * 110ms + 900ms); }
+@keyframes layerIn { from { opacity: 0; transform: translate3d(-28px, 10px, 0); } }
+@keyframes layerIdle { to { transform: translate3d(calc(var(--k) * 3px + 4px), 0, 0); } }
+
+/* ---------- Service sections ---------- */
+.svc { position: relative; z-index: 1; padding: 112px 0; scroll-margin-top: var(--hdr-h); isolation: isolate; }
+.svc-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  -webkit-mask-image: linear-gradient(transparent 0, #000 18%, #000 82%, transparent 100%); mask-image: linear-gradient(transparent 0, #000 18%, #000 82%, transparent 100%); }
+#concierge .svc-bg { background: radial-gradient(60% 70% at 88% 30%, rgb(var(--rgb-blue-600) / .16), transparent 70%), linear-gradient(180deg, rgba(232,238,250,0), rgba(222,233,252,.85)); }
+#workflow  .svc-bg { background: radial-gradient(rgb(var(--rgb-navy-800) / .20) 1.3px, transparent 1.6px) 0 0 / 26px 26px, radial-gradient(55% 60% at 12% 40%, rgb(var(--rgb-cyan-500) / .14), transparent 70%), rgba(255,255,255,.6); }
+#leadgen   .svc-bg { background: repeating-radial-gradient(circle at 80% 48%, rgb(var(--rgb-cyan-500) / .22) 0 1px, transparent 1px 54px), radial-gradient(60% 70% at 80% 48%, rgb(var(--rgb-cyan-500) / .14), transparent 70%), rgba(236,246,248,.6); }
+#internal  .svc-bg { background: linear-gradient(rgb(var(--rgb-navy-800) / .09) 1px, transparent 1px) 0 0 / 44px 44px, linear-gradient(90deg, rgb(var(--rgb-navy-800) / .09) 1px, transparent 1px) 0 0 / 44px 44px, radial-gradient(50% 60% at 15% 60%, rgb(var(--rgb-navy-800) / .12), transparent 70%), rgba(234,234,230,.7); }
+#consult   .svc-bg { background: repeating-radial-gradient(ellipse 120% 80% at 18% 88%, rgb(var(--rgb-navy-800) / .12) 0 1px, transparent 1px 34px), linear-gradient(115deg, rgb(var(--rgb-blue-400) / .20), rgba(244,244,242,0) 55%), rgba(247,244,238,.7); }
+.svc-inner { position: relative; z-index: 2; max-width: var(--maxw); margin: 0 auto; padding: 0 var(--pad); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "main stage" "more more"; column-gap: 64px; align-items: center; }
+.svc--flip .svc-inner { grid-template-areas: "stage main" "more more"; }
+.svc-main { grid-area: main; min-width: 0; }
+.svc-stage { grid-area: stage; min-width: 0; }
+.svc-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.svc-num { color: var(--ink-mute); }
+.svc-tag { color: var(--blue); font-weight: 500; }
+.svc-head::after { content: ""; flex: 0 1 64px; height: 1px; background: var(--line-strong); }
+.svc-sub { font-size: 19px; line-height: 1.45; color: var(--ink); margin: 0 0 22px; max-width: 520px; }
+.svc-price { margin: 0 0 28px; display: flex; flex-direction: column; gap: 4px; }
+.svc-price strong { font-size: clamp(26px, 2.6vw, 34px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+.svc-price span { color: var(--ink-dim); font-size: 14px; }
+.svc-actions { display: flex; flex-wrap: wrap; gap: var(--gap-button, 12px); align-items: center; }
+.svc-actions .btn-block { width: auto; padding: 12px 20px; }
+/* LOCAL-MOD LM-0002: the details button answers the press at once and keeps its width when the label changes */
+.tog { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 14px; background: transparent; border: var(--bw-button, 1px) solid var(--bc-button, var(--line-strong)); border-radius: var(--r-btn, 999px); font-size: 14px; font-weight: 500; transition: border-color var(--dur-fast) var(--ease-soft), background-color var(--dur-fast) var(--ease-soft), transform 140ms var(--ease-soft); }
+.tog:hover { border-color: var(--ink); background: rgba(255,255,255,.7); }
+.tog:active { transform: scale(0.96); }
+.tog[aria-expanded="true"] { background: #fff; border-color: var(--blue); }
+.tog-l { display: grid; overflow: hidden; text-align: center; }
+.tog-l > span { grid-area: 1 / 1; transition: transform 320ms var(--ease-out), opacity 200ms var(--ease-soft), visibility 0s linear 0s; }
+.tog-b { visibility: hidden; opacity: 0; transform: translateY(100%); }
+.tog[aria-expanded="true"] .tog-a { visibility: hidden; opacity: 0; transform: translateY(-100%); }
+.tog[aria-expanded="true"] .tog-b { visibility: visible; opacity: 1; transform: none; }
+.tog svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 380ms cubic-bezier(0.34, 1.4, 0.5, 1); flex: none; }
+.tog[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+/* Disclosure (grid-rows height animation): the columns follow the height in turn; closing is quicker than opening */
+.svc-more { grid-area: more; display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows 300ms var(--ease-in-out) 60ms, visibility 0s linear 360ms; }
+.svc-more.open { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows 460ms var(--ease-soft), visibility 0s; }
+.svc-more-clip { overflow: hidden; min-height: 0; }
+.svc-more-body > * { opacity: 0; transform: translate3d(0, 10px, 0); transition: opacity 140ms var(--ease-soft), transform 220ms var(--ease-soft); }
+.svc-more.open .svc-more-body > * { opacity: 1; transform: none; transition: opacity 360ms var(--ease-soft), transform 460ms var(--ease-out); transition-delay: calc(110ms + var(--col, 0) * 70ms); }
+.svc-more-body > :nth-child(2) { --col: 1; }
+.svc-more-body > :nth-child(3) { --col: 2; }
+.svc-more-body { margin-top: 40px; display: grid; grid-template-columns: 1.1fr 0.9fr 1fr; gap: var(--gap-panel, 40px); padding: var(--pad-panel, 32px); background: rgba(255,255,255,.82); border: var(--bw-panel, 1px) solid var(--bc-panel, rgb(var(--rgb-blue-600) / .14)); border-radius: var(--r-panel); box-shadow: 0 calc(30px * var(--shk-panel, 1)) calc(70px * var(--shk-panel, 1)) calc(-44px * var(--shk-panel, 1)) rgb(var(--rgb-navy-900) / .45); opacity: 0; transition: opacity 180ms var(--ease-soft) 120ms; }
+.svc-more.open .svc-more-body { opacity: 1; transition: opacity 260ms var(--ease-soft); }
+.more-h { margin: 0 0 14px; }
+.svc-detail-body { color: var(--ink-dim); line-height: 1.65; margin: 0 0 18px; }
+.svc-works { font-size: 13px; color: var(--ink-dim); margin: 0; }
+.svc-works b { color: var(--ink); font-weight: 600; }
+.meta-row { padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.meta-row:first-of-type { padding-top: 0; }
+.meta-row:last-child { border-bottom: none; }
+.meta-row .mono { display: block; margin-bottom: 4px; }
+.svc-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.svc-list li { font-size: 14px; position: relative; padding-left: 20px; }
+.svc-list li::before { content: ""; position: absolute; left: 0; top: .55em; width: 10px; height: 1.5px; background: var(--blue); }
+
+/* ---------- Motif stage (dark panel family) ---------- */
+.stage { position: relative; border-radius: var(--r-panel); overflow: hidden; background: radial-gradient(ellipse 70% 80% at 100% 0%, rgb(var(--rgb-blue-600) / .28), transparent 70%), linear-gradient(160deg, var(--c-panel-dark-start) 0%, var(--c-panel-dark-end) 100%); border: var(--bw-panel, 1px) solid var(--bc-panel, rgb(var(--rgb-blue-300) / .16)); box-shadow: 0 calc(34px * var(--shk-panel, 1)) calc(80px * var(--shk-panel, 1)) calc(-40px * var(--shk-panel, 1)) rgba(0,0,0,.65); aspect-ratio: 4 / 3; }
+.stage svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.mot * { transform-box: fill-box; }
+.svc:not(.live) .mot *, .svc:not(.live) .blob { animation-play-state: paused; }
+
+/* Concierge: conversation */
+.mot-chat .bub { animation: bub 9s var(--ease-out) infinite; animation-delay: calc(var(--k) * 1.3s); }
+@keyframes bub { 0% { opacity: 0; transform: translate3d(0, 14px, 0); } 7%, 84% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translate3d(0, -6px, 0); } }
+.mot-chat .dot { animation: dotp 1.2s var(--ease-in-out) infinite; animation-delay: calc(var(--k) * 160ms); }
+@keyframes dotp { 0%, 100% { opacity: .25; transform: translate3d(0, 0, 0); } 50% { opacity: 1; transform: translate3d(0, -4px, 0); } }
+.mot-chat .bar { transform-origin: 50% 100%; animation: bar 1.1s var(--ease-in-out) infinite alternate; animation-delay: calc(var(--k) * -170ms); }
+@keyframes bar { from { transform: scaleY(.25); } to { transform: scaleY(1); } }
+
+/* Workflow: nodes + flow */
+.mot-flow .wire { stroke-dasharray: 5 9; animation: flow 1.4s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -28; } }
+.mot-flow .node { animation: nodeOn 6s var(--ease-in-out) infinite; animation-delay: calc(var(--k) * 1.2s); }
+@keyframes nodeOn { 0%, 100% { opacity: .6; transform: scale(1); } 8%, 22% { opacity: 1; transform: scale(1.05); } 34% { opacity: .85; transform: scale(1); } }
+
+/* Outbound: radar */
+.mot-radar .sweep { transform-box: view-box; transform-origin: 240px 180px; animation: spin 6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.mot-radar .blip { animation: blip 6s var(--ease-out) infinite; animation-delay: calc(var(--k) * 1s); }
+@keyframes blip { 0% { opacity: 0; transform: scale(.4); } 6% { opacity: 1; transform: scale(1.5); } 40%, 100% { opacity: 0; transform: scale(1); } }
+.mot-radar .ping { transform-box: view-box; transform-origin: 240px 180px; animation: ping 4s var(--ease-out) infinite; }
+@keyframes ping { from { opacity: .5; transform: scale(.1); } to { opacity: 0; transform: scale(1); } }
+
+/* Ops agents: system grid */
+.mot-grid .cell-on { animation: cellOn 5s var(--ease-in-out) infinite; animation-delay: calc(var(--k) * .55s); }
+@keyframes cellOn { 0%, 100% { opacity: 0; } 12%, 34% { opacity: .85; } 50% { opacity: 0; } }
+.mot-grid .scan { animation: scan 5.5s var(--ease-in-out) infinite alternate; }
+@keyframes scan { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, 232px, 0); } }
+
+/* Strategy: compass + route */
+.mot-compass .needle { transform-box: view-box; transform-origin: 240px 180px; animation: swing 7s var(--ease-in-out) infinite alternate; }
+@keyframes swing { from { transform: rotate(-24deg); } to { transform: rotate(38deg); } }
+.mot-compass .route { stroke-dasharray: 3 9; animation: flow 2.2s linear infinite; }
+.mot-compass .wp { animation: wp 6s var(--ease-out) infinite; animation-delay: calc(var(--k) * 1.1s); }
+@keyframes wp { 0% { opacity: 0; transform: scale(.3); } 10%, 80% { opacity: 1; transform: scale(1); } 100% { opacity: 0; } }
+.mot-compass .ring { transform-box: view-box; transform-origin: 240px 180px; animation: spin 90s linear infinite; }
+
+/* ---------- Final CTA ---------- */
+.cta-wrap { position: relative; z-index: 1; isolation: isolate; max-width: var(--maxw); margin: 0 auto; padding: 24px var(--pad) 112px; scroll-margin-top: 140px; }
+.cta { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; background: radial-gradient(ellipse 60% 70% at 85% 0%, rgb(var(--rgb-blue-600) / .18), transparent 70%), var(--c-panel-light); border: var(--bw-panel, 1px) solid var(--bc-panel, rgb(var(--rgb-blue-600) / .16)); border-radius: var(--r-panel, 28px); padding: var(--pad-panel, 64px); position: relative; z-index: 2; overflow: hidden; align-items: center; box-shadow: 0 calc(30px * var(--shk-panel, 1)) calc(70px * var(--shk-panel, 1)) calc(-38px * var(--shk-panel, 1)) rgb(var(--rgb-navy-900) / .45); }
+.cta-h2 { font-size: clamp(36px, 4vw, 56px); }
+.svc-page-final { display: flex; flex-direction: column; gap: var(--gap-button, 12px); align-items: stretch; min-width: 0; }
+.svc-page-final .btn { white-space: normal; text-align: center; }
+.cta-fine { text-align: center; margin-top: 4px; }
+
+/* ---------- Footer (dark) ---------- */
+.footer { background: var(--night); color: var(--on-night); border-top: 1px solid var(--hairline-night); position: relative; z-index: 2; background-image: radial-gradient(ellipse 60% 90% at 90% 0%, rgb(var(--rgb-blue-600) / .2), transparent 70%); }
+.footer-in { max-width: var(--maxw); margin: 0 auto; padding: 64px var(--pad) 0; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+.footer-tag { color: var(--on-night-dim); margin-top: 12px; font-size: 14px; }
+.footer-h { margin-bottom: 16px; color: var(--on-night-dim); }
+.footer ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--on-night-dim); }
+.footer a { transition: color var(--dur-fast) var(--ease-soft); }
+.footer a:hover { color: #fff; }
+.footer-rule { height: 1px; background: var(--hairline-night); margin-top: 48px; }
+.footer-bottom { display: flex; justify-content: space-between; padding: 24px 0 32px; gap: 16px; flex-wrap: wrap; color: var(--on-night-dim); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  :root { --pad: 32px; }
+  .nav { display: none; }
+  .hero { grid-template-columns: 1fr; padding-top: 64px; }
+  .hero-vis { justify-self: start; max-width: 360px; }
+  .svc { padding: 80px 0; }
+  .svc-stage { max-width: 560px; width: 100%; }
+  .svc-inner, .svc--flip .svc-inner { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main" "stage" "more"; row-gap: 32px; }
+  .svc-more-body { grid-template-columns: 1fr 1fr; }
+  .svc-more-body > :first-child { grid-column: 1 / -1; }
+  .cta { grid-template-columns: 1fr; padding: 32px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  :root {
+    --m-pad-x: clamp(12px, 4vw, 20px);
+    --m-pad-y: clamp(20px, 3.4svh, 36px);
+    --m-gap: clamp(12px, 2.2svh, 22px);
+    --m-h1: clamp(1.75rem, 6.2vw + 0.5rem, 2.6rem);
+    --m-h2: clamp(1.4rem, 5vw + 0.4rem, 2.15rem);
+    --m-body: clamp(0.92rem, 0.85rem + 0.35vw, 1.05rem);
+    --m-lh-head: 1.08;
+    --m-lh-body: 1.5;
+    --pad: var(--m-pad-x);
+  }
+  html, body { overflow-x: clip; }
+  body { font-size: var(--m-body); line-height: var(--m-lh-body); }
+  .btn:not(.btn-ico-m), .tog, .footer-cta {
+    white-space: normal; overflow-wrap: anywhere; text-wrap: balance; text-align: center;
+  }
+  .hdr-inner { padding-left: max(var(--m-pad-x), env(safe-area-inset-left)); padding-right: max(var(--m-pad-x), env(safe-area-inset-right)); gap: 12px; }
+  .h1 { font-size: var(--m-h1); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; margin-bottom: 14px; }
+  .h2 { font-size: var(--m-h2); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; margin-bottom: 12px; }
+  .lede { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; margin-bottom: 20px; }
+  .hero { padding: var(--m-pad-y) var(--m-pad-x); gap: var(--m-gap); }
+  .svc { padding: var(--m-pad-y) 0; }
+  .svc-inner, .svc--flip .svc-inner { row-gap: var(--m-gap); }
+  .svc-sub { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; margin-bottom: 14px; }
+  .svc-price { margin-bottom: 18px; }
+  .svc-price strong { font-size: clamp(1.35rem, 5vw + 0.3rem, 1.85rem); overflow-wrap: anywhere; }
+  .svc-price span, .svc-detail-body, .svc-list li, .meta-row, .svc-works { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
+  .svc-more-body { margin-top: var(--m-gap); grid-template-columns: 1fr; padding: clamp(14px, 4vw, 22px); gap: var(--m-gap); }
+  .cta-wrap { padding: var(--m-pad-y) var(--m-pad-x); }
+  .cta { padding: clamp(18px, 4vw, 24px) clamp(14px, 4vw, 18px); gap: var(--m-gap); border-radius: 20px; }
+  .cta-h2 { font-size: var(--m-h2); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; }
+  .footer-in { padding: var(--m-pad-y) var(--m-pad-x) 0; }
+  .footer-rule { margin-top: 28px; }
+  .footer-bottom { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+  .logo, .hdr .btn { min-height: 44px; }
+  .hdr .btn-ico-m { font-size: 0; gap: 0; width: 44px; height: 44px; padding: 0; flex: none; }
+  .hdr .btn-ico-m .cta-ico { width: 20px; height: 20px; }
+  .footer a { display: inline-flex; align-items: center; min-height: 44px; }
+}
+@media (max-width: 768px) and (max-height: 700px) {
+  .hero { padding: 14px var(--m-pad-x); }
+  .hero-vis { max-width: 240px; }
+  .svc { padding: 18px 0; }
+}
+@media (max-width: 768px) and (min-height: 860px) {
+  .hero, .svc, .cta-wrap { min-height: 0; }
+}
+@media (max-width: 480px) {
+  .hdr .btn-sm { padding: 8px 12px; }
+  .svc-actions .btn-block, .tog { flex: 1 1 100%; justify-content: center; }
+  .footer-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 360px) {
+  .svc-head { flex-wrap: wrap; gap: 8px; }
+  .svc-more-body { padding: 14px; }
+}
+
+/* ---------- Reduced motion: full static fallback ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .blob, .layer, .mot *, .amb { animation: none !important; transition: none !important; }
+  .js .rv { opacity: 1; translate: none; transition: none; }
+  .svc-more, .svc-more-body, .svc-more-body > *, .btn, .tog, .tog svg, .tog-l > span, .nav-dd, .nav-chev { transition: none !important; }
+  .svc-more-body > * { opacity: 1; transform: none; }
+  .tog:active { transform: none; }
+  .nav-item:hover .nav-dd, .nav-item:focus-within .nav-dd { transform: none; }
+  .mot-chat .bar { transform: scaleY(.7); }
+  .mot-radar .ping { opacity: 0; }
+  .mot-grid .cell-on { opacity: 0; }
+  .mot-grid .cell-on.keep { opacity: .7; }
+  .mot-compass .needle { transform: rotate(18deg); }
+}
+/* LOCAL-MOD LM-0002: inline motif SVGs follow the brand colour variables (values identical by default). */
+svg [fill="#93C5FD" i] { fill: var(--c-blue-300); }
+svg [stroke="#93C5FD" i] { stroke: var(--c-blue-300); }
+svg [fill="#2563EB" i] { fill: var(--c-blue-600); }
+svg [fill="#22D3EE" i] { fill: var(--c-cyan-300); }
+svg [stroke="#22D3EE" i] { stroke: var(--c-cyan-300); }
+svg [fill="#152C5B" i] { fill: var(--c-navy-800); }
+svg [fill="#0D1B38" i] { fill: var(--c-navy-900); }
+svg [fill="#E8EEFA" i] { fill: var(--c-panel-light); }
+svg [fill="#0B1226" i] { fill: var(--c-panel-dark-end); }
+svg [stroke="#60A5FA" i] { stroke: var(--c-blue-400); }
+svg [stroke="rgba(147,197,253,.4)"] { stroke: rgb(var(--rgb-blue-300) / .4); }
+svg [stroke="rgba(37,99,235,.25)"] { stroke: rgb(var(--rgb-blue-600) / .25); }
+svg stop[stop-color="#22D3EE" i] { stop-color: var(--c-cyan-300); }
+svg stop[stop-color="#2563EB" i] { stop-color: var(--c-blue-600); }
+svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
+
+/* LOCAL-MOD LM-0002: plain sentence-case labels, no tracked capitals */
+.mono, .m-nav-grp { text-transform: none; letter-spacing: 0; font-size: 13px; }
+/* LOCAL-MOD LM-0002: shared site footer */
+.footer.footer-shared { display: block; max-width: none; margin: 0; padding: 0; border: 0; background: var(--c-night); color: var(--c-on-night); border-radius: var(--r-band) var(--r-band) 0 0; font-size: 14px; }
+.footer-shared .footer-inner { max-width: var(--maxw); margin: 0 auto; padding: 56px var(--pad) 0; container-type: inline-size; }
+.footer-shared .footer-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr)) minmax(0, 1.3fr); gap: clamp(24px, 3.5cqi, 48px); }
+.footer-shared .footer-tag, .footer-shared .footer-col a, .footer-shared .footer-contact li, .footer-shared .footer-legal span, .footer-shared .footer-bottom { color: var(--c-slate-400); }
+.footer-shared .footer-col ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.footer-shared .footer-col a { overflow-wrap: anywhere; }
+.footer-shared .footer-contact a { color: var(--c-on-night); }
+.footer-shared .logo, .footer-shared a.footer-cta { color: var(--c-on-night); }
+.footer-shared .footer-contact li { display: flex; gap: 12px; align-items: flex-start; }
+.footer-shared .footer-txt { display: flex; flex-direction: column; min-width: 0; overflow-wrap: anywhere; }
+.footer-shared .footer-lbl { font-size: 11px; color: var(--c-slate-500); }
+.footer-shared .footer-ico svg { width: 18px; height: 18px; }
+.footer-shared .footer-h { font-size: 13px; margin: 0 0 16px; }
+.footer-shared .footer-cta { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: var(--r-btn, 999px); background: var(--c-navy-800); border: 1px solid rgb(var(--rgb-blue-300) / .32); }
+.footer-shared .footer-cta .cta-ico { width: 16px; height: 16px; }
+.footer-shared .footer-rule { height: 1px; background: rgb(var(--rgb-blue-300) / .14); margin-top: 48px; }
+.footer-shared .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 24px 0 32px; }
+.footer-shared .footer-legal { display: flex; gap: 24px; }
+@container (max-width: 960px) { .footer-shared .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .footer-shared .footer-brand { grid-column: 1 / -1; } }
+@container (max-width: 620px) { .footer-shared .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .footer-shared .footer-grid > :last-child { grid-column: 1 / -1; } }
+.footer-shared .footer-ico { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex: none; border-radius: 999px; background: rgb(var(--rgb-blue-600) / .14); border: 1px solid rgb(var(--rgb-blue-300) / .18); }
+.footer-shared .footer-ico svg { width: 18px; height: 18px; }
+.footer-shared .footer-cta .cta-ico { width: 16px; height: 16px; }
+.footer.footer-shared { border-radius: var(--r-band, 40px) var(--r-band, 40px) 0 0; }
+/* LOCAL-MOD LM-0002: one header button style across pages */
+@media (min-width: 769px) {
+  .hdr .btn-primary { background: var(--c-navy-800); border-color: rgb(var(--rgb-blue-300) / .32); box-shadow: none; border-radius: var(--r-btn, 999px); font-size: 13px; padding: 8px 14px; min-height: 37px; gap: 6px; }
+  .hdr .btn-primary:hover { background: var(--c-blue-700); }
+}
+</style>
+</head>
+<body data-active="hero">
+<div class="ambient" aria-hidden="true"><div class="amb amb-hero"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-concierge"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-workflow"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-leadgen"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-internal"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-consult"><div class="blob b1"></div><div class="blob b2"></div></div></div>
+<div class="app svc-page">
+
+  <!-- ========== Header ========== -->
+  <header class="hdr">
+    <div class="hdr-inner">
+      <a class="logo" href="index.html">
+        <img src="/assets/querent-logo-flat.svg" alt="Querent" style="width:26px;height:26px;display:block;">
+        <span class="logo-word">Querent</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <div class="nav-item">
+          <button type="button" class="nav-trigger" aria-haspopup="true">Company<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="nav-dd" role="menu" aria-label="Company">
+            <a href="index.html#why-now" role="menuitem">Why Now</a>
+            <a href="index.html#process" role="menuitem">Process</a>
+            <a href="index.html#faq" role="menuitem">FAQ</a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <a href="menu.html" class="nav-trigger is-active" aria-haspopup="true">Services<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
+          <div class="nav-dd" role="menu" aria-label="Services">
+            <a href="menu.html" class="is-active" role="menuitem">All Services</a>
+            <a href="menu.html#concierge" role="menuitem">AI Concierge</a>
+            <a href="menu.html#workflow" role="menuitem">Workflow Automation</a>
+            <a href="menu.html#leadgen" role="menuitem">Outbound &amp; Lead Gen</a>
+            <a href="menu.html#internal" role="menuitem">Internal Ops Agents</a>
+            <a href="menu.html#consult" role="menuitem">Strategy &amp; Advisory</a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <a href="va.html" class="nav-trigger" aria-haspopup="true">AI Virtual Assistants<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
+          <div class="nav-dd" role="menu" aria-label="AI Virtual Assistants">
+            <a href="va.html#how-it-works" role="menuitem">How it works</a>
+            <a href="va.html#offer" role="menuitem">What you get</a>
+            <a href="va.html#use-cases" role="menuitem">Use cases</a>
+            <a href="va.html#compare" role="menuitem">Compare</a>
+          </div>
+        </div>
+      </nav>
+      <div class="hdr-actions">
+        <a href="booking.html" class="btn btn-primary btn-sm btn-ico-m" aria-label="Book a call"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a call</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ========== Page hero ========== -->
+    <section class="hero" id="top" data-sec="hero">
+      <div class="hero-copy">
+        <h1 class="h1 rv" style="--d:0">What we ship<br>and what it costs.</h1>
+        <p class="lede rv" style="--d:1">Five offers, each with a fixed price per outcome. Pick one, stack a few, or start with a strategy retainer.</p>
+        <div class="hero-cta rv" style="--d:2">
+        <a href="booking.html" class="btn btn-primary"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+        </div>
+      </div>
+      <div class="hero-vis"><svg viewBox="0 0 440 340" role="img" aria-label="Five stacked service layers">
+  <defs><linearGradient id="hl" x1="0" x2="1"><stop offset="0" stop-color="#2563EB"/><stop offset="1" stop-color="#06B6D4"/></linearGradient></defs>
+  <g class="layer" style="--k:0"><rect x="10" y="20" width="330" height="48" rx="16" fill="#0D1B38"/><rect x="30" y="40" width="120" height="8" rx="4" fill="#93C5FD" opacity=".8"/></g>
+  <g class="layer" style="--k:1"><rect x="40" y="82" width="360" height="48" rx="16" fill="url(#hl)"/><rect x="60" y="102" width="150" height="8" rx="4" fill="#fff" opacity=".85"/></g>
+  <g class="layer" style="--k:2"><rect x="0" y="144" width="300" height="48" rx="16" fill="#fff" stroke="rgba(37,99,235,.25)"/><rect x="20" y="164" width="110" height="8" rx="4" fill="#2563EB" opacity=".7"/></g>
+  <g class="layer" style="--k:3"><rect x="70" y="206" width="340" height="48" rx="16" fill="#152C5B"/><rect x="90" y="226" width="140" height="8" rx="4" fill="#93C5FD" opacity=".8"/></g>
+  <g class="layer" style="--k:4"><rect x="20" y="268" width="320" height="48" rx="16" fill="#E8EEFA" stroke="rgba(37,99,235,.25)"/><rect x="40" y="288" width="100" height="8" rx="4" fill="#0D1B38" opacity=".55"/></g>
+</svg></div>
+    </section>
+
+
+    <!-- ========== 01 Concierge ========== -->
+    <!-- ========== 01 AI Concierge Services ========== -->
+    <section class="svc" id="concierge" data-sec="concierge">
+      <div class="svc-bg" aria-hidden="true"></div>
+      <div class="svc-inner">
+        <div class="svc-main">
+          <h2 class="h2 rv" style="--d:1">AI Concierge Services</h2>
+          <p class="svc-sub rv" style="--d:2">Chat + voice agents that answer, qualify and book 24/7.</p>
+          <p class="svc-price rv" style="--d:3"><strong>$12k–$28k build</strong><span>$2.4k+/mo retainer (optional)</span></p>
+          <div class="svc-actions rv" style="--d:4">
+          <a href="booking.html?service=concierge" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-concierge"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="svc-stage rv" style="--d:2"><div class="stage">
+<svg class="mot mot-chat" viewBox="0 0 480 360" role="img" aria-label="Chat and voice conversation motif" preserveAspectRatio="xMidYMid slice">
+  <g class="bub" style="--k:0"><rect x="36" y="38" width="236" height="62" rx="20" fill="rgba(255,255,255,.08)" stroke="rgba(147,197,253,.4)"/><rect x="58" y="58" width="150" height="7" rx="3.5" fill="#93C5FD" opacity=".75"/><rect x="58" y="74" width="98" height="7" rx="3.5" fill="#93C5FD" opacity=".4"/></g>
+  <g class="bub" style="--k:1"><rect x="176" y="118" width="268" height="70" rx="20" fill="#2563EB"/><rect x="198" y="138" width="190" height="7" rx="3.5" fill="#fff" opacity=".9"/><rect x="198" y="154" width="130" height="7" rx="3.5" fill="#fff" opacity=".55"/></g>
+  <g class="bub" style="--k:2"><rect x="36" y="206" width="210" height="56" rx="20" fill="rgba(255,255,255,.08)" stroke="rgba(147,197,253,.4)"/><rect x="58" y="224" width="128" height="7" rx="3.5" fill="#93C5FD" opacity=".75"/><rect x="58" y="240" width="76" height="7" rx="3.5" fill="#93C5FD" opacity=".4"/></g>
+  <g><rect x="36" y="286" width="86" height="40" rx="20" fill="rgba(255,255,255,.08)" stroke="rgba(147,197,253,.4)"/><circle class="dot" style="--k:0" cx="62" cy="306" r="4" fill="#93C5FD"/><circle class="dot" style="--k:1" cx="79" cy="306" r="4" fill="#93C5FD"/><circle class="dot" style="--k:2" cx="96" cy="306" r="4" fill="#93C5FD"/></g>
+  <g fill="#22D3EE"><rect class="bar" style="--k:0" x="318" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:1" x="333" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:2" x="348" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:3" x="363" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:4" x="378" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:5" x="393" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:6" x="408" y="290" width="7" height="36" rx="3.5"/></g>
+</svg>
+        </div></div>
+        <div class="svc-more" id="more-concierge" role="region" aria-label="AI Concierge Services details">
+          <div class="svc-more-clip"><div class="svc-more-body">
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">A unified concierge layer for inbound. Trained on your knowledge base, wired to your calendar, CRM, and ticketing. Sub‑second voice responses with confident human handoff. Replaces the after‑hours desk; lifts the day‑shift's ceiling.</p><p class="svc-works"><b>Works with</b>: Voiceflow &middot; Vapi &middot; ElevenLabs &middot; Twilio &middot; Intercom &middot; HubSpot &middot; OpenAI</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Property management, clinics, professional services, e‑commerce support</div><div class="meta-row"><span class="mono dim">Timeline</span>3–4 weeks from kickoff to production</div><div class="meta-row"><span class="mono dim">Ownership</span>You own the trained agent, prompts, and integrations</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Trained chat + voice agent</li><li>Web + Slack + WhatsApp + phone install</li><li>Calendar + CRM writeback</li><li>Ticket auto‑routing &amp; escalation</li><li>Weekly QA &amp; retraining report</li><li>Handoff playbook for your team</li></ul></div>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 02 Workflow ========== -->
+    <!-- ========== 02 Workflow Automation (n8n) ========== -->
+    <section class="svc svc--flip" id="workflow" data-sec="workflow">
+      <div class="svc-bg" aria-hidden="true"></div>
+      <div class="svc-inner">
+        <div class="svc-main">
+          <h2 class="h2 rv" style="--d:1">Workflow Automation (n8n)</h2>
+          <p class="svc-sub rv" style="--d:2">No‑code &amp; low‑code plumbing across the tools you already pay for, built on n8n, owned by you.</p>
+          <p class="svc-price rv" style="--d:3"><strong>$8k–$24k per workflow</strong><span>volume discounts on bundles</span></p>
+          <div class="svc-actions rv" style="--d:4">
+          <a href="booking.html?service=workflow" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-workflow"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="svc-stage rv" style="--d:2"><div class="stage">
+<svg class="mot mot-flow" viewBox="0 0 480 360" role="img" aria-label="Connected workflow nodes motif" preserveAspectRatio="xMidYMid slice">
+  <g fill="none" stroke="#60A5FA" stroke-width="2" stroke-linecap="round" opacity=".9">
+    <path class="wire" d="M128 180 C168 180 160 100 200 100"/><path class="wire" d="M128 180 C168 180 160 260 200 260"/>
+    <path class="wire" d="M280 100 C330 100 320 180 352 180"/><path class="wire" d="M280 260 C330 260 320 180 352 180"/>
+  </g>
+  <g class="node" style="--k:0"><rect x="40" y="148" width="88" height="64" rx="16" fill="#152C5B" stroke="#93C5FD" stroke-opacity=".6"/><circle cx="64" cy="180" r="9" fill="#22D3EE"/><rect x="82" y="174" width="34" height="6" rx="3" fill="#93C5FD" opacity=".7"/><rect x="82" y="186" width="22" height="6" rx="3" fill="#93C5FD" opacity=".4"/></g>
+  <g class="node" style="--k:1"><rect x="200" y="68" width="80" height="64" rx="16" fill="#152C5B" stroke="#93C5FD" stroke-opacity=".6"/><rect x="218" y="88" width="44" height="7" rx="3.5" fill="#93C5FD" opacity=".8"/><rect x="218" y="104" width="28" height="7" rx="3.5" fill="#93C5FD" opacity=".4"/></g>
+  <g class="node" style="--k:2"><rect x="200" y="228" width="80" height="64" rx="16" fill="#152C5B" stroke="#93C5FD" stroke-opacity=".6"/><rect x="218" y="248" width="44" height="7" rx="3.5" fill="#93C5FD" opacity=".8"/><rect x="218" y="264" width="28" height="7" rx="3.5" fill="#93C5FD" opacity=".4"/></g>
+  <g class="node" style="--k:3"><rect x="352" y="148" width="88" height="64" rx="16" fill="#2563EB"/><path d="M380 180 l9 9 l17 -19" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>
+        </div></div>
+        <div class="svc-more" id="more-workflow" role="region" aria-label="Workflow Automation (n8n) details">
+          <div class="svc-more-clip"><div class="svc-more-body">
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">End‑to‑end automation built primarily in n8n: the open‑source, self‑hostable workflow engine that means no per‑task pricing, no vendor lock‑in, and no caps on run volume. We wire Google Workspace (Drive, Gmail, Calendar, Sheets), Slack, and your CRM into resilient flows with retries, alerts, and dashboards your team trusts. We'll also work in Zapier or Make if your team already lives there.</p><p class="svc-works"><b>Works with</b>: n8n &middot; Google Workspace &middot; Slack &middot; Zapier &middot; Make &middot; Airtable</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Operations teams drowning in Sheets/Gmail/Slack copy‑paste</div><div class="meta-row"><span class="mono dim">Timeline</span>2–4 weeks per flow; longer for multi‑system replatforms</div><div class="meta-row"><span class="mono dim">Ownership</span>Full source, in your own VPC.</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Workflow audit &amp; opportunity map</li><li>Self‑hosted n8n setup in your VPC</li><li>Google Workspace + Slack integration</li><li>Built + monitored flows with retry logic</li><li>Failure alerts to Slack on‑call</li><li>Runbook + handoff training</li></ul></div>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 03 Outbound / Lead Gen ========== -->
+    <!-- ========== 03 Outbound, Research &amp; Lead Gen ========== -->
+    <section class="svc" id="leadgen" data-sec="leadgen">
+      <div class="svc-bg" aria-hidden="true"></div>
+      <div class="svc-inner">
+        <div class="svc-main">
+          <h2 class="h2 rv" style="--d:1">Outbound, Research &amp; Lead Gen</h2>
+          <p class="svc-sub rv" style="--d:2">Researched, personalized outbound at a volume humans can't touch.</p>
+          <p class="svc-price rv" style="--d:3"><strong>$15k–$35k build</strong><span>$3.5k+/mo retainer for tuning + scale</span></p>
+          <div class="svc-actions rv" style="--d:4">
+          <a href="booking.html?service=leadgen" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-leadgen"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="svc-stage rv" style="--d:2"><div class="stage">
+<svg class="mot mot-radar" viewBox="0 0 480 360" role="img" aria-label="Radar signal sweep motif" preserveAspectRatio="xMidYMid slice">
+  <defs><linearGradient id="swp" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#22D3EE" stop-opacity=".55"/><stop offset="1" stop-color="#22D3EE" stop-opacity="0"/></linearGradient></defs>
+  <g fill="none" stroke="#93C5FD" stroke-opacity=".28"><circle cx="240" cy="180" r="40"/><circle cx="240" cy="180" r="80"/><circle cx="240" cy="180" r="120"/><circle cx="240" cy="180" r="160"/><path d="M80 180H400M240 20V340"/></g>
+  <circle class="ping" cx="240" cy="180" r="160" fill="none" stroke="#22D3EE" stroke-width="2"/>
+  <path class="sweep" d="M240 180 L400 180 A160 160 0 0 0 342.9 57.4 Z" fill="url(#swp)"/>
+  <circle cx="240" cy="180" r="5" fill="#fff"/>
+  <g fill="#22D3EE"><circle class="blip" style="--k:0.2" cx="320" cy="132" r="6"/><circle class="blip" style="--k:2.4" cx="188" cy="238" r="6"/><circle class="blip" style="--k:1.2" cx="170" cy="120" r="6"/><circle class="blip" style="--k:3.6" cx="306" cy="250" r="6"/><circle class="blip" style="--k:4.8" cx="262" cy="86" r="6"/></g>
+</svg>
+        </div></div>
+        <div class="svc-more" id="more-leadgen" role="region" aria-label="Outbound, Research &amp; Lead Gen details">
+          <div class="svc-more-clip"><div class="svc-more-body">
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">Agents run prospecting from start to finish. They find accounts that match your ideal customer, research each one (10‑K filings, news, hiring signals, tech stack), write a personalized first message, and sort replies into your rep's calendar. SDRs stop researching and start closing.</p><p class="svc-works"><b>Works with</b>: Clay &middot; Apollo &middot; Smartlead &middot; Perplexity API &middot; OpenAI &middot; HubSpot</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>B2B teams with a defined ICP and a closing process that works</div><div class="meta-row"><span class="mono dim">Timeline</span>3–5 weeks to first booked meetings</div><div class="meta-row"><span class="mono dim">Ownership</span>Lists, sequences, and account briefs delivered into your tools</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>ICP &amp; list pipeline (Clay/Apollo)</li><li>Account research agent with per‑lead briefs</li><li>Personalized sequence builder</li><li>Reply classifier &amp; sentiment routing</li><li>Booking &amp; pipeline dashboard</li><li>Weekly performance review</li></ul></div>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 04 Internal Ops ========== -->
+    <!-- ========== 04 Internal Ops Agents ========== -->
+    <section class="svc svc--flip" id="internal" data-sec="internal">
+      <div class="svc-bg" aria-hidden="true"></div>
+      <div class="svc-inner">
+        <div class="svc-main">
+          <h2 class="h2 rv" style="--d:1">Internal Ops Agents</h2>
+          <p class="svc-sub rv" style="--d:2">Agents that handle invoicing, data entry, and the boring middle.</p>
+          <p class="svc-price rv" style="--d:3"><strong>$10k–$30k per agent</strong><span>volume pricing for multi‑agent rollouts</span></p>
+          <div class="svc-actions rv" style="--d:4">
+          <a href="booking.html?service=internal" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-internal"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="svc-stage rv" style="--d:2"><div class="stage">
+<svg class="mot mot-grid" viewBox="0 0 480 360" role="img" aria-label="System grid of agents motif" preserveAspectRatio="xMidYMid slice">
+  <rect x="40" y="40" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:0" x="40" y="40" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="106" y="40" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:7" x="106" y="40" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="172" y="40" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:3" x="172" y="40" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="238" y="40" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:10" x="238" y="40" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="304" y="40" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on keep" style="--k:6" x="304" y="40" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="370" y="40" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:2" x="370" y="40" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="40" y="106" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:9" x="40" y="106" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="106" y="106" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on keep" style="--k:5" x="106" y="106" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="172" y="106" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:1" x="172" y="106" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="238" y="106" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:8" x="238" y="106" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="304" y="106" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:4" x="304" y="106" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="370" y="106" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:0" x="370" y="106" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="40" y="172" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:7" x="40" y="172" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="106" y="172" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:3" x="106" y="172" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="172" y="172" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on keep" style="--k:10" x="172" y="172" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="238" y="172" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:6" x="238" y="172" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="304" y="172" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:2" x="304" y="172" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="370" y="172" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:9" x="370" y="172" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="40" y="238" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on keep" style="--k:5" x="40" y="238" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="106" y="238" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:1" x="106" y="238" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="172" y="238" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:8" x="172" y="238" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="238" y="238" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:4" x="238" y="238" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="304" y="238" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:0" x="304" y="238" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="370" y="238" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on keep" style="--k:7" x="370" y="238" width="56" height="56" rx="12" fill="#2563EB"/>
+  <g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".9"><path d="M120 260 l9 9 l15 -17"/><path d="M252 128 l9 9 l15 -17"/></g>
+  <rect class="scan" x="32" y="36" width="416" height="4" rx="2" fill="#22D3EE" opacity=".85"/>
+</svg>
+        </div></div>
+        <div class="svc-more" id="more-internal" role="region" aria-label="Internal Ops Agents details">
+          <div class="svc-more-clip"><div class="svc-more-body">
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">Internal agents that read PDFs, update CRMs, and reconcile spreadsheets. Approvals stay with humans; typing doesn't. Quietly removes hours from finance, HR, and PM workflows.</p><p class="svc-works"><b>Works with</b>: LlamaIndex &middot; Notion &middot; QuickBooks &middot; Airtable &middot; Slack</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Finance, ops, and HR teams hand‑keying data between systems</div><div class="meta-row"><span class="mono dim">Timeline</span>2–6 weeks depending on document complexity</div><div class="meta-row"><span class="mono dim">Ownership</span>Full source + audit logs + SOPs in your accounts</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Document extraction agent</li><li>ERP / CRM writeback</li><li>Audit log + approvals UI</li><li>SOP automation</li><li>Error‑rate monitoring</li><li>Quarterly accuracy review</li></ul></div>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 05 Strategy ========== -->
+    <!-- ========== 05 Operations Strategy &amp; Advisory ========== -->
+    <section class="svc" id="consult" data-sec="consult">
+      <div class="svc-bg" aria-hidden="true"></div>
+      <div class="svc-inner">
+        <div class="svc-main">
+          <h2 class="h2 rv" style="--d:1">Operations Strategy &amp; Advisory</h2>
+          <p class="svc-sub rv" style="--d:2">A blanket retainer for everything the build offers don't cover.</p>
+          <p class="svc-price rv" style="--d:3"><strong>From $4.5k/mo</strong><span>10 strategy hours + async Slack</span></p>
+          <div class="svc-actions rv" style="--d:4">
+          <a href="booking.html?service=consult" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a scoping call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-consult"><span class="tog-l"><span class="tog-a">Details &amp; options</span><span class="tog-b">Hide details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="svc-stage rv" style="--d:2"><div class="stage">
+<svg class="mot mot-compass" viewBox="0 0 480 360" role="img" aria-label="Compass and route map motif" preserveAspectRatio="xMidYMid slice">
+  <g fill="none" stroke="#93C5FD" stroke-opacity=".18"><ellipse cx="120" cy="300" rx="110" ry="50"/><ellipse cx="120" cy="300" rx="70" ry="30"/><ellipse cx="380" cy="70" rx="90" ry="40"/></g>
+  <g class="ring" stroke="#93C5FD" stroke-opacity=".5" stroke-width="2"><line x1="240" y1="42" x2="240" y2="58" transform="rotate(0 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(10 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(20 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(30 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(40 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(50 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(60 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(70 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(80 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(90 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(100 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(110 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(120 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(130 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(140 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(150 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(160 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(170 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(180 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(190 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(200 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(210 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(220 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(230 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(240 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(250 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(260 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(270 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(280 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(290 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(300 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(310 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(320 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(330 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(340 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(350 240 180)"/></g>
+  <circle cx="240" cy="180" r="138" fill="none" stroke="#93C5FD" stroke-opacity=".4"/>
+  <circle cx="240" cy="180" r="92" fill="none" stroke="#93C5FD" stroke-opacity=".25"/>
+  <g fill="#93C5FD" font-family="Source Sans 3, system-ui, -apple-system, sans-serif" font-size="13" text-anchor="middle"><text x="240" y="34">N</text><text x="448" y="185">E</text><text x="240" y="340">S</text><text x="32" y="185">W</text></g>
+  <path class="route" d="M64 300 C150 310 150 220 240 214 S360 130 420 66" fill="none" stroke="#22D3EE" stroke-width="2.5" stroke-linecap="round"/>
+  <g fill="#22D3EE"><circle class="wp" style="--k:0" cx="64" cy="300" r="7"/><circle class="wp" style="--k:1" cx="240" cy="214" r="7"/><circle class="wp" style="--k:2" cx="420" cy="66" r="7"/></g>
+  <g class="needle"><path d="M240 180 L252 180 L240 90 L228 180 Z" fill="#2563EB"/><path d="M240 180 L252 180 L240 270 L228 180 Z" fill="#fff" opacity=".8"/></g>
+  <circle cx="240" cy="180" r="7" fill="#0B1226" stroke="#fff" stroke-width="2"/>
+</svg>
+        </div></div>
+        <div class="svc-more" id="more-consult" role="region" aria-label="Operations Strategy &amp; Advisory details">
+          <div class="svc-more-clip"><div class="svc-more-body">
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">We sit with your team during conception and design: aligning resources, scoping budgets, choosing tools and writing the brief, so the eventual build is the right one, whether we ship it or someone else does.</p><p class="svc-works"><b>Format</b>: Workshop‑led &middot; Async + weekly working sessions &middot; Custom</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Leaders evaluating where AI/automation fits their roadmap</div><div class="meta-row"><span class="mono dim">Timeline</span>Ongoing · monthly minimum, no long contracts</div><div class="meta-row"><span class="mono dim">Ownership</span>All artifacts (briefs, decision docs, roadmaps) yours</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Workflow inventory &amp; ROI scorecard</li><li>Build vs. buy decision docs</li><li>Vendor &amp; tool selection</li><li>Architecture &amp; systems design with your team</li><li>Org‑design and resourcing input</li><li>90‑day operations roadmap</li></ul></div>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Final CTA ========== -->
+    <section class="cta-wrap" id="cta" data-sec="cta">
+      <div class="cta rv">
+        <div class="cta-copy">
+          <h2 class="h2 cta-h2">Start with<br>a free audit.</h2>
+          <p class="lede lede-sm">
+            30 minutes. We'll map your top 3 workflows and tell you which
+            offer (if any) is right, in writing.
+          </p>
+        </div>
+        <div class="svc-page-final">
+          <a href="index.html#cta" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+          <a href="mailto:hello@querent.ai" class="btn btn-ghost btn-block"><svg class="cta-ico cta-ico--mail" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Email hello@querent.ai</a>
+          <div class="mono dim cta-fine">We reply within 1 business day.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer footer-shared">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo" href="index.html#top"><img src="/assets/querent-logo-flat.svg" alt="" style="width:28px;height:28px;display:block;"><span class="logo-word">Querent</span></a>
+          <p class="footer-tag">AI automation, productized. Workflows, agents and ops that give your team its time back.</p>
+          <a class="footer-cta" href="booking.html"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a free audit</a>
+        </div>
+        <nav class="footer-col" aria-label="Services">
+          <h3 class="footer-h">Services</h3>
+          <ul>
+            <li><a href="#top">Full menu of services</a></li>
+            <li><a href="#concierge">AI Concierge</a></li>
+            <li><a href="#workflow">n8n Workflow Automation</a></li>
+            <li><a href="#leadgen">Outbound &amp; Research</a></li>
+            <li><a href="#internal">Internal Ops Agents</a></li>
+            <li><a href="#consult">Strategy &amp; Advisory</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Explore">
+          <h3 class="footer-h">Explore</h3>
+          <ul>
+            <li><a href="index.html#top">Home</a></li>
+            <li><a href="index.html#why-now">Why now</a></li>
+            <li><a href="index.html#services">Solutions</a></li>
+            <li><a href="index.html#process">Process</a></li>
+            <li><a href="index.html#faq">FAQ</a></li>
+          </ul>
+        </nav>
+        <div class="footer-col">
+          <h3 class="footer-h">Contact</h3>
+          <ul class="footer-contact">
+            <li><span class="footer-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span><span class="footer-txt"><span class="footer-lbl">Email</span><a href="mailto:hello@querent.ai">hello@querent.ai</a></span></li>
+            <li><span class="footer-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><span class="footer-txt"><span class="footer-lbl">Coverage</span><span>Americas · APAC · Global Remote</span></span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-rule"></div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Querent Labs, Inc. All rights reserved.</span>
+        <span class="footer-legal"><span>Privacy</span><span>Terms</span></span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var d = document, root = d.documentElement, body = d.body;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Disclosures (button + aria-expanded; height animated in CSS)
+  d.querySelectorAll('.tog').forEach(function (b) {
+    var p = d.getElementById(b.getAttribute('aria-controls'));
+    if (p) { p.inert = true; }
+    b.addEventListener('click', function () {
+      var open = b.getAttribute('aria-expanded') !== 'true';
+      b.setAttribute('aria-expanded', open);
+      p.classList.toggle('open', open);
+      p.inert = !open;
+      if (open) setTimeout(function () { revealPanel(b, p); }, 140);
+    });
+  });
+  // bring an opening panel into view without pushing its button under the header
+  function revealPanel(btn, panel) {
+    if (btn.getAttribute('aria-expanded') !== 'true') return;
+    var body = panel.querySelector('.svc-more-body'), hdr = d.querySelector('.hdr');
+    var overflow = panel.getBoundingClientRect().top + parseFloat(getComputedStyle(body).marginTop) + body.offsetHeight + 24 - window.innerHeight;
+    var room = btn.getBoundingClientRect().top - (hdr ? hdr.offsetHeight : 0) - 16;
+    var dy = Math.min(overflow, room);
+    if (dy > 0) window.scrollBy({ top: dy, behavior: reduce ? 'auto' : 'smooth' });
+  }
+
+  // Close focus-within header dropdowns on Escape or same-page anchor click
+  d.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && d.activeElement && d.activeElement.closest('.nav-item')) d.activeElement.blur();
+  });
+  d.querySelectorAll('.nav-dd a[href*="#"]').forEach(function (a) {
+    a.addEventListener('click', function () { if (d.activeElement === a) a.blur(); });
+  });
+
+  // Reveal + active-section tracking + pause offscreen motifs
+  var secs = d.querySelectorAll('[data-sec]');
+  body.setAttribute('data-active', 'hero');
+  if (!reduce && 'IntersectionObserver' in window) {
+    root.classList.add('js');
+    var rio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); rio.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    d.querySelectorAll('.rv').forEach(function (n) { rio.observe(n); });
+    var lio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { e.target.classList.toggle('live', e.isIntersecting); });
+    }, { rootMargin: '10% 0px' });
+    d.querySelectorAll('.svc').forEach(function (n) { lio.observe(n); });
+  } else {
+    d.querySelectorAll('.svc').forEach(function (n) { n.classList.add('live'); });
+  }
+  if ('IntersectionObserver' in window) {
+    var aio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var id = e.target.getAttribute('data-sec');
+        body.setAttribute('data-active', id);
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    secs.forEach(function (n) { aio.observe(n); });
+  }
+})();
+</script>
+</body>
+</html>

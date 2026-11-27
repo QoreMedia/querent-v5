@@ -1,365 +1,614 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-accent="violet" data-wireframe="on">
+<html lang="en" data-theme="light" data-accent="blue">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Querent — Menu of Services</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Menu of Services | Querent</title>
+<link rel="icon" type="image/svg+xml" href="/assets/querent-logo-flat.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&amp;family=Source+Sans+3:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
 <style>
+/* LOCAL-MOD LM-0002: brand colour variables. Values are identical to the literals they replace, so the page looks the same by default.
+   The staging design-system preview can override them to try other palettes (see staging-ds-panel.js). */
+:root {
+  --c-night: #0A0B0E; --c-on-night: #ECEEF2; --c-slate-400: #94A3B8; --c-slate-500: #64748B;
+  --c-blue-300: #93C5FD; --c-blue-400: #60A5FA; --c-blue-600: #2563EB; --c-blue-700: #1D4ED8;
+  --c-navy-900: #0D1B38; --c-navy-800: #152C5B; --c-cyan-500: #06B6D4; --c-cyan-300: #22D3EE;
+  --c-panel-light: #E8EEFA; --c-panel-dark-end: #0B1226; --c-panel-dark-start: #111C38; --c-canvas: #F4F4F2;
+  --rgb-blue-600: 37 99 235; --rgb-blue-300: 147 197 253; --rgb-blue-700: 29 78 216; --rgb-cyan-500: 6 182 212;
+  --rgb-navy-800: 21 44 91; --rgb-navy-900: 13 27 56; --rgb-night: 10 11 14; --rgb-blue-400: 96 165 250; --rgb-cyan-300: 34 211 238;
+}
+
 /* ==================================================================
-   Querent — Menu of Services
-   Implemented from Claude Design handoff bundle (services-page.jsx).
-   Single-file vanilla HTML/CSS/JS port; shares design tokens with
-   index.html.
+   Querent — Menu of Services (LM-0002 revamp, 2026-11-26)
+   Dark header + footer, light body with drifting light variance,
+   one disclosure per service, one inline-SVG motif per service.
+   Motion: shared tokens, transform/opacity only (SVG dash flow aside),
+   full static fallback under prefers-reduced-motion.
    ================================================================== */
 
-/* ---------- Tokens ---------- */
 :root {
-  --bg: #0A0B0E;
-  --bg-elev: #13151A;
-  --bg-elev-2: #1B1E25;
-  --ink: #ECEEF2;
-  --ink-dim: #8A8F99;
-  --ink-mute: #5A5F69;
-  --line: rgba(255,255,255,0.08);
-  --line-strong: rgba(255,255,255,0.16);
-  --accent: oklch(0.65 0.22 295);
-  --accent-2: oklch(0.72 0.18 250);
-  --accent-soft: oklch(0.65 0.22 295 / 0.14);
-  --warn: oklch(0.78 0.16 70);
-  --ok: oklch(0.78 0.16 150);
-  --maxw: 1280px;
-  --pad: 64px;
-  --gap-section: 160px;
-  --radius: 14px;
-  --radius-sm: 8px;
-}
-[data-theme="light"] {
-  --bg: #F4F4F2;
+  --bg: var(--c-canvas);
   --bg-elev: #FFFFFF;
-  --bg-elev-2: #F8F8F6;
-  --ink: #0A0B0E;
+  --ink: var(--c-night);
   --ink-dim: #5A5F69;
   --ink-mute: #8A8F99;
   --line: rgba(0,0,0,0.10);
   --line-strong: rgba(0,0,0,0.18);
-  --accent-soft: oklch(0.65 0.22 295 / 0.10);
-}
-[data-accent="blue"] {
-  --accent: oklch(0.72 0.18 250);
-  --accent-2: oklch(0.65 0.22 295);
-  --accent-soft: oklch(0.72 0.18 250 / 0.12);
-}
-[data-accent="amber"] {
-  --accent: oklch(0.78 0.16 70);
-  --accent-2: oklch(0.65 0.22 295);
-  --accent-soft: oklch(0.78 0.16 70 / 0.14);
+  --night: var(--c-night);
+  --on-night: var(--c-on-night);
+  --on-night-dim: var(--c-slate-400);
+  --hairline-night: rgb(var(--rgb-blue-300) / 0.16);
+  --blue: var(--c-blue-600);
+  --blue-700: var(--c-blue-700);
+  --blue-400: var(--c-blue-400);
+  --blue-300: var(--c-blue-300);
+  --cyan: var(--c-cyan-500);
+  --navy-900: var(--c-navy-900);
+  --navy-800: var(--c-navy-800);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 240ms;
+  --dur-base: 560ms;
+  --dur-slow: 900ms;
+  --stagger: 90ms;
+  --maxw: 1280px;
+  --pad: 64px;
+  --hdr-h: 68px;
+  --r-panel: 24px;
 }
 
 /* ---------- Base ---------- */
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: clip; }
 html, body { margin: 0; padding: 0; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-size: 16px;
   line-height: 1.5;
   letter-spacing: -0.005em;
+  overflow-x: clip;
 }
-.mono { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+h1, h2, h3, .h1, .h2, .h3, .title, .why-now-headline, .faq-title, .cta-h2, .proc2-card-title, .stat-num, .value-num, .case-stat-num, .logo-word {
+  font-family: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+}
+.mono { font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
 .dim { color: var(--ink-dim); }
 a { color: inherit; text-decoration: none; }
-button { font: inherit; cursor: pointer; }
+button { font: inherit; cursor: pointer; color: inherit; }
 em { font-style: normal; }
-
-body::before {
-  content: "";
-  position: fixed; inset: 0;
-  background-image:
-    linear-gradient(var(--line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 80px 80px;
-  opacity: 0.35;
-  pointer-events: none;
-  z-index: 0;
-  mask-image: radial-gradient(ellipse at top, black 0%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse at top, black 0%, transparent 70%);
-}
-[data-wireframe="off"] body::before { display: none; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 6px; }
 .app { position: relative; z-index: 1; }
 
-/* ---------- Header ---------- */
+/* ---------- Ambient light variance (fixed, transform/opacity only) ---------- */
+.ambient { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.amb { position: absolute; inset: 0; opacity: 0; transition: opacity 1400ms var(--ease-soft); }
+body[data-active="hero"] .amb-hero,
+body[data-active="concierge"] .amb-concierge,
+body[data-active="workflow"] .amb-workflow,
+body[data-active="leadgen"] .amb-leadgen,
+body[data-active="internal"] .amb-internal,
+body[data-active="consult"] .amb-consult,
+body[data-active="cta"] .amb-consult { opacity: 1; }
+.blob {
+  position: absolute; width: max(56vmax, 520px); height: max(56vmax, 520px); border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgb(var(--c) / var(--a)) 0%, rgb(var(--c) / 0) 66%);
+  will-change: transform;
+  animation: drift var(--t, 42s) var(--ease-in-out) infinite alternate;
+}
+.blob.b1 { left: -14%; top: -18%; }
+.blob.b2 { right: -18%; bottom: -22%; --t: 54s; animation-direction: alternate-reverse; background: radial-gradient(circle at 50% 50%, rgb(var(--rgb-navy-800) / 0.12) 0%, rgb(var(--rgb-navy-800) / 0) 66%); }
+@keyframes drift { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(9vw, 7vh, 0) scale(1.14); } }
+.amb-hero      { --c: var(--rgb-blue-600);  --a: 0.20; }
+.amb-concierge { --c: var(--rgb-blue-600);  --a: 0.20; }
+.amb-workflow  { --c: var(--rgb-cyan-500);  --a: 0.17; }
+.amb-leadgen   { --c: var(--rgb-cyan-500);  --a: 0.20; }
+.amb-internal  { --c: var(--rgb-navy-800);   --a: 0.14; }
+.amb-consult   { --c: var(--rgb-blue-400); --a: 0.22; }
+
+/* ---------- Header (dark) ---------- */
 .hdr {
-  position: sticky; top: 0; z-index: 50;
-  background: color-mix(in oklab, var(--bg) 80%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 60; overflow: visible;
+  background: var(--night);
+  border-bottom: 1px solid var(--hairline-night);
+  color: var(--on-night);
 }
 .hdr-inner {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 16px var(--pad);
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 32px;
+  max-width: var(--maxw); margin: 0 auto;
+  padding: 0 var(--pad); height: var(--hdr-h);
+  display: flex; align-items: center; justify-content: space-between; gap: 32px;
 }
 .logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.02em; }
-.logo-mark {
-  width: 22px; height: 22px;
-  background: conic-gradient(from 210deg, var(--accent), var(--accent-2), var(--accent));
-  border-radius: 6px;
-  position: relative;
-}
-.logo-mark::after {
-  content: ""; position: absolute; inset: 5px;
-  background: var(--bg); border-radius: 3px;
-}
 .logo-word { font-size: 18px; }
-.nav { display: flex; gap: 32px; }
-.nav a { color: var(--ink-dim); font-size: 14px; transition: color .15s ease; }
-.nav a:hover, .nav a.is-active { color: var(--ink); }
-.hdr-actions { display: flex; align-items: center; gap: 12px; }
-.theme-toggle {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: transparent;
-  border: 1px solid var(--line-strong);
-  color: var(--ink-dim);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.nav { display: flex; align-items: center; gap: 32px; }
+.nav > a,
+.nav-trigger {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 0;
+  color: var(--on-night-dim); font-size: 14px; font-weight: 600;
+  background: transparent; border: 0; font-family: inherit; line-height: 1.2;
   position: relative;
+  transition: color var(--dur-fast) var(--ease-soft);
 }
-.theme-toggle:hover { color: var(--ink); border-color: var(--ink-dim); }
-.theme-toggle svg { position: absolute; transition: opacity 0.2s ease, transform 0.3s ease; }
-[data-theme="dark"]  .theme-toggle-sun  { opacity: 1; transform: rotate(0) scale(1); }
-[data-theme="dark"]  .theme-toggle-moon { opacity: 0; transform: rotate(-90deg) scale(0.6); }
-[data-theme="light"] .theme-toggle-sun  { opacity: 0; transform: rotate(90deg) scale(0.6); }
-[data-theme="light"] .theme-toggle-moon { opacity: 1; transform: rotate(0) scale(1); }
+.nav > a:hover, .nav > a.is-active,
+.nav-trigger:hover, .nav-trigger.is-active,
+.nav-item:hover > .nav-trigger, .nav-item:focus-within > .nav-trigger { color: #fff; }
+.nav > a.is-active::after,
+.nav-trigger.is-active::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 2px; background: var(--on-night); border-radius: 2px;
+}
+.nav-item { position: relative; display: inline-flex; align-items: center; }
+.nav-chev {
+  width: 14px; height: 14px; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.nav-item:hover .nav-chev,
+.nav-item:focus-within .nav-chev { transform: rotate(180deg); }
+.nav-dd {
+  position: absolute; top: calc(100% + 8px); left: -12px; min-width: 248px;
+  padding: 8px; border-radius: 16px;
+  background: linear-gradient(165deg, var(--c-panel-dark-start) 0%, var(--c-night) 100%);
+  border: 1px solid rgb(var(--rgb-blue-300) / .16);
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, .72);
+  color: var(--on-night);
+  display: flex; flex-direction: column; gap: 2px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translate3d(0, -6px, 0);
+  transition: opacity var(--dur-fast) var(--ease-soft), transform var(--dur-fast) var(--ease-out), visibility 0s linear var(--dur-fast);
+  z-index: 70;
+}
+.nav-dd::before { content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px; }
+.nav-item:hover .nav-dd,
+.nav-item:focus-within .nav-dd {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: translate3d(0, 0, 0); transition-delay: 0s;
+}
+.nav-dd a {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 38px; padding: 8px 12px; border-radius: 10px;
+  font-size: 14px; font-weight: 500; color: var(--on-night-dim);
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease-soft), color var(--dur-fast) var(--ease-soft);
+}
+.nav-dd a:hover, .nav-dd a:focus-visible { background: rgb(var(--rgb-blue-300) / .10); color: #fff; }
+.nav-dd a.is-active { background: rgb(var(--rgb-blue-600) / .16); color: #fff; }
+.nav-dd-sep { height: 1px; background: rgb(var(--rgb-blue-300) / .12); margin: 4px 8px; }
+.hdr-actions { display: flex; align-items: center; gap: 12px; }
 
 /* ---------- Buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-size: 14px; font-weight: 500;
-  border: 1px solid transparent;
-  transition: all 0.15s ease;
-  white-space: nowrap;
+  min-height: 44px; padding: var(--pad-button, 12px 20px); border-radius: var(--r-btn, 999px);
+  font-size: 14px; font-weight: 500; border: var(--bw-button, 1px) solid transparent;
+  transition: transform var(--dur-fast) var(--ease-soft), background-color var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft), box-shadow var(--dur-fast) var(--ease-soft);
+  white-space: nowrap; max-width: 100%;
 }
-.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn-sm { padding: 8px 16px; font-size: 13px; }
 .btn-block { width: 100%; padding: 14px 20px; }
-.btn-primary {
-  background: var(--accent); color: #0A0B0E;
-  border-color: var(--accent);
-  box-shadow: 0 8px 24px -8px var(--accent);
+.btn-primary { background: var(--navy-900); color: #fff; border-color: var(--bc-button, var(--navy-900)); box-shadow: 0 calc(10px * var(--shk-button, 1)) calc(26px * var(--shk-button, 1)) calc(-12px * var(--shk-button, 1)) rgb(var(--rgb-navy-900) / .55); }
+.btn-primary:hover { background: var(--blue-700); border-color: var(--blue-700); transform: translateY(-1px); }
+.hdr .btn-primary { background: var(--navy-800); border-color: rgb(var(--rgb-blue-300) / .32); box-shadow: none; }
+.hdr .btn-primary:hover { background: var(--blue-700); }
+.btn-ghost { background: rgba(255,255,255,.6); color: var(--ink); border-color: var(--bc-button, var(--line-strong)); }
+.btn-ghost:hover { border-color: var(--ink); background: #fff; }
+
+/* ---------- CTA icons (LM-0002; spec: design-system/spec.json ctaIcon) ----------
+   One inline Lucide-style set: stroke currentColor, 16-18px, aria-hidden. Place icon as first
+   (calendar, mail, arrow-left) or last (arrow-right, arrow-down) child of .btn / .footer-cta / .cta-link.
+   Hover/focus nudge uses the shared --ease-soft / --dur-fast tokens; transform only. */
+.btn, .footer-cta, .cta-link { gap: 8px; }
+.btn-sm { gap: 6px; }
+.cta-link { display: inline-flex; align-items: center; }
+.cta-ico {
+  display: block; flex: none;
+  width: clamp(16px, 1.2em, 18px); height: clamp(16px, 1.2em, 18px);
+  fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform var(--dur-fast, 240ms) var(--ease-soft, cubic-bezier(0.22, 1, 0.36, 1));
 }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 32px -8px var(--accent); }
-.btn-ghost {
-  background: transparent; color: var(--ink);
-  border-color: var(--line-strong);
+.footer-cta .cta-ico, .cta-link .cta-ico { stroke-width: 2; }
+.cta-ico--cal { translate: 0 -0.5px; }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--right { transform: translate3d(3px, 0, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--left { transform: translate3d(-3px, 0, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--down { transform: translate3d(0, 2px, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--cal { transform: translate3d(0, -1.5px, 0); }
+:is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico--mail { transform: translate3d(0, -1px, 0) scale(1.06); }
+@media (prefers-reduced-motion: reduce) {
+  .cta-ico { transition: none; }
+  :is(.btn, .footer-cta, .cta-link):is(:hover, :focus-visible) > .cta-ico { transform: none; }
 }
-.btn-ghost:hover { border-color: var(--ink); }
 
 /* ---------- Typography ---------- */
-.eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: 'Geist Mono', monospace;
-  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 24px;
-}
-.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-mute); display: inline-block; }
-.dot-live { background: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 25%, transparent); }
-.h1 {
-  font-size: clamp(42px, 5.6vw, 78px);
-  line-height: 1.02; letter-spacing: -0.035em;
-  font-weight: 600; margin: 0 0 24px;
-}
-.h2 {
-  font-size: clamp(32px, 3.6vw, 52px);
-  line-height: 1.05; letter-spacing: -0.03em;
-  font-weight: 600; margin: 0 0 16px;
-}
+.h1 { font-size: clamp(42px, 6.2vw, 92px); line-height: 0.98; letter-spacing: -0.045em; font-weight: 700; margin: 0 0 24px; }
+.h2 { font-size: clamp(32px, 3.8vw, 56px); line-height: 1.04; letter-spacing: -0.035em; font-weight: 700; margin: 0 0 14px; }
 .lede { font-size: 19px; line-height: 1.5; color: var(--ink-dim); max-width: 540px; margin: 0 0 32px; }
 .lede-sm { font-size: 16px; max-width: 480px; }
 
-/* ---------- Page hero ---------- */
-.svc-page-hero {
-  max-width: var(--maxw);
-  margin: 0 auto 0;
-  padding: 0 var(--pad) 64px;
-  border-bottom: 1px solid var(--line);
-}
-.svc-page-cta { display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap; }
+/* ---------- Reveal (JS adds html.js; static without it) ---------- */
+.js .rv { opacity: 0; translate: 0 26px; transition: opacity var(--dur-slow) var(--ease-out), translate var(--dur-slow) var(--ease-out); transition-delay: calc(var(--d, 0) * var(--stagger)); }
+.js .rv.in { opacity: 1; translate: 0 0; }
 
-/* ---------- Sticky service nav strip ---------- */
-.svc-nav {
-  max-width: var(--maxw);
-  margin: 48px auto 0;
-  padding: 16px var(--pad);
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
-  position: sticky;
-  top: 65px;
-  z-index: 40;
-  background: color-mix(in oklab, var(--bg) 92%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line);
-}
-.svc-nav-item {
-  display: flex; flex-direction: column; gap: 4px;
-  padding: 10px 14px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  color: var(--ink);
-  transition: all 0.15s;
-}
-.svc-nav-item:hover { border-color: var(--accent); color: var(--accent); }
+/* ---------- Hero ---------- */
+.hero { position: relative; max-width: var(--maxw); margin: 0 auto; padding: 88px var(--pad) 72px; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; }
+.hero-copy { min-width: 0; }
+.hero-cta { display: flex; gap: var(--gap-button, 12px); flex-wrap: wrap; margin-top: 8px; }
+.hero-vis { width: 100%; max-width: 440px; justify-self: end; }
+.hero-vis svg { display: block; width: 100%; height: auto; overflow: visible; }
+.layer { animation: layerIn var(--dur-slow) var(--ease-out) backwards, layerIdle 7s var(--ease-in-out) infinite alternate; animation-delay: calc(var(--k) * 110ms), calc(var(--k) * 110ms + 900ms); }
+@keyframes layerIn { from { opacity: 0; transform: translate3d(-28px, 10px, 0); } }
+@keyframes layerIdle { to { transform: translate3d(calc(var(--k) * 3px + 4px), 0, 0); } }
 
-/* ---------- Service detail blocks ---------- */
-.svc-detail {
-  max-width: var(--maxw);
-  margin: 96px auto 0;
-  padding: 0 var(--pad);
-  scroll-margin-top: 140px;
+/* ---------- Service sections ---------- */
+.svc { position: relative; z-index: 1; padding: 112px 0; scroll-margin-top: var(--hdr-h); isolation: isolate; }
+.svc-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  -webkit-mask-image: linear-gradient(transparent 0, #000 18%, #000 82%, transparent 100%); mask-image: linear-gradient(transparent 0, #000 18%, #000 82%, transparent 100%); }
+#concierge .svc-bg { background: radial-gradient(60% 70% at 88% 30%, rgb(var(--rgb-blue-600) / .16), transparent 70%), linear-gradient(180deg, rgba(232,238,250,0), rgba(222,233,252,.85)); }
+#workflow  .svc-bg { background: radial-gradient(rgb(var(--rgb-navy-800) / .20) 1.3px, transparent 1.6px) 0 0 / 26px 26px, radial-gradient(55% 60% at 12% 40%, rgb(var(--rgb-cyan-500) / .14), transparent 70%), rgba(255,255,255,.6); }
+#leadgen   .svc-bg { background: repeating-radial-gradient(circle at 80% 48%, rgb(var(--rgb-cyan-500) / .22) 0 1px, transparent 1px 54px), radial-gradient(60% 70% at 80% 48%, rgb(var(--rgb-cyan-500) / .14), transparent 70%), rgba(236,246,248,.6); }
+#internal  .svc-bg { background: linear-gradient(rgb(var(--rgb-navy-800) / .09) 1px, transparent 1px) 0 0 / 44px 44px, linear-gradient(90deg, rgb(var(--rgb-navy-800) / .09) 1px, transparent 1px) 0 0 / 44px 44px, radial-gradient(50% 60% at 15% 60%, rgb(var(--rgb-navy-800) / .12), transparent 70%), rgba(234,234,230,.7); }
+#consult   .svc-bg { background: repeating-radial-gradient(ellipse 120% 80% at 18% 88%, rgb(var(--rgb-navy-800) / .12) 0 1px, transparent 1px 34px), linear-gradient(115deg, rgb(var(--rgb-blue-400) / .20), rgba(244,244,242,0) 55%), rgba(247,244,238,.7); }
+.svc-inner { position: relative; z-index: 2; max-width: var(--maxw); margin: 0 auto; padding: 0 var(--pad); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "main stage" "more more"; column-gap: 64px; align-items: center; }
+.svc--flip .svc-inner { grid-template-areas: "stage main" "more more"; }
+.svc-main { grid-area: main; min-width: 0; }
+.svc-stage { grid-area: stage; min-width: 0; }
+.svc-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.svc-num { color: var(--ink-mute); }
+.svc-tag { color: var(--blue); font-weight: 500; }
+.svc-head::after { content: ""; flex: 0 1 64px; height: 1px; background: var(--line-strong); }
+.svc-sub { font-size: 19px; line-height: 1.45; color: var(--ink); margin: 0 0 22px; max-width: 520px; }
+/* complexity meter + "good fit for" tags (replaces per-offer prices) */
+.svc-fit { margin: 0 0 28px; display: flex; flex-direction: column; gap: 14px; }
+.svc-cx { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.svc-cx-lbl { color: var(--ink-dim); font-weight: 600; letter-spacing: 0.01em; }
+.svc-cx-bars { display: inline-flex; gap: 4px; }
+.svc-cx-bars i { width: 22px; height: 6px; border-radius: 6px; background: rgb(var(--rgb-navy-800, 21 44 91) / 0.14); }
+.svc-cx-bars i.on { background: var(--c-blue-600, #2563EB); }
+.svc-cx-val { font-weight: 700; color: var(--ink); }
+.svc-cx-note { color: var(--ink-dim); font-size: 13px; }
+.svc-cx { flex-wrap: wrap; }
+.svc-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.svc-tags li {
+  font-size: 13px; font-weight: 600; line-height: 1; padding: 8px 12px; border-radius: 999px;
+  color: var(--c-navy-800, #152C5B); background: rgb(37 99 235 / 0.08); border: 1px solid rgb(37 99 235 / 0.18);
 }
-.svc-detail-grid {
-  display: grid;
-  grid-template-columns: 1.05fr 1fr;
-  gap: 64px;
-  padding-top: 48px;
-  border-top: 1px solid var(--line);
-}
-.svc-tag { color: var(--accent); font-weight: 500; }
-.svc-detail-name { margin: 16px 0 12px; }
-.svc-detail-sub { font-size: 19px; color: var(--ink); margin: 0 0 24px; }
-.svc-detail-body { color: var(--ink-dim); line-height: 1.65; max-width: 540px; margin-bottom: 32px; }
-.svc-detail-stack { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip {
-  font-family: 'Geist Mono', monospace;
-  font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
-  padding: 4px 8px;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  color: var(--ink-dim);
-}
-.svc-detail-right { display: flex; flex-direction: column; gap: 24px; }
-.svc-detail-meta {
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 8px 24px;
-}
-.svc-detail-meta-row {
-  display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 16px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--line);
-  font-size: 14px;
-  align-items: start;
-}
-.svc-detail-meta-row:last-child { border-bottom: none; }
-.svc-detail-deliv {
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 24px;
-}
-.svc-detail-deliv-h { margin-bottom: 16px; }
-.svc-list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; }
-.svc-list li { font-size: 14px; color: var(--ink); position: relative; padding-left: 16px; }
-.svc-list li::before { content: "→"; color: var(--accent); position: absolute; left: 0; }
+.svc-actions { display: flex; flex-wrap: wrap; gap: var(--gap-button, 12px); align-items: center; }
+.svc-actions .btn-block { width: auto; padding: 12px 20px; }
+/* LOCAL-MOD LM-0002: the details button answers the press at once and keeps its width when the label changes */
+.tog { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 14px; background: transparent; border: var(--bw-button, 1px) solid var(--bc-button, var(--line-strong)); border-radius: var(--r-btn, 999px); font-size: 14px; font-weight: 500; transition: border-color var(--dur-fast) var(--ease-soft), background-color var(--dur-fast) var(--ease-soft), transform 140ms var(--ease-soft); }
+.tog:hover { border-color: var(--ink); background: rgba(255,255,255,.7); }
+.tog:active { transform: scale(0.96); }
+.tog[aria-expanded="true"] { background: #fff; border-color: var(--blue); }
+.tog-l { display: grid; overflow: hidden; text-align: center; }
+.tog-l > span { grid-area: 1 / 1; transition: transform 320ms var(--ease-out), opacity 200ms var(--ease-soft), visibility 0s linear 0s; }
+.tog-b { visibility: hidden; opacity: 0; transform: translateY(100%); }
+.tog[aria-expanded="true"] .tog-a { visibility: hidden; opacity: 0; transform: translateY(-100%); }
+.tog[aria-expanded="true"] .tog-b { visibility: visible; opacity: 1; transform: none; }
+.tog svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 380ms cubic-bezier(0.34, 1.4, 0.5, 1); flex: none; }
+.tog[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+/* Disclosure (grid-rows height animation): the columns follow the height in turn; closing is quicker than opening */
+.svc-more { grid-area: more; display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows 300ms var(--ease-in-out) 60ms, visibility 0s linear 360ms; }
+.svc-more.open { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows 460ms var(--ease-soft), visibility 0s; }
+.svc-more-clip { overflow: hidden; min-height: 0; }
+.svc-more-body > * { opacity: 0; transform: translate3d(0, 10px, 0); transition: opacity 140ms var(--ease-soft), transform 220ms var(--ease-soft); }
+.svc-more.open .svc-more-body > * { opacity: 1; transform: none; transition: opacity 360ms var(--ease-soft), transform 460ms var(--ease-out); transition-delay: calc(110ms + var(--col, 0) * 70ms); }
+.svc-more-body > :nth-child(2) { --col: 1; }
+.svc-more-body > :nth-child(3) { --col: 2; }
+.svc-more-body { margin-top: 40px; display: grid; grid-template-columns: 1.1fr 0.9fr 1fr; gap: var(--gap-panel, 40px); padding: var(--pad-panel, 32px); background: rgba(255,255,255,.82); border: var(--bw-panel, 1px) solid var(--bc-panel, rgb(var(--rgb-blue-600) / .14)); border-radius: var(--r-panel); box-shadow: 0 calc(30px * var(--shk-panel, 1)) calc(70px * var(--shk-panel, 1)) calc(-44px * var(--shk-panel, 1)) rgb(var(--rgb-navy-900) / .45); opacity: 0; transition: opacity 180ms var(--ease-soft) 120ms; }
+.svc-more.open .svc-more-body { opacity: 1; transition: opacity 260ms var(--ease-soft); }
+.more-h { margin: 0 0 14px; }
+.svc-detail-body { color: var(--ink-dim); line-height: 1.65; margin: 0 0 18px; }
+.svc-works { font-size: 13px; color: var(--ink-dim); margin: 0; }
+.svc-works b { color: var(--ink); font-weight: 600; }
+.meta-row { padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.meta-row:first-of-type { padding-top: 0; }
+.meta-row:last-child { border-bottom: none; }
+.meta-row .mono { display: block; margin-bottom: 4px; }
+.svc-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.svc-list li { font-size: 14px; position: relative; padding-left: 20px; }
+.svc-list li::before { content: ""; position: absolute; left: 0; top: .55em; width: 10px; height: 1.5px; background: var(--blue); }
+
+/* ---------- Motif stage (dark panel family) ---------- */
+.stage { position: relative; border-radius: var(--r-panel); overflow: hidden; background: radial-gradient(ellipse 70% 80% at 100% 0%, rgb(var(--rgb-blue-600) / .28), transparent 70%), linear-gradient(160deg, var(--c-panel-dark-start) 0%, var(--c-panel-dark-end) 100%); border: var(--bw-panel, 1px) solid var(--bc-panel, rgb(var(--rgb-blue-300) / .16)); box-shadow: 0 calc(34px * var(--shk-panel, 1)) calc(80px * var(--shk-panel, 1)) calc(-40px * var(--shk-panel, 1)) rgba(0,0,0,.65); aspect-ratio: 4 / 3; }
+.stage svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.mot * { transform-box: fill-box; }
+.svc:not(.live) .mot *, .svc:not(.live) .blob { animation-play-state: paused; }
+
+/* Concierge: conversation */
+.mot-chat .bub { animation: bub 9s var(--ease-out) infinite; animation-delay: calc(var(--k) * 1.3s); }
+@keyframes bub { 0% { opacity: 0; transform: translate3d(0, 14px, 0); } 7%, 84% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: translate3d(0, -6px, 0); } }
+.mot-chat .dot { animation: dotp 1.2s var(--ease-in-out) infinite; animation-delay: calc(var(--k) * 160ms); }
+@keyframes dotp { 0%, 100% { opacity: .25; transform: translate3d(0, 0, 0); } 50% { opacity: 1; transform: translate3d(0, -4px, 0); } }
+.mot-chat .bar { transform-origin: 50% 100%; animation: bar 1.1s var(--ease-in-out) infinite alternate; animation-delay: calc(var(--k) * -170ms); }
+@keyframes bar { from { transform: scaleY(.25); } to { transform: scaleY(1); } }
+
+/* Workflow: nodes + flow */
+.mot-flow .wire { stroke-dasharray: 5 9; animation: flow 1.4s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -28; } }
+.mot-flow .node { animation: nodeOn 6s var(--ease-in-out) infinite; animation-delay: calc(var(--k) * 1.2s); }
+@keyframes nodeOn { 0%, 100% { opacity: .6; transform: scale(1); } 8%, 22% { opacity: 1; transform: scale(1.05); } 34% { opacity: .85; transform: scale(1); } }
+
+/* Outbound: radar */
+.mot-radar .sweep { transform-box: view-box; transform-origin: 240px 180px; animation: spin 6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.mot-radar .blip { animation: blip 6s var(--ease-out) infinite; animation-delay: calc(var(--k) * 1s); }
+@keyframes blip { 0% { opacity: 0; transform: scale(.4); } 6% { opacity: 1; transform: scale(1.5); } 40%, 100% { opacity: 0; transform: scale(1); } }
+.mot-radar .ping { transform-box: view-box; transform-origin: 240px 180px; animation: ping 4s var(--ease-out) infinite; }
+@keyframes ping { from { opacity: .5; transform: scale(.1); } to { opacity: 0; transform: scale(1); } }
+
+/* Ops agents: system grid */
+.mot-grid .cell-on { animation: cellOn 5s var(--ease-in-out) infinite; animation-delay: calc(var(--k) * .55s); }
+@keyframes cellOn { 0%, 100% { opacity: 0; } 12%, 34% { opacity: .85; } 50% { opacity: 0; } }
+.mot-grid .scan { animation: scan 5.5s var(--ease-in-out) infinite alternate; }
+@keyframes scan { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, 232px, 0); } }
+
+/* Strategy: compass + route */
+.mot-compass .needle { transform-box: view-box; transform-origin: 240px 180px; animation: swing 7s var(--ease-in-out) infinite alternate; }
+@keyframes swing { from { transform: rotate(-24deg); } to { transform: rotate(38deg); } }
+.mot-compass .route { stroke-dasharray: 3 9; animation: flow 2.2s linear infinite; }
+.mot-compass .wp { animation: wp 6s var(--ease-out) infinite; animation-delay: calc(var(--k) * 1.1s); }
+@keyframes wp { 0% { opacity: 0; transform: scale(.3); } 10%, 80% { opacity: 1; transform: scale(1); } 100% { opacity: 0; } }
+.mot-compass .ring { transform-box: view-box; transform-origin: 240px 180px; animation: spin 90s linear infinite; }
 
 /* ---------- Final CTA ---------- */
-.cta-wrap {
-  max-width: var(--maxw);
-  margin: var(--gap-section) auto 0;
-  padding: 0 var(--pad) 80px;
-}
-.cta {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 56px;
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 64px;
-  position: relative; overflow: hidden;
-  align-items: center;
-}
-.cta::before {
-  content: ""; position: absolute; inset: -1px;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, var(--accent), transparent 40%, transparent 60%, var(--accent-2));
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-  pointer-events: none; opacity: 0.4;
-}
+.cta-wrap { position: relative; z-index: 1; isolation: isolate; max-width: var(--maxw); margin: 0 auto; padding: 24px var(--pad) 112px; scroll-margin-top: 140px; }
+.cta { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; background: radial-gradient(ellipse 60% 70% at 85% 0%, rgb(var(--rgb-blue-600) / .18), transparent 70%), var(--c-panel-light); border: var(--bw-panel, 1px) solid var(--bc-panel, rgb(var(--rgb-blue-600) / .16)); border-radius: var(--r-panel, 28px); padding: var(--pad-panel, 64px); position: relative; z-index: 2; overflow: hidden; align-items: center; box-shadow: 0 calc(30px * var(--shk-panel, 1)) calc(70px * var(--shk-panel, 1)) calc(-38px * var(--shk-panel, 1)) rgb(var(--rgb-navy-900) / .45); }
 .cta-h2 { font-size: clamp(36px, 4vw, 56px); }
-.svc-page-final { display: flex; flex-direction: column; gap: 12px; align-items: stretch; }
+.svc-page-final { display: flex; flex-direction: column; gap: var(--gap-button, 12px); align-items: stretch; min-width: 0; }
+.svc-page-final .btn { white-space: normal; text-align: center; }
 .cta-fine { text-align: center; margin-top: 4px; }
 
-/* ---------- Footer ---------- */
-.footer {
-  max-width: var(--maxw);
-  margin: 80px auto 48px;
-  padding: 48px var(--pad) 0;
-  border-top: 1px solid var(--line);
-}
+/* ---------- Footer (dark) ---------- */
+.footer { background: var(--night); color: var(--on-night); border-top: 1px solid var(--hairline-night); position: relative; z-index: 2; background-image: radial-gradient(ellipse 60% 90% at 90% 0%, rgb(var(--rgb-blue-600) / .2), transparent 70%); }
+.footer-in { max-width: var(--maxw); margin: 0 auto; padding: 64px var(--pad) 0; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
-.footer-tag { color: var(--ink-dim); margin-top: 12px; font-size: 14px; }
-.footer-h { margin-bottom: 16px; }
-.footer ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--ink-dim); }
-.footer-rule { height: 1px; background: var(--line); margin-top: 48px; }
-.footer-bottom { display: flex; justify-content: space-between; padding: 24px 0; gap: 16px; flex-wrap: wrap; }
+.footer-tag { color: var(--on-night-dim); margin-top: 12px; font-size: 14px; }
+.footer-h { margin-bottom: 16px; color: var(--on-night-dim); }
+.footer ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--on-night-dim); }
+.footer a { transition: color var(--dur-fast) var(--ease-soft); }
+.footer a:hover { color: #fff; }
+.footer-rule { height: 1px; background: var(--hairline-night); margin-top: 48px; }
+.footer-bottom { display: flex; justify-content: space-between; padding: 24px 0 32px; gap: 16px; flex-wrap: wrap; color: var(--on-night-dim); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 980px) {
-  :root { --pad: 32px; --gap-section: 96px; }
+  :root { --pad: 32px; }
   .nav { display: none; }
-  .svc-nav { grid-template-columns: 1fr 1fr; }
-  .svc-detail-grid { grid-template-columns: 1fr; gap: 32px; }
-  .svc-list { grid-template-columns: 1fr; }
+  .hero { grid-template-columns: 1fr; padding-top: 64px; }
+  .hero-vis { justify-self: start; max-width: 360px; }
+  .svc { padding: 80px 0; }
+  .svc-stage { max-width: 560px; width: 100%; }
+  .svc-inner, .svc--flip .svc-inner { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main" "stage" "more"; row-gap: 32px; }
+  .svc-more-body { grid-template-columns: 1fr 1fr; }
+  .svc-more-body > :first-child { grid-column: 1 / -1; }
   .cta { grid-template-columns: 1fr; padding: 32px; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
+@media (max-width: 768px) {
+  :root {
+    --m-pad-x: clamp(12px, 4vw, 20px);
+    --m-pad-y: clamp(20px, 3.4svh, 36px);
+    --m-gap: clamp(12px, 2.2svh, 22px);
+    --m-h1: clamp(1.75rem, 6.2vw + 0.5rem, 2.6rem);
+    --m-h2: clamp(1.4rem, 5vw + 0.4rem, 2.15rem);
+    --m-body: clamp(0.92rem, 0.85rem + 0.35vw, 1.05rem);
+    --m-lh-head: 1.08;
+    --m-lh-body: 1.5;
+    --pad: var(--m-pad-x);
+  }
+  html, body { overflow-x: clip; }
+  body { font-size: var(--m-body); line-height: var(--m-lh-body); }
+  .btn:not(.btn-ico-m), .tog, .footer-cta {
+    white-space: normal; overflow-wrap: anywhere; text-wrap: balance; text-align: center;
+  }
+  .hdr-inner { padding-left: max(var(--m-pad-x), env(safe-area-inset-left)); padding-right: max(var(--m-pad-x), env(safe-area-inset-right)); gap: 12px; }
+  .h1 { font-size: var(--m-h1); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; margin-bottom: 14px; }
+  .h2 { font-size: var(--m-h2); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; margin-bottom: 12px; }
+  .lede { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; margin-bottom: 20px; }
+  .hero { padding: var(--m-pad-y) var(--m-pad-x); gap: var(--m-gap); }
+  .svc { padding: var(--m-pad-y) 0; }
+  .svc-inner, .svc--flip .svc-inner { row-gap: var(--m-gap); }
+  .svc-sub { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; margin-bottom: 14px; }
+  .svc-fit { margin-bottom: 18px; gap: 10px; }
+  .svc-tags li { font-size: 12.5px; padding: 7px 11px; }
+  .svc-detail-body, .svc-list li, .meta-row, .svc-works { font-size: var(--m-body); line-height: var(--m-lh-body); overflow-wrap: anywhere; }
+  .svc-more-body { margin-top: var(--m-gap); grid-template-columns: 1fr; padding: clamp(14px, 4vw, 22px); gap: var(--m-gap); }
+  .cta-wrap { padding: var(--m-pad-y) var(--m-pad-x); }
+  .cta { padding: clamp(18px, 4vw, 24px) clamp(14px, 4vw, 18px); gap: var(--m-gap); border-radius: 20px; }
+  .cta-h2 { font-size: var(--m-h2); line-height: var(--m-lh-head); overflow-wrap: anywhere; text-wrap: balance; }
+  .footer-in { padding: var(--m-pad-y) var(--m-pad-x) 0; }
+  .footer-rule { margin-top: 28px; }
+  .footer-bottom { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+  .logo, .hdr .btn { min-height: 44px; }
+  .hdr .btn-ico-m { font-size: 0; gap: 0; width: 44px; height: 44px; padding: 0; flex: none; }
+  .hdr .btn-ico-m .cta-ico { width: 20px; height: 20px; }
+  .footer a { display: inline-flex; align-items: center; min-height: 44px; }
+}
+@media (max-width: 768px) and (max-height: 700px) {
+  .hero { padding: 14px var(--m-pad-x); }
+  .hero-vis { max-width: 240px; }
+  .svc { padding: 18px 0; }
+}
+@media (max-width: 768px) and (min-height: 860px) {
+  .hero, .svc, .cta-wrap { min-height: 0; }
+}
+@media (max-width: 480px) {
+  .hdr .btn-sm { padding: 8px 12px; }
+  .svc-actions .btn-block, .tog { flex: 1 1 100%; justify-content: center; }
+  .footer-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 360px) {
+  .svc-head { flex-wrap: wrap; gap: 8px; }
+  .svc-more-body { padding: 14px; }
+}
+
+/* ---------- Reduced motion: full static fallback ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .blob, .layer, .mot *, .amb { animation: none !important; transition: none !important; }
+  .js .rv { opacity: 1; translate: none; transition: none; }
+  .svc-more, .svc-more-body, .svc-more-body > *, .btn, .tog, .tog svg, .tog-l > span, .nav-dd, .nav-chev { transition: none !important; }
+  .svc-more-body > * { opacity: 1; transform: none; }
+  .tog:active { transform: none; }
+  .nav-item:hover .nav-dd, .nav-item:focus-within .nav-dd { transform: none; }
+  .mot-chat .bar { transform: scaleY(.7); }
+  .mot-radar .ping { opacity: 0; }
+  .mot-grid .cell-on { opacity: 0; }
+  .mot-grid .cell-on.keep { opacity: .7; }
+  .mot-compass .needle { transform: rotate(18deg); }
+}
+/* LOCAL-MOD LM-0002: inline motif SVGs follow the brand colour variables (values identical by default). */
+svg [fill="#93C5FD" i] { fill: var(--c-blue-300); }
+svg [stroke="#93C5FD" i] { stroke: var(--c-blue-300); }
+svg [fill="#2563EB" i] { fill: var(--c-blue-600); }
+svg [fill="#22D3EE" i] { fill: var(--c-cyan-300); }
+svg [stroke="#22D3EE" i] { stroke: var(--c-cyan-300); }
+svg [fill="#152C5B" i] { fill: var(--c-navy-800); }
+svg [fill="#0D1B38" i] { fill: var(--c-navy-900); }
+svg [fill="#E8EEFA" i] { fill: var(--c-panel-light); }
+svg [fill="#0B1226" i] { fill: var(--c-panel-dark-end); }
+svg [stroke="#60A5FA" i] { stroke: var(--c-blue-400); }
+svg [stroke="rgba(147,197,253,.4)"] { stroke: rgb(var(--rgb-blue-300) / .4); }
+svg [stroke="rgba(37,99,235,.25)"] { stroke: rgb(var(--rgb-blue-600) / .25); }
+svg stop[stop-color="#22D3EE" i] { stop-color: var(--c-cyan-300); }
+svg stop[stop-color="#2563EB" i] { stop-color: var(--c-blue-600); }
+svg stop[stop-color="#06B6D4" i] { stop-color: var(--c-cyan-500); }
+
+/* LOCAL-MOD LM-0002: plain sentence-case labels, no tracked capitals */
+.mono, .m-nav-grp { text-transform: none; letter-spacing: 0; font-size: 13px; }
+/* LOCAL-MOD LM-0002: shared site footer */
+.footer.footer-shared { display: block; max-width: none; margin: 0; padding: 0; border: 0; background: var(--c-night); color: var(--c-on-night); border-radius: var(--r-band) var(--r-band) 0 0; font-size: 14px; }
+.footer-shared .footer-inner { max-width: var(--maxw); margin: 0 auto; padding: 56px var(--pad) 0; container-type: inline-size; }
+.footer-shared .footer-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr)) minmax(0, 1.3fr); gap: clamp(24px, 3.5cqi, 48px); }
+.footer-shared .footer-tag, .footer-shared .footer-col a, .footer-shared .footer-contact li, .footer-shared .footer-legal span, .footer-shared .footer-bottom { color: var(--c-slate-400); }
+.footer-shared .footer-col ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.footer-shared .footer-col a { overflow-wrap: anywhere; }
+.footer-shared .footer-contact a { color: var(--c-on-night); }
+.footer-shared .logo, .footer-shared a.footer-cta { color: var(--c-on-night); }
+.footer-shared .footer-contact li { display: flex; gap: 12px; align-items: flex-start; }
+.footer-shared .footer-txt { display: flex; flex-direction: column; min-width: 0; overflow-wrap: anywhere; }
+.footer-shared .footer-lbl { font-size: 11px; color: var(--c-slate-500); }
+.footer-shared .footer-ico svg { width: 18px; height: 18px; }
+.footer-shared .footer-h { font-size: 13px; margin: 0 0 16px; }
+.footer-shared .footer-cta { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: var(--r-btn, 999px); background: var(--c-navy-800); border: 1px solid rgb(var(--rgb-blue-300) / .32); }
+.footer-shared .footer-cta .cta-ico { width: 16px; height: 16px; }
+.footer-shared .footer-rule { height: 1px; background: rgb(var(--rgb-blue-300) / .14); margin-top: 48px; }
+.footer-shared .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 24px 0 32px; }
+.footer-shared .footer-legal { display: flex; gap: 24px; }
+@container (max-width: 960px) { .footer-shared .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .footer-shared .footer-brand { grid-column: 1 / -1; } }
+@container (max-width: 620px) { .footer-shared .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .footer-shared .footer-grid > :last-child { grid-column: 1 / -1; } }
+.footer-shared .footer-ico { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex: none; border-radius: 999px; background: rgb(var(--rgb-blue-600) / .14); border: 1px solid rgb(var(--rgb-blue-300) / .18); }
+.footer-shared .footer-ico svg { width: 18px; height: 18px; }
+.footer-shared .footer-cta .cta-ico { width: 16px; height: 16px; }
+.footer.footer-shared { border-radius: var(--r-band, 40px) var(--r-band, 40px) 0 0; }
+/* LOCAL-MOD LM-0002: one header button style across pages */
+@media (min-width: 769px) {
+  .hdr .btn-primary { background: var(--c-navy-800); border-color: rgb(var(--rgb-blue-300) / .32); box-shadow: none; border-radius: var(--r-btn, 999px); font-size: 13px; padding: 8px 14px; min-height: 37px; gap: 6px; }
+  .hdr .btn-primary:hover { background: var(--c-blue-700); }
+}
+</style>
+<style id="v05-light-header">
+/* v0.5: header colour-matches the page canvas instead of the dark ribbon (solid tint + blur, not transparent) */
+.hdr {
+  background: rgb(244 244 242 / 0.88); color: var(--c-night);
+  border-bottom: 1px solid rgb(21 44 91 / 0.08);
+  box-shadow: 0 8px 24px -22px rgb(13 27 56 / 0.35);
+  --ink: var(--c-night); --ink-dim: #5A5F69; --line: rgb(21 44 91 / 0.10);
+  --btn-bg: var(--c-navy-900); --btn-line: var(--c-navy-900);
+}
+.hdr .logo, .hdr .logo-word { color: var(--c-navy-900); }
+.hdr .nav > a, .hdr .nav-trigger { color: #5A6275; }
+.hdr .nav > a:hover, .hdr .nav > a.is-active,
+.hdr .nav-trigger:hover, .hdr .nav-trigger.is-active,
+.hdr .nav-item:hover > .nav-trigger, .hdr .nav-item:focus-within > .nav-trigger { color: var(--c-navy-900); }
+.hdr .nav > a.is-active::after, .hdr .nav-trigger.is-active::after { background: var(--c-navy-900); }
+.hdr .nav-dd {
+  background: #FFFFFF; color: var(--c-night);
+  border: 1px solid rgb(21 44 91 / 0.10);
+  box-shadow: 0 24px 48px -20px rgb(13 27 56 / 0.28);
+}
+.hdr .nav-dd a { color: #4B5363; }
+.hdr .nav-dd a:hover, .hdr .nav-dd a:focus-visible { background: rgb(37 99 235 / 0.07); color: var(--c-navy-900); }
+.hdr .nav-dd a.is-active { background: rgb(37 99 235 / 0.11); color: var(--c-navy-900); }
+.hdr .nav-dd-sep { background: rgb(21 44 91 / 0.08); }
+.hdr .hdr-menu { color: var(--c-navy-900); }
+.hdr .m-nav { background: #F4F4F2; border-bottom: 1px solid rgb(21 44 91 / 0.10); }
+.hdr .m-nav-grp { color: #7A8192; border-top-color: rgb(21 44 91 / 0.08); }
+.hdr .m-nav a { color: #2B3345; border-bottom-color: rgb(21 44 91 / 0.06); }
+.hdr .m-nav a:hover, .hdr .m-nav a:focus-visible { color: var(--c-navy-900); }
+</style>
+<style id="v051-svc-compress">
+/* v0.51: service sections are vertically compressed so an opened "Details" panel fits on one 13" laptop screen */
+@media (min-width: 981px) {
+  .svc { padding: clamp(40px, 6svh, 80px) 0; }
+  .svc-inner { align-items: center; }
+  .svc .stage { aspect-ratio: 16 / 10; max-height: clamp(240px, calc(100svh - 470px), 360px); width: 100%; margin-inline: auto; }
+  .svc-main .h2 { font-size: clamp(32px, 3.2vw, 48px); margin-bottom: 10px; }
+  .svc-sub { font-size: 17.5px; margin-bottom: 16px; }
+  .svc-fit { margin-bottom: 20px; gap: 10px; }
+  .svc-more-body { margin-top: 22px; padding: 22px 26px; gap: 28px; }
+  .more-h { margin-bottom: 8px; }
+  .svc-detail-body { font-size: 15px; line-height: 1.55; margin-bottom: 10px; }
+  .meta-row { padding: 7px 0; font-size: 13.5px; }
+  .meta-row .mono { margin-bottom: 2px; }
+  .svc-list { gap: 5px; }
+  .svc-list li { font-size: 13.5px; }
+  .svc-works { font-size: 12.5px; }
+}
 </style>
 </head>
-<body>
+<body data-active="hero">
+<div class="ambient" aria-hidden="true"><div class="amb amb-hero"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-concierge"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-workflow"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-leadgen"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-internal"><div class="blob b1"></div><div class="blob b2"></div></div><div class="amb amb-consult"><div class="blob b1"></div><div class="blob b2"></div></div></div>
 <div class="app svc-page">
 
   <!-- ========== Header ========== -->
   <header class="hdr">
     <div class="hdr-inner">
       <a class="logo" href="index.html">
-        <img src="/querent-logo.png" alt="Querent" style="width:26px;height:26px;display:block;">
+        <img src="/assets/querent-logo-flat.svg" alt="Querent" style="width:26px;height:26px;display:block;">
         <span class="logo-word">Querent</span>
       </a>
-      <nav class="nav">
+      <nav class="nav" aria-label="Primary">
         <a href="index.html">Home</a>
-        <a href="menu.html" class="is-active">Solutions</a>
-        <a href="index.html#case">Case Studies</a>
-        <a href="index.html#process">Process</a>
-        <a href="index.html#faq">FAQ</a>
+        <div class="nav-item">
+          <button type="button" class="nav-trigger" aria-haspopup="true">Company<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="nav-dd" role="menu" aria-label="Company">
+            <a href="index.html#why-now" role="menuitem">Why Now</a>
+            <a href="index.html#process" role="menuitem">Process</a>
+            <a href="index.html#faq" role="menuitem">FAQ</a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <a href="menu.html" class="nav-trigger is-active" aria-haspopup="true">Services<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
+          <div class="nav-dd" role="menu" aria-label="Services">
+            <a href="menu.html" class="is-active" role="menuitem">All Services</a>
+            <a href="menu.html#leadgen" role="menuitem">Lead Gen, Outbound / Research</a>
+            <a href="menu.html#workflow" role="menuitem">Workflow Automation</a>
+            <a href="menu.html#concierge" role="menuitem">AI Concierge</a>
+            <a href="menu.html#internal" role="menuitem">Internal Ops Agents</a>
+            <a href="menu.html#consult" role="menuitem">Strategy &amp; Advisory</a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <a href="va.html" class="nav-trigger" aria-haspopup="true">AI Virtual Assistants<svg class="nav-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></a>
+          <div class="nav-dd" role="menu" aria-label="AI Virtual Assistants">
+            <a href="va.html#how-it-works" role="menuitem">How It Works</a>
+            <a href="va.html#offer" role="menuitem">Two Options</a>
+            <a href="va.html#use-cases" role="menuitem">Use Cases</a>
+            <a href="va.html#compare" role="menuitem">Compare</a>
+          </div>
+        </div>
       </nav>
       <div class="hdr-actions">
-        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light / dark mode">
-          <svg class="theme-toggle-sun"  viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-          <svg class="theme-toggle-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        </button>
-        <a href="booking.html" class="btn btn-primary btn-sm">Book a Call →</a>
+        <a href="booking.html" class="btn btn-primary btn-sm btn-ico-m" aria-label="Book a Call"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Call</a>
       </div>
     </div>
   </header>
@@ -367,296 +616,344 @@ body::before {
   <main>
 
     <!-- ========== Page hero ========== -->
-    <section class="svc-page-hero">
-      <h1 class="h1">What we ship<br>and what it costs.</h1>
-      <p class="lede">
-        Five productized offers. Fixed‑price per outcome, never hourly. Pick one,
-        stack a few, or start with a strategy retainer and figure out what to
-        build first.
-      </p>
-      <div class="svc-page-cta">
-        <a href="booking.html" class="btn btn-primary">Book a free audit</a>
-        <a href="index.html" class="btn btn-ghost">← Back to home</a>
+    <section class="hero" id="top" data-sec="hero">
+      <div class="hero-copy">
+        <h1 class="h1 rv" style="--d:0">What we ship<br>and who it&rsquo;s for.</h1>
+        <p class="lede rv" style="--d:1">Curated offers, each priced by complexity and outcome. Pick one, stack a few, or start with a strategy retainer to structure things out.</p>
+        <div class="hero-cta rv" style="--d:2">
+        <a href="booking.html" class="btn btn-primary"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Audit</a>
+        </div>
       </div>
+      <div class="hero-vis"><svg viewBox="0 0 440 340" role="img" aria-label="Five stacked service layers">
+  <defs><linearGradient id="hl" x1="0" x2="1"><stop offset="0" stop-color="#2563EB"/><stop offset="1" stop-color="#06B6D4"/></linearGradient></defs>
+  <g class="layer" style="--k:0"><rect x="10" y="20" width="330" height="48" rx="16" fill="#0D1B38"/><rect x="30" y="40" width="120" height="8" rx="4" fill="#93C5FD" opacity=".8"/></g>
+  <g class="layer" style="--k:1"><rect x="40" y="82" width="360" height="48" rx="16" fill="url(#hl)"/><rect x="60" y="102" width="150" height="8" rx="4" fill="#fff" opacity=".85"/></g>
+  <g class="layer" style="--k:2"><rect x="0" y="144" width="300" height="48" rx="16" fill="#fff" stroke="rgba(37,99,235,.25)"/><rect x="20" y="164" width="110" height="8" rx="4" fill="#2563EB" opacity=".7"/></g>
+  <g class="layer" style="--k:3"><rect x="70" y="206" width="340" height="48" rx="16" fill="#152C5B"/><rect x="90" y="226" width="140" height="8" rx="4" fill="#93C5FD" opacity=".8"/></g>
+  <g class="layer" style="--k:4"><rect x="20" y="268" width="320" height="48" rx="16" fill="#E8EEFA" stroke="rgba(37,99,235,.25)"/><rect x="40" y="288" width="100" height="8" rx="4" fill="#0D1B38" opacity=".55"/></g>
+</svg></div>
     </section>
 
-    <!-- ========== Sticky service nav ========== -->
-    <nav class="svc-nav" aria-label="Services">
-      <a class="svc-nav-item" href="#concierge"><span>AI Concierge Services</span></a>
-      <a class="svc-nav-item" href="#workflow" ><span>Workflow Automation (n8n)</span></a>
-      <a class="svc-nav-item" href="#leadgen"  ><span>Outbound, Research &amp; Lead Gen</span></a>
-      <a class="svc-nav-item" href="#internal" ><span>Internal Ops Agents</span></a>
-      <a class="svc-nav-item" href="#consult"  ><span>Operations Strategy &amp; Advisory</span></a>
-    </nav>
 
-    <!-- ========== 01 Concierge ========== -->
-    <section class="svc-detail" id="concierge">
-      <div class="svc-detail-grid">
-        <div class="svc-detail-left">
-          <span class="svc-tag mono">CONCIERGE</span>
-          <h2 class="h2 svc-detail-name">AI Concierge Services</h2>
-          <p class="svc-detail-sub">Chat + voice agents that answer, qualify, and book — 24/7.</p>
-          <p class="svc-detail-body">A unified concierge layer for inbound. Trained on your knowledge base, wired to your calendar, CRM, and ticketing. Sub‑second voice responses with confident human handoff. Replaces the after‑hours desk; lifts the day‑shift's ceiling.</p>
-          <div class="svc-detail-stack">
-            <span class="chip">Voiceflow</span><span class="chip">Vapi</span><span class="chip">ElevenLabs</span>
-            <span class="chip">Twilio</span><span class="chip">Intercom</span><span class="chip">HubSpot</span><span class="chip">OpenAI</span>
+    <!-- ========== 01 Lead Gen, Outbound / Research ========== -->
+    <section class="svc" id="leadgen" data-sec="leadgen">
+      <div class="svc-bg" aria-hidden="true"></div>
+      <div class="svc-inner">
+        <div class="svc-main">
+          <h2 class="h2 rv" style="--d:1">Lead Gen, Outbound / Research</h2>
+          <p class="svc-sub rv" style="--d:2">Researched, personalized outbound and lead gen, run by a team of agents.</p>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span><span class="svc-cx-val">Medium</span></div><ul class="svc-tags" aria-label="Good fit for"><li>B2B sales teams</li><li>Agencies &amp; consultancies</li><li>SaaS</li><li>Recruiting</li></ul></div>
+          <div class="svc-actions rv" style="--d:4">
+          <a href="booking.html?service=leadgen" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-leadgen"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
-        <div class="svc-detail-right">
-          <div class="svc-detail-meta">
-            <div class="svc-detail-meta-row"><span class="mono dim">BEST FOR</span><span>Property management, clinics, professional services, e‑commerce support</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">TIMELINE</span><span>3–4 weeks from kickoff to production</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">INVESTMENT</span><span>$12k–$28k build · $2.4k+/mo retainer (optional)</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">OWNERSHIP</span><span>You own the trained agent, prompts, and integrations</span></div>
-          </div>
-          <div class="svc-detail-deliv">
-            <div class="mono dim svc-detail-deliv-h">DELIVERABLES</div>
-            <ul class="svc-list">
-              <li>Trained chat + voice agent</li>
-              <li>Web + Slack + WhatsApp + phone install</li>
-              <li>Calendar + CRM writeback</li>
-              <li>Ticket auto‑routing &amp; escalation</li>
-              <li>Weekly QA &amp; retraining report</li>
-              <li>Handoff playbook for your team</li>
-            </ul>
-          </div>
-          <a href="index.html#cta" class="btn btn-primary btn-block">Book a scoping call →</a>
+        <div class="svc-stage rv" style="--d:2"><div class="stage">
+<svg class="mot mot-radar" viewBox="0 0 480 360" role="img" aria-label="Radar signal sweep motif" preserveAspectRatio="xMidYMid slice">
+  <defs><linearGradient id="swp" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#22D3EE" stop-opacity=".55"/><stop offset="1" stop-color="#22D3EE" stop-opacity="0"/></linearGradient></defs>
+  <g fill="none" stroke="#93C5FD" stroke-opacity=".28"><circle cx="240" cy="180" r="40"/><circle cx="240" cy="180" r="80"/><circle cx="240" cy="180" r="120"/><circle cx="240" cy="180" r="160"/><path d="M80 180H400M240 20V340"/></g>
+  <circle class="ping" cx="240" cy="180" r="160" fill="none" stroke="#22D3EE" stroke-width="2"/>
+  <path class="sweep" d="M240 180 L400 180 A160 160 0 0 0 342.9 57.4 Z" fill="url(#swp)"/>
+  <circle cx="240" cy="180" r="5" fill="#fff"/>
+  <g fill="#22D3EE"><circle class="blip" style="--k:0.2" cx="320" cy="132" r="6"/><circle class="blip" style="--k:2.4" cx="188" cy="238" r="6"/><circle class="blip" style="--k:1.2" cx="170" cy="120" r="6"/><circle class="blip" style="--k:3.6" cx="306" cy="250" r="6"/><circle class="blip" style="--k:4.8" cx="262" cy="86" r="6"/></g>
+</svg>
+        </div></div>
+        <div class="svc-more" id="more-leadgen" role="region" aria-label="Lead Gen, Outbound / Research details">
+          <div class="svc-more-clip"><div class="svc-more-body">
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">A team of agents runs prospecting from start to finish. They find accounts that match your ideal customer, research each one across multiple models and live sources (filings, news, hiring signals, tech stack), draft a personalized first touch for email or social, and route replies into your rep's calendar and CRM. Your team spends its time on conversations, not research.</p><p class="svc-works"><b>Works with</b>: Clay &middot; Apollo &middot; Smartlead &middot; Perplexity &middot; Claude &middot; OpenAI &middot; Grok Bot &middot; HubSpot &middot; Slack &middot; Discord</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>B2B teams with a defined ICP and a closing process that works</div><div class="meta-row"><span class="mono dim">Timeline</span>3–5 weeks to first booked meetings</div><div class="meta-row"><span class="mono dim">Ownership</span>Lists, sequences, and account briefs delivered into your tools</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>ICP &amp; list pipeline (Clay/Apollo)</li><li>Multi‑model research agent with per‑lead briefs</li><li>Personalized email &amp; social sequences</li><li>Reply classifier &amp; sentiment routing</li><li>Lead alerts in Slack or Discord</li><li>Booking &amp; pipeline dashboard</li></ul></div>
+          </div></div>
         </div>
       </div>
     </section>
 
     <!-- ========== 02 Workflow ========== -->
-    <section class="svc-detail" id="workflow">
-      <div class="svc-detail-grid">
-        <div class="svc-detail-left">
-          <span class="svc-tag mono">OPS</span>
-          <h2 class="h2 svc-detail-name">Workflow Automation (n8n)</h2>
-          <p class="svc-detail-sub">No‑code &amp; low‑code plumbing across the tools you already pay for — built on n8n, owned by you.</p>
-          <p class="svc-detail-body">End‑to‑end automation built primarily in n8n — the open‑source, self‑hostable workflow engine that means no per‑task pricing, no vendor lock‑in, and no caps on run volume. We wire Google Workspace (Drive, Gmail, Calendar, Sheets), Slack, and your CRM into resilient flows with retries, alerts, and dashboards your team trusts. We'll also work in Zapier or Make if your team already lives there.</p>
-          <div class="svc-detail-stack">
-            <span class="chip">n8n</span><span class="chip">Google Workspace</span><span class="chip">Slack</span>
-            <span class="chip">Zapier</span><span class="chip">Make</span><span class="chip">Airtable</span>
+    <!-- ========== 02 Workflow Automation (n8n) ========== -->
+    <section class="svc svc--flip" id="workflow" data-sec="workflow">
+      <div class="svc-bg" aria-hidden="true"></div>
+      <div class="svc-inner">
+        <div class="svc-main">
+          <h2 class="h2 rv" style="--d:1">Workflow Automation</h2>
+          <p class="svc-sub rv" style="--d:2">Multi‑model workflows and agents across the tools you already pay for, owned by you.</p>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span><span class="svc-cx-val">Medium</span><span class="svc-cx-note">depends on domain&#8209;specific knowledge</span></div><ul class="svc-tags" aria-label="Good fit for"><li>Ops teams</li><li>Agencies</li><li>Founders</li><li>Finance &amp; admin</li></ul></div>
+          <div class="svc-actions rv" style="--d:4">
+          <a href="booking.html?service=workflow" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-workflow"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
-        <div class="svc-detail-right">
-          <div class="svc-detail-meta">
-            <div class="svc-detail-meta-row"><span class="mono dim">BEST FOR</span><span>Operations teams drowning in Sheets/Gmail/Slack copy‑paste</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">TIMELINE</span><span>2–4 weeks per flow; longer for multi‑system replatforms</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">INVESTMENT</span><span>$8k–$24k per workflow · volume discounts on bundles</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">OWNERSHIP</span><span>Self‑hosted in your VPC. Full source. No vendor lock‑in.</span></div>
-          </div>
-          <div class="svc-detail-deliv">
-            <div class="mono dim svc-detail-deliv-h">DELIVERABLES</div>
-            <ul class="svc-list">
-              <li>Workflow audit &amp; opportunity map</li>
-              <li>Self‑hosted n8n setup in your VPC</li>
-              <li>Google Workspace + Slack integration</li>
-              <li>Built + monitored flows with retry logic</li>
-              <li>Failure alerts to Slack on‑call</li>
-              <li>Runbook + handoff training</li>
-            </ul>
-          </div>
-          <a href="index.html#cta" class="btn btn-primary btn-block">Book a scoping call →</a>
+        <div class="svc-stage rv" style="--d:2"><div class="stage">
+<svg class="mot mot-flow" viewBox="0 0 480 360" role="img" aria-label="Connected workflow nodes motif" preserveAspectRatio="xMidYMid slice">
+  <g fill="none" stroke="#60A5FA" stroke-width="2" stroke-linecap="round" opacity=".9">
+    <path class="wire" d="M128 180 C168 180 160 100 200 100"/><path class="wire" d="M128 180 C168 180 160 260 200 260"/>
+    <path class="wire" d="M280 100 C330 100 320 180 352 180"/><path class="wire" d="M280 260 C330 260 320 180 352 180"/>
+  </g>
+  <g class="node" style="--k:0"><rect x="40" y="148" width="88" height="64" rx="16" fill="#152C5B" stroke="#93C5FD" stroke-opacity=".6"/><circle cx="64" cy="180" r="9" fill="#22D3EE"/><rect x="82" y="174" width="34" height="6" rx="3" fill="#93C5FD" opacity=".7"/><rect x="82" y="186" width="22" height="6" rx="3" fill="#93C5FD" opacity=".4"/></g>
+  <g class="node" style="--k:1"><rect x="200" y="68" width="80" height="64" rx="16" fill="#152C5B" stroke="#93C5FD" stroke-opacity=".6"/><rect x="218" y="88" width="44" height="7" rx="3.5" fill="#93C5FD" opacity=".8"/><rect x="218" y="104" width="28" height="7" rx="3.5" fill="#93C5FD" opacity=".4"/></g>
+  <g class="node" style="--k:2"><rect x="200" y="228" width="80" height="64" rx="16" fill="#152C5B" stroke="#93C5FD" stroke-opacity=".6"/><rect x="218" y="248" width="44" height="7" rx="3.5" fill="#93C5FD" opacity=".8"/><rect x="218" y="264" width="28" height="7" rx="3.5" fill="#93C5FD" opacity=".4"/></g>
+  <g class="node" style="--k:3"><rect x="352" y="148" width="88" height="64" rx="16" fill="#2563EB"/><path d="M380 180 l9 9 l17 -19" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>
+        </div></div>
+        <div class="svc-more" id="more-workflow" role="region" aria-label="Workflow Automation details">
+          <div class="svc-more-clip"><div class="svc-more-body">
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">End‑to‑end automation that orchestrates multiple models and nodes. n8n runs the flow, models like Claude, GPT and Grok handle the reasoning, and agent runtimes such as Claude Code, Hermes Agent and Grok Bot take on the longer, multi‑step jobs. We wire Google Workspace, your CRM and your team chat (Slack, Discord, WhatsApp or whichever app we settle on in the build) into resilient flows with retries, alerts, approvals and dashboards your team trusts. Already on Zapier or Make? We work there too.</p><p class="svc-works"><b>Works with</b>: n8n &middot; Claude &middot; Claude Code &middot; Hermes Agent &middot; Grok Bot &middot; OpenAI &middot; Google Workspace &middot; Slack &middot; Discord &middot; WhatsApp &middot; Zapier &middot; Make</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Teams copy‑pasting between Sheets, inboxes, chat and the CRM</div><div class="meta-row"><span class="mono dim">Timeline</span>2–4 weeks per flow; longer for multi‑system replatforms</div><div class="meta-row"><span class="mono dim">Ownership</span>Full source and credentials, hosted in your own cloud</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Workflow audit &amp; opportunity map</li><li>Self‑hosted n8n with multi‑model routing</li><li>Agent runtimes for long, multi‑step jobs</li><li>Slack, Discord or WhatsApp control &amp; approvals</li><li>Monitored flows with retries &amp; failure alerts</li><li>Runbook + handoff training</li></ul></div>
+          </div></div>
         </div>
       </div>
     </section>
 
-    <!-- ========== 03 Outbound / Lead Gen ========== -->
-    <section class="svc-detail" id="leadgen">
-      <div class="svc-detail-grid">
-        <div class="svc-detail-left">
-          <span class="svc-tag mono">GROWTH</span>
-          <h2 class="h2 svc-detail-name">Outbound, Research &amp; Lead Gen</h2>
-          <p class="svc-detail-sub">Researched, personalized outbound at a volume humans can't touch.</p>
-          <p class="svc-detail-body">Agentic prospecting end‑to‑end. ICP discovery → deep account research (10‑K filings, news, hiring signals, tech stack) → personalized first‑touch → reply triage straight into your rep's calendar. SDRs stop researching and start closing.</p>
-          <div class="svc-detail-stack">
-            <span class="chip">Clay</span><span class="chip">Apollo</span><span class="chip">Smartlead</span>
-            <span class="chip">Perplexity API</span><span class="chip">OpenAI</span><span class="chip">HubSpot</span>
+    <!-- ========== 03 AI Concierge Services ========== -->
+    <section class="svc" id="concierge" data-sec="concierge">
+      <div class="svc-bg" aria-hidden="true"></div>
+      <div class="svc-inner">
+        <div class="svc-main">
+          <h2 class="h2 rv" style="--d:1">AI Concierge Services</h2>
+          <p class="svc-sub rv" style="--d:2">Chat + voice agents that answer, qualify and book 24/7.</p>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="svc-cx-val">High</span></div><ul class="svc-tags" aria-label="Good fit for"><li>Clinics &amp; med&#8209;spas</li><li>Property management</li><li>Professional services</li><li>E&#8209;commerce support</li></ul></div>
+          <div class="svc-actions rv" style="--d:4">
+          <a href="booking.html?service=concierge" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-concierge"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
-        <div class="svc-detail-right">
-          <div class="svc-detail-meta">
-            <div class="svc-detail-meta-row"><span class="mono dim">BEST FOR</span><span>B2B teams with a defined ICP and a closing process that works</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">TIMELINE</span><span>3–5 weeks to first booked meetings</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">INVESTMENT</span><span>$15k–$35k build · $3.5k+/mo retainer for tuning + scale</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">OWNERSHIP</span><span>Lists, sequences, and account briefs delivered into your tools</span></div>
-          </div>
-          <div class="svc-detail-deliv">
-            <div class="mono dim svc-detail-deliv-h">DELIVERABLES</div>
-            <ul class="svc-list">
-              <li>ICP &amp; list pipeline (Clay/Apollo)</li>
-              <li>Account research agent — per‑lead briefs</li>
-              <li>Personalized sequence builder</li>
-              <li>Reply classifier &amp; sentiment routing</li>
-              <li>Booking &amp; pipeline dashboard</li>
-              <li>Weekly performance review</li>
-            </ul>
-          </div>
-          <a href="index.html#cta" class="btn btn-primary btn-block">Book a scoping call →</a>
+        <div class="svc-stage rv" style="--d:2"><div class="stage">
+<svg class="mot mot-chat" viewBox="0 0 480 360" role="img" aria-label="Chat and voice conversation motif" preserveAspectRatio="xMidYMid slice">
+  <g class="bub" style="--k:0"><rect x="36" y="38" width="236" height="62" rx="20" fill="rgba(255,255,255,.08)" stroke="rgba(147,197,253,.4)"/><rect x="58" y="58" width="150" height="7" rx="3.5" fill="#93C5FD" opacity=".75"/><rect x="58" y="74" width="98" height="7" rx="3.5" fill="#93C5FD" opacity=".4"/></g>
+  <g class="bub" style="--k:1"><rect x="176" y="118" width="268" height="70" rx="20" fill="#2563EB"/><rect x="198" y="138" width="190" height="7" rx="3.5" fill="#fff" opacity=".9"/><rect x="198" y="154" width="130" height="7" rx="3.5" fill="#fff" opacity=".55"/></g>
+  <g class="bub" style="--k:2"><rect x="36" y="206" width="210" height="56" rx="20" fill="rgba(255,255,255,.08)" stroke="rgba(147,197,253,.4)"/><rect x="58" y="224" width="128" height="7" rx="3.5" fill="#93C5FD" opacity=".75"/><rect x="58" y="240" width="76" height="7" rx="3.5" fill="#93C5FD" opacity=".4"/></g>
+  <g><rect x="36" y="286" width="86" height="40" rx="20" fill="rgba(255,255,255,.08)" stroke="rgba(147,197,253,.4)"/><circle class="dot" style="--k:0" cx="62" cy="306" r="4" fill="#93C5FD"/><circle class="dot" style="--k:1" cx="79" cy="306" r="4" fill="#93C5FD"/><circle class="dot" style="--k:2" cx="96" cy="306" r="4" fill="#93C5FD"/></g>
+  <g fill="#22D3EE"><rect class="bar" style="--k:0" x="318" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:1" x="333" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:2" x="348" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:3" x="363" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:4" x="378" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:5" x="393" y="290" width="7" height="36" rx="3.5"/><rect class="bar" style="--k:6" x="408" y="290" width="7" height="36" rx="3.5"/></g>
+</svg>
+        </div></div>
+        <div class="svc-more" id="more-concierge" role="region" aria-label="AI Concierge Services details">
+          <div class="svc-more-clip"><div class="svc-more-body">
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">A unified concierge layer for inbound chat, voice and messaging, running on the model that fits each job. Trained on your knowledge base and wired to your calendar, CRM and ticketing, with fast voice responses and a clean human handoff when confidence drops. Covers the after‑hours desk and frees up the day shift.</p><p class="svc-works"><b>Works with</b>: Claude &middot; OpenAI &middot; Vapi &middot; ElevenLabs &middot; Twilio &middot; WhatsApp &middot; Discord &middot; Intercom &middot; HubSpot</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Property management, clinics, professional services, e‑commerce support</div><div class="meta-row"><span class="mono dim">Timeline</span>3–4 weeks from kickoff to production</div><div class="meta-row"><span class="mono dim">Ownership</span>You own the trained agent, prompts, and integrations</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Trained chat + voice agent</li><li>Web, phone, WhatsApp, Slack or Discord install</li><li>Calendar + CRM writeback</li><li>Ticket auto‑routing &amp; escalation</li><li>Weekly QA &amp; retraining report</li><li>Handoff playbook for your team</li></ul></div>
+          </div></div>
         </div>
       </div>
     </section>
 
     <!-- ========== 04 Internal Ops ========== -->
-    <section class="svc-detail" id="internal">
-      <div class="svc-detail-grid">
-        <div class="svc-detail-left">
-          <span class="svc-tag mono">INTERNAL</span>
-          <h2 class="h2 svc-detail-name">Internal Ops Agents</h2>
-          <p class="svc-detail-sub">Agents that handle invoicing, data entry, and the boring middle.</p>
-          <p class="svc-detail-body">Internal agents that read PDFs, update CRMs, and reconcile spreadsheets. Approvals stay with humans; typing doesn't. Quietly removes hours from finance, HR, and PM workflows.</p>
-          <div class="svc-detail-stack">
-            <span class="chip">LlamaIndex</span><span class="chip">Notion</span>
-            <span class="chip">QuickBooks</span><span class="chip">Airtable</span><span class="chip">Slack</span>
+    <!-- ========== 04 Internal Ops Agents ========== -->
+    <section class="svc svc--flip" id="internal" data-sec="internal">
+      <div class="svc-bg" aria-hidden="true"></div>
+      <div class="svc-inner">
+        <div class="svc-main">
+          <h2 class="h2 rv" style="--d:1">Internal Ops Agents</h2>
+          <p class="svc-sub rv" style="--d:2">Agents that handle invoicing, data entry and the busywork in between.</p>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="svc-cx-val">Medium to high</span></div><ul class="svc-tags" aria-label="Good fit for"><li>Finance</li><li>HR &amp; people ops</li><li>Project management</li><li>Multi&#8209;location teams</li></ul></div>
+          <div class="svc-actions rv" style="--d:4">
+          <a href="booking.html?service=internal" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-internal"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
-        <div class="svc-detail-right">
-          <div class="svc-detail-meta">
-            <div class="svc-detail-meta-row"><span class="mono dim">BEST FOR</span><span>Finance, ops, and HR teams hand‑keying data between systems</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">TIMELINE</span><span>2–6 weeks depending on document complexity</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">INVESTMENT</span><span>$10k–$30k per agent · volume pricing for multi‑agent rollouts</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">OWNERSHIP</span><span>Full source + audit logs + SOPs in your accounts</span></div>
-          </div>
-          <div class="svc-detail-deliv">
-            <div class="mono dim svc-detail-deliv-h">DELIVERABLES</div>
-            <ul class="svc-list">
-              <li>Document extraction agent</li>
-              <li>ERP / CRM writeback</li>
-              <li>Audit log + approvals UI</li>
-              <li>SOP automation</li>
-              <li>Error‑rate monitoring</li>
-              <li>Quarterly accuracy review</li>
-            </ul>
-          </div>
-          <a href="index.html#cta" class="btn btn-primary btn-block">Book a scoping call →</a>
+        <div class="svc-stage rv" style="--d:2"><div class="stage">
+<svg class="mot mot-grid" viewBox="0 0 480 360" role="img" aria-label="System grid of agents motif" preserveAspectRatio="xMidYMid slice">
+  <rect x="40" y="40" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:0" x="40" y="40" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="106" y="40" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:7" x="106" y="40" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="172" y="40" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:3" x="172" y="40" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="238" y="40" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:10" x="238" y="40" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="304" y="40" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on keep" style="--k:6" x="304" y="40" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="370" y="40" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:2" x="370" y="40" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="40" y="106" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:9" x="40" y="106" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="106" y="106" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on keep" style="--k:5" x="106" y="106" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="172" y="106" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:1" x="172" y="106" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="238" y="106" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:8" x="238" y="106" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="304" y="106" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:4" x="304" y="106" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="370" y="106" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:0" x="370" y="106" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="40" y="172" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:7" x="40" y="172" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="106" y="172" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:3" x="106" y="172" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="172" y="172" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on keep" style="--k:10" x="172" y="172" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="238" y="172" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:6" x="238" y="172" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="304" y="172" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:2" x="304" y="172" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="370" y="172" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:9" x="370" y="172" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="40" y="238" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on keep" style="--k:5" x="40" y="238" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="106" y="238" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:1" x="106" y="238" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="172" y="238" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:8" x="172" y="238" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="238" y="238" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:4" x="238" y="238" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="304" y="238" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on" style="--k:0" x="304" y="238" width="56" height="56" rx="12" fill="#2563EB"/>
+  <rect x="370" y="238" width="56" height="56" rx="12" fill="none" stroke="#93C5FD" stroke-opacity=".28"/><rect class="cell-on keep" style="--k:7" x="370" y="238" width="56" height="56" rx="12" fill="#2563EB"/>
+  <g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".9"><path d="M120 260 l9 9 l15 -17"/><path d="M252 128 l9 9 l15 -17"/></g>
+  <rect class="scan" x="32" y="36" width="416" height="4" rx="2" fill="#22D3EE" opacity=".85"/>
+</svg>
+        </div></div>
+        <div class="svc-more" id="more-internal" role="region" aria-label="Internal Ops Agents details">
+          <div class="svc-more-clip"><div class="svc-more-body">
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">Internal agents that read PDFs and inboxes, update your CRM and accounting tools, and reconcile spreadsheets. Approvals stay with humans and arrive in Slack, Discord or Teams; the typing doesn't. Quietly removes hours from finance, HR and PM workflows.</p><p class="svc-works"><b>Works with</b>: Claude &middot; OpenAI &middot; Hermes Agent &middot; LlamaIndex &middot; Notion &middot; QuickBooks &middot; Airtable &middot; Slack &middot; Discord</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Finance, ops, and HR teams hand‑keying data between systems</div><div class="meta-row"><span class="mono dim">Timeline</span>2–6 weeks depending on document complexity</div><div class="meta-row"><span class="mono dim">Ownership</span>Full source + audit logs + SOPs in your accounts</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>Document &amp; inbox extraction agent</li><li>ERP / CRM writeback</li><li>Audit log + approvals in chat</li><li>SOP automation</li><li>Error‑rate monitoring</li><li>Quarterly accuracy review</li></ul></div>
+          </div></div>
         </div>
       </div>
     </section>
 
     <!-- ========== 05 Strategy ========== -->
-    <section class="svc-detail" id="consult">
-      <div class="svc-detail-grid">
-        <div class="svc-detail-left">
-          <span class="svc-tag mono">STRATEGY</span>
-          <h2 class="h2 svc-detail-name">Operations Strategy &amp; Advisory</h2>
-          <p class="svc-detail-sub">A blanket retainer for everything the build offers don't cover.</p>
-          <p class="svc-detail-body">Strategy hours, on retainer. We sit with your team during conception and design — aligning resources, scoping budgets, choosing tools, and writing the brief — so the eventual build is the right one. Whether we ship it or someone else does.</p>
-          <div class="svc-detail-stack">
-            <span class="chip">Workshop‑led</span>
-            <span class="chip">Async + weekly working sessions</span>
-            <span class="chip">Custom</span>
+    <!-- ========== 05 Operations Strategy &amp; Advisory ========== -->
+    <section class="svc" id="consult" data-sec="consult">
+      <div class="svc-bg" aria-hidden="true"></div>
+      <div class="svc-inner">
+        <div class="svc-main">
+          <h2 class="h2 rv" style="--d:1">Operations Strategy &amp; Advisory</h2>
+          <p class="svc-sub rv" style="--d:2">A fractional AI strategy partner for the decisions the builds don't cover.</p>
+          <div class="svc-fit rv" style="--d:3"><div class="svc-cx"><span class="svc-cx-lbl">Complexity</span><span class="svc-cx-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span><span class="svc-cx-val">Scoped to you</span></div><ul class="svc-tags" aria-label="Good fit for"><li>Founders &amp; CEOs</li><li>Leadership teams</li><li>Pre&#8209;build planning</li><li>AI roadmaps</li></ul></div>
+          <div class="svc-actions rv" style="--d:4">
+          <a href="booking.html?service=consult" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Scoping Call</a>
+            <button type="button" class="tog" aria-expanded="false" aria-controls="more-consult"><span class="tog-l"><span class="tog-a">Details &amp; Options</span><span class="tog-b">Hide Details</span></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
           </div>
         </div>
-        <div class="svc-detail-right">
-          <div class="svc-detail-meta">
-            <div class="svc-detail-meta-row"><span class="mono dim">BEST FOR</span><span>Leaders evaluating where AI/automation fits their roadmap</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">TIMELINE</span><span>Ongoing · monthly minimum, no long contracts</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">INVESTMENT</span><span>From $4.5k/mo · 10 strategy hours + async Slack</span></div>
-            <div class="svc-detail-meta-row"><span class="mono dim">OWNERSHIP</span><span>All artifacts (briefs, decision docs, roadmaps) yours</span></div>
-          </div>
-          <div class="svc-detail-deliv">
-            <div class="mono dim svc-detail-deliv-h">DELIVERABLES</div>
-            <ul class="svc-list">
-              <li>Workflow inventory &amp; ROI scorecard</li>
-              <li>Build vs. buy decision docs</li>
-              <li>Vendor &amp; tool selection</li>
-              <li>Architecture &amp; systems design with your team</li>
-              <li>Org‑design and resourcing input</li>
-              <li>90‑day operations roadmap</li>
-            </ul>
-          </div>
-          <a href="index.html#cta" class="btn btn-primary btn-block">Book a scoping call →</a>
+        <div class="svc-stage rv" style="--d:2"><div class="stage">
+<svg class="mot mot-compass" viewBox="0 0 480 360" role="img" aria-label="Compass and route map motif" preserveAspectRatio="xMidYMid slice">
+  <g fill="none" stroke="#93C5FD" stroke-opacity=".18"><ellipse cx="120" cy="300" rx="110" ry="50"/><ellipse cx="120" cy="300" rx="70" ry="30"/><ellipse cx="380" cy="70" rx="90" ry="40"/></g>
+  <g class="ring" stroke="#93C5FD" stroke-opacity=".5" stroke-width="2"><line x1="240" y1="42" x2="240" y2="58" transform="rotate(0 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(10 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(20 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(30 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(40 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(50 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(60 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(70 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(80 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(90 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(100 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(110 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(120 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(130 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(140 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(150 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(160 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(170 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(180 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(190 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(200 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(210 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(220 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(230 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(240 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(250 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(260 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(270 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(280 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(290 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(300 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(310 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(320 240 180)"/><line x1="240" y1="42" x2="240" y2="58" transform="rotate(330 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(340 240 180)"/><line x1="240" y1="42" x2="240" y2="52" transform="rotate(350 240 180)"/></g>
+  <circle cx="240" cy="180" r="138" fill="none" stroke="#93C5FD" stroke-opacity=".4"/>
+  <circle cx="240" cy="180" r="92" fill="none" stroke="#93C5FD" stroke-opacity=".25"/>
+  <g fill="#93C5FD" font-family="Source Sans 3, system-ui, -apple-system, sans-serif" font-size="13" text-anchor="middle"><text x="240" y="34">N</text><text x="448" y="185">E</text><text x="240" y="340">S</text><text x="32" y="185">W</text></g>
+  <path class="route" d="M64 300 C150 310 150 220 240 214 S360 130 420 66" fill="none" stroke="#22D3EE" stroke-width="2.5" stroke-linecap="round"/>
+  <g fill="#22D3EE"><circle class="wp" style="--k:0" cx="64" cy="300" r="7"/><circle class="wp" style="--k:1" cx="240" cy="214" r="7"/><circle class="wp" style="--k:2" cx="420" cy="66" r="7"/></g>
+  <g class="needle"><path d="M240 180 L252 180 L240 90 L228 180 Z" fill="#2563EB"/><path d="M240 180 L252 180 L240 270 L228 180 Z" fill="#fff" opacity=".8"/></g>
+  <circle cx="240" cy="180" r="7" fill="#0B1226" stroke="#fff" stroke-width="2"/>
+</svg>
+        </div></div>
+        <div class="svc-more" id="more-consult" role="region" aria-label="Operations Strategy &amp; Advisory details">
+          <div class="svc-more-clip"><div class="svc-more-body">
+            <div><div class="mono dim more-h">Overview</div><p class="svc-detail-body">We sit with your leadership while ideas are still taking shape: choosing models and tools, designing how agents, people and VAs work together, setting data and security guardrails, and writing the brief so the eventual build is the right one, whether we ship it or someone else does.</p><p class="svc-works"><b>Format</b>: Workshops &middot; Weekly working sessions &middot; Async in Slack or Discord</p></div>
+            <div><div class="mono dim more-h">At a glance</div><div class="meta-row"><span class="mono dim">Best for</span>Leaders deciding where AI fits their roadmap and org</div><div class="meta-row"><span class="mono dim">Timeline</span>Ongoing, month to month, no long contracts</div><div class="meta-row"><span class="mono dim">Ownership</span>All briefs, decision docs and roadmaps are yours</div></div>
+            <div><div class="mono dim more-h">Deliverables</div><ul class="svc-list"><li>AI opportunity map &amp; prioritized roadmap</li><li>Model, agent &amp; vendor selection</li><li>Agent architecture &amp; systems design</li><li>Data, security &amp; usage guardrails</li><li>Team enablement: workshops &amp; playbooks</li><li>Build oversight &amp; vendor management</li></ul></div>
+          </div></div>
         </div>
       </div>
     </section>
 
     <!-- ========== Final CTA ========== -->
-    <section class="cta-wrap">
-      <div class="cta">
+    <section class="cta-wrap" id="cta" data-sec="cta">
+      <div class="cta rv">
         <div class="cta-copy">
-          <div class="eyebrow"><span class="dot dot-live"></span> Not sure which fits?</div>
           <h2 class="h2 cta-h2">Start with<br>a free audit.</h2>
           <p class="lede lede-sm">
             30 minutes. We'll map your top 3 workflows and tell you which
-            offer (if any) is right — in writing.
+            offer (if any) is right, in writing.
           </p>
         </div>
         <div class="svc-page-final">
-          <a href="index.html#cta" class="btn btn-primary btn-block">Book my free audit →</a>
-          <a href="mailto:hello@querent.ai" class="btn btn-ghost btn-block">Email hello@querent.ai</a>
-          <div class="mono dim cta-fine">Replies within 1 business day. No drip sequences.</div>
+          <a href="index.html#cta" class="btn btn-primary btn-block"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Audit</a>
+          <a href="mailto:hello@querent.ai" class="btn btn-ghost btn-block"><svg class="cta-ico cta-ico--mail" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Email hello@querent.ai</a>
+          <div class="mono dim cta-fine">We reply within 1 business day.</div>
         </div>
       </div>
     </section>
   </main>
 
   <!-- ========== Footer ========== -->
-  <footer class="footer">
-    <div class="footer-grid">
-      <div>
-        <a class="logo" href="index.html"><img src="/querent-logo.png" alt="Querent" style="width:26px;height:26px;display:block;"><span class="logo-word">Querent</span></a>
-        <p class="footer-tag">AI automation, productized.</p>
+  <footer class="footer footer-shared">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo" href="index.html#top"><img src="/assets/querent-logo-flat.svg" alt="" style="width:28px;height:28px;display:block;"><span class="logo-word">Querent</span></a>
+          <p class="footer-tag">AI automations for scaling founders and teams. Workflows, agents, marketing and operations that give your team their time back.</p>
+          <a class="footer-cta" href="booking.html"><svg class="cta-ico cta-ico--cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>Book a Free Audit</a>
+        </div>
+        <nav class="footer-col" aria-label="Services">
+          <h3 class="footer-h">Services</h3>
+          <ul>
+            <li><a href="#top">Full Menu of Services</a></li>
+            <li><a href="#leadgen">Lead Gen, Outbound / Research</a></li>
+            <li><a href="#workflow">Workflow Automation</a></li>
+            <li><a href="#concierge">AI Concierge</a></li>
+            <li><a href="#internal">Internal Ops Agents</a></li>
+            <li><a href="#consult">Strategy &amp; Advisory</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-col" aria-label="Explore">
+          <h3 class="footer-h">Explore</h3>
+          <ul>
+            <li><a href="index.html#top">Home</a></li>
+            <li><a href="index.html#why-now">Why Now</a></li>
+            <li><a href="index.html#services">Solutions</a></li>
+            <li><a href="index.html#process">Process</a></li>
+            <li><a href="index.html#faq">FAQ</a></li>
+          </ul>
+        </nav>
+        <div class="footer-col">
+          <h3 class="footer-h">Contact</h3>
+          <ul class="footer-contact">
+            <li><span class="footer-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span><span class="footer-txt"><span class="footer-lbl">Email</span><a href="mailto:hello@querent.ai">hello@querent.ai</a></span></li>
+            <li><span class="footer-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><span class="footer-txt"><span class="footer-lbl">Coverage</span><span>Americas · APAC · Global Remote</span></span></li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <div class="mono dim footer-h">SERVICES</div>
-        <ul>
-          <li><a href="menu.html">Menu of services →</a></li>
-          <li><a href="#concierge">AI Concierge</a></li>
-          <li><a href="#workflow">n8n Workflow Automation</a></li>
-          <li><a href="#leadgen">Outbound &amp; Research</a></li>
-          <li><a href="#internal">Internal Ops Agents</a></li>
-          <li><a href="#consult">Strategy &amp; Advisory</a></li>
-        </ul>
+      <div class="footer-rule"></div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Querent Labs, Inc. All rights reserved.</span>
+        <span class="footer-legal"><span>Privacy</span><span>Terms</span></span>
       </div>
-      <div>
-        <div class="mono dim footer-h">COMPANY</div>
-        <ul>
-          <li><a href="index.html#case">Case studies</a></li>
-          <li><a href="index.html#process">Process</a></li>
-          <li><a href="index.html#faq">FAQ</a></li>
-          <li>Careers</li>
-        </ul>
-      </div>
-      <div>
-        <div class="mono dim footer-h">CONTACT</div>
-        <ul>
-          <li>hello@querent.ai</li>
-          <li>Brooklyn · Lagos · Remote</li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-rule"></div>
-    <div class="footer-bottom mono dim">
-      <span>© 2026 Querent Labs, Inc.</span>
-      <span>Wireframe v0.5 · Last updated 04.30.26</span>
     </div>
   </footer>
 </div>
 
 <script>
 (function () {
-  // ----- Theme toggle (shared with wireframe via the same localStorage key) -----
-  var html = document.documentElement;
-  try {
-    var saved = localStorage.getItem('querent-theme');
-    if (saved === 'light' || saved === 'dark') html.dataset.theme = saved;
-  } catch (e) {}
-  document.getElementById('theme-toggle').addEventListener('click', function () {
-    var next = (html.dataset.theme === 'dark') ? 'light' : 'dark';
-    html.dataset.theme = next;
-    try { localStorage.setItem('querent-theme', next); } catch (e) {}
-  });
+  var d = document, root = d.documentElement, body = d.body;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ----- Smooth-scroll for the sticky service nav -----
-  document.querySelectorAll('a.svc-nav-item[href^="#"]').forEach(function (a) {
-    a.addEventListener('click', function (e) {
-      var target = document.querySelector(a.getAttribute('href'));
-      if (!target) return;
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      history.pushState(null, '', a.getAttribute('href'));
+  // Disclosures (button + aria-expanded; height animated in CSS)
+  d.querySelectorAll('.tog').forEach(function (b) {
+    var p = d.getElementById(b.getAttribute('aria-controls'));
+    if (p) { p.inert = true; }
+    b.addEventListener('click', function () {
+      var open = b.getAttribute('aria-expanded') !== 'true';
+      b.setAttribute('aria-expanded', open);
+      p.classList.toggle('open', open);
+      p.inert = !open;
+      if (open) setTimeout(function () { revealPanel(b, p); }, 140);
     });
   });
+  // bring an opening panel into view without pushing its button under the header
+  function revealPanel(btn, panel) {
+    if (btn.getAttribute('aria-expanded') !== 'true') return;
+    var body = panel.querySelector('.svc-more-body'), hdr = d.querySelector('.hdr');
+    var overflow = panel.getBoundingClientRect().top + parseFloat(getComputedStyle(body).marginTop) + body.offsetHeight + 24 - window.innerHeight;
+    var room = btn.getBoundingClientRect().top - (hdr ? hdr.offsetHeight : 0) - 16;
+    var dy = Math.min(overflow, room);
+    if (dy > 0) window.scrollBy({ top: dy, behavior: reduce ? 'auto' : 'smooth' });
+  }
+
+  // Close focus-within header dropdowns on Escape or same-page anchor click
+  d.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && d.activeElement && d.activeElement.closest('.nav-item')) d.activeElement.blur();
+  });
+  d.querySelectorAll('.nav-dd a[href*="#"]').forEach(function (a) {
+    a.addEventListener('click', function () { if (d.activeElement === a) a.blur(); });
+  });
+
+  // Reveal + active-section tracking + pause offscreen motifs
+  var secs = d.querySelectorAll('[data-sec]');
+  body.setAttribute('data-active', 'hero');
+  if (!reduce && 'IntersectionObserver' in window) {
+    root.classList.add('js');
+    var rio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); rio.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    d.querySelectorAll('.rv').forEach(function (n) { rio.observe(n); });
+    var lio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { e.target.classList.toggle('live', e.isIntersecting); });
+    }, { rootMargin: '10% 0px' });
+    d.querySelectorAll('.svc').forEach(function (n) { lio.observe(n); });
+  } else {
+    d.querySelectorAll('.svc').forEach(function (n) { n.classList.add('live'); });
+  }
+  if ('IntersectionObserver' in window) {
+    var aio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var id = e.target.getAttribute('data-sec');
+        body.setAttribute('data-active', id);
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    secs.forEach(function (n) { aio.observe(n); });
+  }
 })();
 </script>
 </body>
